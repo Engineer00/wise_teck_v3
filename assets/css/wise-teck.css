@@ -1080,3 +1080,42 @@
   body.v3 .page-hero--compact h1{font-size:clamp(32px,3.1vw,44px)}
   body.v3 .page-hero--compact p.lead{margin:14px 0 24px}
 }
+
+/* home ecosystem orbit: larger, everything scales with the orbit size */
+@layer site{
+  .v3 .eorbit--in{width:min(100%,36rem);margin-bottom:var(--sp-24)}
+  .v3 .eorbit--in .eorbit__center{width:min(28%,10rem)}
+  .v3 .eorbit--in .eorbit__clabel{top:calc(50% - min(14%,5rem) - 12px);padding:6px 16px 7px;font-size:12.5px}
+  .v3 .eorbit--in .eorbit__clabel b{font-size:14px}
+  .v3 .eorbit--in .eorbit__badge{width:5rem;height:5rem;font-size:1.35rem}
+  .v3 .eorbit--in .eorbit__node .eorbit__t{top:3.75rem}
+  .v3 .eorbit--in .eorbit__node:first-child .eorbit__t{top:-3.75rem}
+  .v3 .eorbit--in .eorbit__node:nth-child(2) .eorbit__t,
+  .v3 .eorbit--in .eorbit__node:nth-child(3) .eorbit__t{top:3.75rem}
+}
+
+/* About / inner hero photo: photo sits right on the gold + navy frame (no gap), flat 2D look */
+@layer site{
+  .v3 .about-media,.v3 .hero-photo{padding:10px 10px 10px 14px}
+  .v3 .about-media::before,.v3 .hero-photo::before{border-color:#f5b335;border-left-color:transparent;border-bottom-color:transparent}
+  .v3 .about-media::after,.v3 .hero-photo::after{border-color:#1b2f78;border-left-color:transparent;border-top-color:transparent}
+  .v3 .about-media .frame,.v3 .hero-photo .frame{box-shadow:none;border-width:4px}
+}
+
+/* ecosystem: give the orbit the full left half (larger than its grid cell) */
+@layer site{
+  .v3 .eco-grid{grid-template-columns:minmax(0,1.25fr) minmax(0,1fr);gap:36px}
+  .v3 .eorbit--in{width:calc(100% + 70px);max-width:44rem;margin:-30px 0 0 -70px}
+  .v3 .eorbit--in .eorbit__center{width:min(27%,11.5rem)}
+  .v3 .eorbit--in .eorbit__clabel{top:calc(50% - min(13.5%,5.75rem) - 14px)}
+  .v3 .eorbit--in .eorbit__badge{width:5.75rem;height:5.75rem;font-size:1.55rem}
+  .v3 .eorbit--in .eorbit__node .eorbit__t,
+  .v3 .eorbit--in .eorbit__node:nth-child(2) .eorbit__t,
+  .v3 .eorbit--in .eorbit__node:nth-child(3) .eorbit__t{top:4.2rem}
+  .v3 .eorbit--in .eorbit__node:first-child .eorbit__t{top:-4.2rem}
+  .v3 .eorbit--in .eorbit__t{font-size:16px;padding:10px 16px}
+}
+@layer site{
+  .v3 .eorbit--in{margin-bottom:56px}
+  .v3 .eorbit--in .eorbit__node:nth-child(2) .eorbit__t{top:-4.2rem;transform:translate(-50%,-100%)}
+}
