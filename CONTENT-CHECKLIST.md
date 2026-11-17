@@ -82,6 +82,21 @@ The top menu links to all 12 inner pages.
 
 ---
 
+## Image & video sizes to supply
+
+| Image | Supply at | Shape |
+|---|---|---|
+| Inner page feature photo (one per inner page) | 2000 × 760px | 21 : 8 |
+| Home About photo | 1200 × 800px | 3 : 2 |
+| Program cards (3) / Earning Block cards (6) | 800 × 500px | 16 : 10 |
+| Services thumbnails (6) | 400 × 300px | 4 : 3 |
+| Weekend courses image | 640 × 440px | 3 : 2 |
+| Success story photos | 300 × 300px | 1 : 1 |
+| Collaborations image | 1200 × 500px | 12 : 5 |
+| Overview video | MP4 1920 × 1080, under 15MB (+ 1920 × 1080 cover) | 16 : 9 |
+
+JPG or WebP, under ~400KB each. Full details: README section 5.
+
 ## 3. Site-wide items still needed
 
 - [ ] Social media links: Facebook, Instagram, LinkedIn, YouTube (icons link nowhere yet)

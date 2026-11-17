@@ -278,6 +278,41 @@ Only intentional edits to the PDF text: "four" → "three" programs, NAVTTC prog
 | Contact | Form connected to email; Google Map (optional) |
 | Whole site | Real photos (current images are samples), social media links, "Watch Overview" video, partner logo approval |
 
+### Image & video sizes (for whoever supplies the media)
+
+The site is designed for a desktop window **1440px wide**; content sits in a centred column of about 1150px;
+the home hero is 700px tall. Current photos are temporary samples at only **512 × 279px** — too small, they look soft
+in the larger frames. Supply the sizes below (about 2× the on-screen size so photos stay sharp on high-resolution screens).
+Photos are cropped automatically to fit each frame — keep the main subject in the centre.
+Format: **JPG or WebP**, ideally under 400KB each.
+
+**Hero areas**
+
+| Where | Shows now | Size on screen | Shape | Supply at |
+|---|---|---|---|---|
+| Home hero (right side) | 3D spinning coin + orbit | ~520 × 520px | square | nothing needed (uses the logo) |
+| Inner page feature band (below the centred banner) | Page photo in a white rounded frame | **980 × 366px** (frame 992 × 378) | **21 : 8** wide strip | **2000 × 760px** |
+| Inner pages with an orbit (Earning Blocks, Corporate, Incubation, Success Stories) | 3D coin + icons | ~470 × 470px | square | nothing needed |
+| Logo (menu & footer) | Spinning logo | 44 × 44px | square | already fine (150 × 150) |
+
+**Other images**
+
+| Section | Size on screen | Shape | Supply at |
+|---|---|---|---|
+| Home — About Wise-Teck photo (slanted frame) | 599 × 390px | ~3 : 2 | 1200 × 800px |
+| Home — Program cards (3) | 350 × 219px | 16 : 10 | 800 × 500px |
+| Earning Blocks page — block cards (6) | 367 × 229px | 16 : 10 | 800 × 500px |
+| Home — Services thumbnails (6) | 179 × 138px | ~4 : 3 | 400 × 300px |
+| Home — Weekend courses image | 306 × 210px | ~3 : 2 | 640 × 440px |
+| Success story photos | 110 × 110px (round) | 1 : 1 | 300 × 300px |
+| Home — Collaborations image | 559 × 233px | ~12 : 5 | 1200 × 500px |
+
+**Video (not on the site yet)** — the hero's "Watch Overview" button currently scrolls to About.
+To add one: **MP4 (H.264), 1920 × 1080, 16 : 9**, about 1–2 minutes, under 15MB (or a YouTube link).
+It would open in a pop-up player of about **960 × 540px**; also supply a 1920 × 1080 JPG cover image.
+
+**Where image files go:** put them in `assets/img/`, then point the page to them in `tools/pages.py` and rebuild.
+
 ### How to add missing content
 
 1. Open `tools/pages.py`, find the page (e.g. `"courses"`) and replace the `placeholder(...)` block with the real text.
