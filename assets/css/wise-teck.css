@@ -1334,3 +1334,9 @@
   .v3 .page-hero--center .hero-body{position:relative;z-index:2;padding-bottom:200px}
   .v3 .page-feature{margin-top:-60px}
 }
+/* home ecosystem: smaller rings and coin (nodes stay aligned with the card) */
+@layer site{
+  .v3 .eorbit--in .eorbit__system{transform:scale(.84)}
+  .v3 .eorbit--in .eorbit__center{width:min(22%,9.5rem)}
+  .v3 .eorbit--in .eorbit__clabel{top:calc(50% - min(11%,4.75rem) - 14px)}
+}
