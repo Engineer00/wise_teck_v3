@@ -226,6 +226,67 @@ git branch -d feature/inner-page-headers                 # local
 git push origin --delete feature/inner-page-headers      # on GitHub
 ```
 
+### Pull the feature branch to your computer
+
+```bash
+# A) you do NOT have the project yet — clone straight onto the feature branch
+git clone -b feature/inner-page-headers https://github.com/Engineer00/wise_teck_v3.git
+cd wise_teck_v3
+
+# B) you already have the project — download and switch to the feature branch
+cd wise_teck_v3
+git fetch origin                                   # get the newest branches from GitHub
+git checkout feature/inner-page-headers            # switch (first time creates the local branch)
+git pull origin feature/inner-page-headers         # get the newest commits of this branch
+```
+
+Check which branch you are on (the one with `*`):
+
+```bash
+git branch            # local branches
+git status            # first line shows the current branch
+```
+
+### Switch between main and the feature branch
+
+```bash
+git checkout feature/inner-page-headers      # work on the feature
+git checkout main                            # back to main
+```
+
+Commit or stash your changes before switching (`git stash`, later `git stash pop`).
+The local server (`py -m http.server 8020`) always shows the branch that is checked out — just refresh the browser.
+
+### Push your work — to the feature branch or to main?
+
+**Normal rule: push to the feature branch, then merge into main.** Never work directly on main.
+
+```bash
+# push to the FEATURE branch (day-to-day work)
+git checkout feature/inner-page-headers
+git add -A
+git commit -m "Describe the change"
+git push origin feature/inner-page-headers
+```
+
+```bash
+# put the feature into MAIN (when the work is finished and checked)
+git checkout main
+git pull origin main
+git merge feature/inner-page-headers
+git push origin main
+# (or open a pull request: gh pr create --base main --head feature/inner-page-headers --fill)
+```
+
+### Make main the same as the feature branch
+
+Merging (above) is the safe way: main gets every commit of the feature branch and keeps its history.
+After `git push origin main` both branches contain the same code; check with:
+
+```bash
+git diff main origin/feature/inner-page-headers     # no output = identical
+```
+
 ### Commit author
 
 Commits are authored as **Engineer00 &lt;salman.k.786000@gmail.com&gt;** (set once per clone):
