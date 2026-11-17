@@ -755,7 +755,7 @@
   body.v3 .ft-col a,body.v3 .ft-tag{color:#dfe5fa}
   body.v3 .ft-contact{border-color:rgba(255,255,255,.26);background:rgba(255,255,255,.04)}
   body.v3 .ft-bottom{border-top-color:rgba(255,255,255,.14);color:#c3cdf0}
-  body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 166px,#24397f 166px,#1c3070 100%)}
+  body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 166px,#2f4c9f 166px,#2a4492 100%)}
   /* =====================================================================
      SECTION MOTIFS (tools/motifs.py) — faint lavender/violet, behind content, no W
      ===================================================================== */
@@ -1052,7 +1052,7 @@
   body.v3 .ft-tag{font-size:var(--fs-small)}
   body.v3 .topbar,body.v3 .ft-bottom{font-size:var(--fs-fine);font-weight:var(--fw-medium)}
   /* role exceptions (specific components) */
-  body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 132px,#24397f 132px,#24397f 170px,#1c3070 100%)}
+  body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 132px,#2f4c9f 132px,#2f4c9f 170px,#2a4492 100%)}
   body.v3 .ft-logo{align-items:center}
   body.v3 .ft-logo small{display:block;margin-top:2px}
   body.v3 .ft-tag{margin:18px 0 18px;line-height:1.6}
