@@ -363,6 +363,7 @@ def page_hero(key, crumbs, eyebrow, title, lead, ctas, visual, facts=None):
         fx = '<div class="hero-facts">' + "".join(f'<span class="fact"><i class="fa-solid {i}"></i>{t}</span>' for i, t in facts) + "</div>"
     st = hero_stats(key) if visual and "hero-photo" in visual else ""
     if st:
+        visual = re.sub(r'<div class="badge-float">.*?</div>', "", visual, flags=re.S)   # no badge on inner banners
         visual = feature_pair(key, visual)
     feature = f'<div class="page-feature{" has-stats" if st else ""}">{visual}{st}</div>' if visual else ""
     return f'''<header class="hero page-hero page-hero--center wt-sec">
