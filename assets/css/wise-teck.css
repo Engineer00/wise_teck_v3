@@ -1161,3 +1161,46 @@
   body.v3 .page-hero--center p.lead{margin:14px auto 24px}
 }
 @layer site{ .v3 .page-feature:has(.hero__visual){margin-top:-6px;margin-bottom:-20px} }
+
+/* ===== inner banner v2: calm background (no wave stripes) + layered feature photo ===== */
+@layer site{
+  .v3 .page-hero--center{background:none;overflow:hidden}
+  .v3 .page-hero--center .ph-bg{position:absolute;inset:0;z-index:0;pointer-events:none;
+    background:
+      radial-gradient(38% 60% at 50% 18%,rgba(139,92,246,.22),rgba(139,92,246,0) 70%),
+      radial-gradient(26% 40% at 88% 30%,rgba(245,179,53,.16),rgba(245,179,53,0) 70%),
+      radial-gradient(26% 44% at 10% 60%,rgba(99,102,241,.14),rgba(99,102,241,0) 70%),
+      linear-gradient(180deg,#e6e8fb 0%,#eceefc 60%,#eef0fc 100%)}
+  .v3 .page-hero--center .ph-grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(91,80,200,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(91,80,200,.07) 1px,transparent 1px);
+    background-size:44px 44px;-webkit-mask:radial-gradient(60% 70% at 50% 35%,#000 30%,transparent 80%);mask:radial-gradient(60% 70% at 50% 35%,#000 30%,transparent 80%)}
+  /* one smooth curve into the page */
+  .v3 .page-hero--center .ph-curve{position:absolute;left:-12%;right:-12%;bottom:-150px;height:260px;background:var(--lav-100);border-radius:50% 50% 0 0/100% 100% 0 0;box-shadow:0 -1px 0 rgba(124,92,240,.18),0 -18px 40px -20px rgba(124,92,240,.25)}
+  .v3 .page-hero--center .hero-body{padding:22px 0 130px}
+  .v3 .page-hero--center .m-dots-hero{opacity:.5}
+
+  /* feature photo: layered accent cards behind for depth */
+  .v3 .page-feature{margin-top:-84px;margin-bottom:24px}
+  .v3 .page-feature .hero-photo{max-width:960px}
+  .v3 .page-feature .hero-photo::before{content:"";position:absolute;z-index:0;inset:26px -26px -26px 26px;border-radius:32px;background:linear-gradient(135deg,#8b5cf6,#4f46e5);opacity:.9;border:0;transform:none;width:auto;height:auto}
+  .v3 .page-feature .hero-photo::after{content:"";position:absolute;z-index:0;left:-22px;top:-22px;right:auto;bottom:auto;width:46%;height:58%;border-radius:32px;background:none;border:3px solid #f5b335;transform:none}
+  .v3 .page-feature .hero-photo .frame{position:relative;z-index:2;aspect-ratio:12/5;border:0;border-radius:28px;box-shadow:0 34px 70px -30px rgba(30,30,90,.55)}
+  .v3 .page-feature .badge-float{z-index:3;left:-28px;bottom:36px}
+}
+
+/* ===== inner pages: own background system (home keeps the waves) =====
+   calm banner + clean alternating bands; a faint grid (the inner-page motif) on tinted bands */
+@layer site{
+  .v3 .page-hero--center .ph-curve{background:#f7f8fe}
+  body.inner{background:#f7f8fe}
+  body.inner .wave-div{display:none}
+  body.inner section.blk{padding:88px 0;background:#f7f8fe}
+  body.inner section.blk.tight{padding:72px 0}
+  body.inner section.blk:nth-of-type(even){background:#fff;box-shadow:inset 0 1px 0 rgba(124,92,240,.10),inset 0 -1px 0 rgba(124,92,240,.10)}
+  body.inner section.blk:nth-of-type(even)::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background-image:linear-gradient(rgba(91,80,200,.06) 1px,transparent 1px),linear-gradient(90deg,rgba(91,80,200,.06) 1px,transparent 1px);
+    background-size:44px 44px;-webkit-mask:radial-gradient(40% 70% at 100% 0,#000,transparent 75%);mask:radial-gradient(40% 70% at 100% 0,#000,transparent 75%)}
+  body.inner section.blk:nth-of-type(even)::after{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;
+    background:radial-gradient(30% 60% at 0 100%,rgba(139,92,246,.07),transparent 70%)}
+  body.inner section.blk .motif{opacity:.35}
+}

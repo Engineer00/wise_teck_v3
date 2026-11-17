@@ -93,7 +93,7 @@ def art(sym, h, cls):
 
 
 HERO_ART = art("wv-hero", 320, "wv-hero-art") + motif("hero")            # home hero: full wave + globe motif
-INNER_HERO_ART = art("wv-hero", 320, "wv-hero-art") + motif("inner-hero")  # inner pages: calmer (dots only)
+INNER_HERO_ART = '<div class="ph-bg" aria-hidden="true"><i class="ph-grid"></i><i class="ph-curve"></i></div>' + motif("inner-hero")
 FOOT_ART = art("wv-foot", 170, "wv-foot-art") + motif("footer")
 _div_n = [0]
 
@@ -200,7 +200,7 @@ def page(key, title, desc, hero, body, home=False):
     three = (f'<script src="assets/js/vendor/three.min.js?v={ASSET_V}" defer></script>\n<script src="assets/js/hero-three.js?v={ASSET_V}" defer></script>\n'
              if 'id="heroThreeStage"' in hero else "")
     return f'''{head(title, desc)}
-<body class="v3"{ref}>
+<body class="v3{"" if home else " inner"}"{ref}>
 {SYMBOLS}
 {SPRITE}
 {TOPBAR}
