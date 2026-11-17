@@ -1,0 +1,16 @@
+# Python environment and caches (tools only — the website itself is static HTML/CSS/JS)
+.venv/
+__pycache__/
+*.pyc
+
+# generated check images from the tracing tools
+tools/out/
+
+# temporary measurement pages
+_*.html
+
+# OS / editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
