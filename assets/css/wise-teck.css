@@ -1317,3 +1317,9 @@
   .v3 .page-feature .pf-pair > .hero-photo:first-child .frame{border-right-width:3px;border-radius:36px 14px 14px 36px}
   .v3 .page-feature .pf-pair .pf-small .frame{border-left-width:3px;border-radius:14px 36px 36px 14px}
 }
+/* CTA band: decorative grey + gold lines sit below the text, never across it */
+@layer site{
+  .v3 .band > svg{height:54px;bottom:8px}
+  .v3 .band{padding-bottom:74px}
+}
+@layer site{ .v3 .band > svg{height:76px;bottom:6px} .v3 .band{padding-bottom:92px} }
