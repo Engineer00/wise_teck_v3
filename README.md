@@ -128,6 +128,17 @@ Font: **Inter** (Google Fonts) — everywhere. All values are CSS variables at t
 | Navigation | `--fs-nav` | 15px | 600 | — |
 | Fine print | `--fs-fine` | 13px | 500 | — |
 
+**Colour palette** — tokens `--p-*` at the top of the stylesheet; every colour in the CSS uses them
+(only the PSDF / NIC partner logos keep their own brand colours).
+
+| Family | Role (60-30-10 rule) | Key steps |
+|---|---|---|
+| **Violet** (primary brand) | ~30% — accents, icons, highlighted words, badges | 100 `#ede9fe` · 300 `#c4b5fd` · 500 `#8b5cf6` · **600 `#7c3aed`** · 700 `#6d28d9` · 800 `#5b21b6` · 900 `#4c1d95` |
+| **Lavender** (neutral canvas) + white | ~60% — page background, cards, bands, waves | 25 `#fbfbff` · **50 `#f7f8fe`** (page) · 100 `#eef0fc` · 200 `#e2e6fa` · 300 `#cdd4f6` · 400 `#b6c0f0` |
+| **Gold** (accent) | ~10% — main call-to-action buttons, kicker rules, highlights | 200 `#fbe5a2` · **300 `#f7c75a`** · 400 `#f5b335` · 600 `#d9961c` |
+| **Navy** (anchor) | top bar, dark buttons, footer | **500 `#2f4c9f`** (footer) · 700 `#1b2f78` · **900 `#0d2158`** |
+| **Ink** (text) | headings, body, muted | 900 `#10123f` headings · 600 `#3a4068` body · 500 `#646a8f` muted (all WCAG AA) |
+
 Spacing follows an 8px grid (`--space-1` … `--space-9` = 4, 8, 12, 16, 24, 32, 48, 64, 88px);
 paragraph gap `--p-gap` = 12px; radii `--r-sm` … `--r-pill`.
 
