@@ -1347,3 +1347,6 @@
   .v3 .eorbit--in .eorbit__center{width:min(22%,9.5rem)}
   .v3 .eorbit--in .eorbit__clabel{top:calc(50% - min(11%,4.75rem) - 14px)}
 }
+/* footer contact: no outlined box — plain column like the other footer columns */
+@layer site{ body.v3 .ft-contact{border:0;background:none;border-radius:0;padding:0} }
+@layer site{ body.v3 .ft-contact{padding-top:31px} }
