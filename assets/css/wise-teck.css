@@ -1291,3 +1291,6 @@
 @layer type{
   body.v3 .pf-stats--text .pf-stat b{font-size:15.5px;white-space:normal;overflow:visible;overflow-wrap:anywhere}
 }
+/* feature badge: top-centre, straddling the photo's top edge (mirrors the stat cards at the bottom) */
+@layer site{ .v3 .page-feature .badge-float{left:50%;right:auto;top:-10px;bottom:auto;transform:translate(-50%,-50%) skewX(6deg);white-space:nowrap} }
+@layer site{ .v3 .page-feature .badge-float{width:max-content;max-width:none;left:calc(50% - 26px)} }
