@@ -1352,3 +1352,5 @@
 @layer site{ body.v3 .ft-contact{padding-top:31px} }
 /* lighter footer: hover uses light gold so it stays readable (WCAG AA) */
 @layer type{ body.v3 .ft-col a:not(.logo):hover,body.v3 .ft-col a:not(.logo):focus-visible{color:var(--p-gold-200)} }
+/* footer "Our Services": each link on one line (e.g. Placement Department) */
+@layer site{ body.v3 .ft-col:nth-child(4) a{white-space:nowrap} }
