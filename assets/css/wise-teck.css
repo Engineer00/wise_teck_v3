@@ -1126,3 +1126,38 @@
   .v3 .eorbit--in{margin-top:calc(24.65px - 30.5%)}
 }
 @layer site{ .v3 .eco-grid{padding-top:84px} }
+
+/* footer link lists: tighter rhythm (item spacing 6px, line height 1.45) */
+@layer type{
+  body.v3 .ft-col a:not(.logo){line-height:1.45;margin-bottom:var(--space-2)}
+  body.v3 .ft-col h4{margin-bottom:var(--space-4)}
+}
+
+/* footer links: golden yellow on hover / keyboard focus */
+@layer type{
+  body.v3 .ft-col a:not(.logo){transition:color .2s ease}
+  body.v3 .ft-col a:not(.logo):hover,body.v3 .ft-col a:not(.logo):focus-visible{color:var(--gold-2)}
+}
+
+/* ===== inner pages: centered banner header (home keeps the full split hero) ===== */
+@layer site{
+  .v3 .page-hero--center .hero-body{display:block;max-width:880px;margin:0 auto;padding:18px 0 150px;min-height:0;text-align:center}
+  .v3 .page-hero--center .wv-hero-art{height:230px}
+  .v3 .page-hero--center .crumbs{justify-content:center}
+  .v3 .page-hero--center .eyebrow{justify-content:center;margin-inline:auto}
+  .v3 .page-hero--center .lead{max-width:680px;margin-inline:auto}
+  .v3 .page-hero--center .hero-facts,.v3 .page-hero--center .ctas{justify-content:center}
+  /* feature band: the page photo / orbit, pulled up over the wave */
+  .v3 .page-feature{position:relative;z-index:3;margin:-96px auto 8px;max-width:1040px;padding:0 24px;display:flex;justify-content:center}
+  .v3 .page-feature .hero-photo{transform:none;padding:0;max-width:none;width:100%;margin:0}
+  .v3 .page-feature .hero-photo::before,.v3 .page-feature .hero-photo::after{content:none}
+  .v3 .page-feature .hero-photo .frame{aspect-ratio:21/8;border-radius:28px;border:6px solid #fff;box-shadow:0 30px 60px -34px rgba(30,30,90,.45)}
+  .v3 .page-feature .hero-photo .frame img{transform:none}
+  .v3 .page-feature .badge-float{left:32px;right:auto;bottom:-22px;top:auto}
+  .v3 .page-feature .hero__visual{transform:none;margin:0 auto}
+}
+@layer type{
+  body.v3 .page-hero--center h1{font-size:clamp(34px,3.4vw,48px)}
+  body.v3 .page-hero--center p.lead{margin:14px auto 24px}
+}
+@layer site{ .v3 .page-feature:has(.hero__visual){margin-top:-6px;margin-bottom:-20px} }

@@ -134,9 +134,159 @@ paragraph gap `--p-gap` = 12px; radii `--r-sm` … `--r-pill`.
 The stylesheet uses **CSS cascade layers**: `vendor` (Font Awesome) → `site` (layout & components)
 → `type` (typography). The `type` layer always wins, so text sizes are guaranteed uniform.
 
+**Measured in the browser on all 13 pages (1440px wide):**
+
+| Text | Size / weight | Where | Uniform? |
+|---|---|---|---|
+| H1 page title | 51px / 800 (home), 44px / 800 (all 12 inner pages) | Hero of every page | ✅ |
+| H2 section heading | 35.6px / 800 | 55 headings, every section | ✅ |
+| H3 card title | 20px / 700 | 108 card titles | ✅ |
+| H4 footer heading | 16px / 700 | Footer | ✅ |
+| Lead paragraph | 18px / 400–500 | Under hero titles and section intros | ✅ |
+| Body paragraph | 16px / 400 | Long text blocks | ✅ |
+| Card / list text | 15px / 400 | Cards, lists, step text | ✅ |
+| Kicker / tag line | 13px / 700, uppercase | Above headings | ✅ |
+| Buttons | 15px / 700 | All buttons | ✅ |
+| Menu | 15px / 600 (dropdown 14px) | Top navigation | ✅ |
+| Footer links | 14.5px / 400 | Footer | ✅ |
+| Small UI labels | 12–14px | Chips, badges, orbit labels, logo captions | component-specific |
+| Big numbers | 34–40px / 800–900 | Step numbers "01, 02…" | decorative |
+
+Font: **Inter** everywhere; the only exception is the large decorative quotation marks (Georgia).
+
 ---
 
-## 5. Git & GitHub workflow
+## 5. Site content — pages, source and status
+
+**Source of all text:** the Wise-Teck ecosystem document (`eco system (5).pdf`). No content is invented —
+anything the PDF does not cover is shown on the site as a dashed **[Placeholder]** box for Wise-Teck to supply.
+Content lives in `tools/pages.py`; check coverage any time with `.venv\Scripts\python tools\check_content.py`.
+A printable to-do list is in [`CONTENT-CHECKLIST.md`](CONTENT-CHECKLIST.md).
+
+**13 pages = 1 home page + 12 inner pages.**
+
+### Home page sections → inner pages
+
+| Home section | Content shown (short version) | "Read more" opens |
+|---|---|---|
+| Hero | Tagline, intro line, Apply Now / Explore Programs, 3D coin | `contact.html` |
+| About Wise-Teck | Introduction paragraph + photo | `about.html` |
+| Our Ecosystem | 3 programs → Earning Centre diagram + summary | `earning-centre.html` |
+| Programs Working Under WISE-TECK | 3 program cards | `wise-support-hub.html`, `wise-college.html`, `professional-paid-courses.html` |
+| Our Professional Services | Service cards | `business-incubation.html`, `corporate-services.html`, `student-loan-scheme.html`, `placement.html` |
+| Earning Blocks / weekend courses | Teaser | `earning-blocks.html`, `professional-paid-courses.html` |
+| Success Stories | 2 learner stories | `success-stories.html` (menu) |
+| Corporate & Industry Collaborations | PSDF, NIC, become a partner | `contact.html` |
+| Call to action + footer | Contact details, links | `contact.html` |
+
+### Where each part of the PDF appears
+
+| PDF section | On the site | Status |
+|---|---|---|
+| Name, "Registered with Registrar Firms, Lahore", tagline | Home hero, About, footer, page titles | ✅ word for word |
+| Introduction — Bridging Education, Industry & Self-Earning (3 paragraphs + "Turning Students into Self-Earning Individuals") | Home About (short), `about.html` (full) | ✅ word for word |
+| Our Vision | `about.html` | ✅ word for word |
+| Our Core Objectives (all 8) | `about.html` | ✅ word for word |
+| Wise Eco System — Programs Working Under Wise-Teck | Home Ecosystem + Programs, `about.html`, `earning-centre.html` | ✅ — "four programs" changed to **three** (owner decision) |
+| Wise Support Hub (funded, intermediate, BISE, full description) | Home card, `wise-support-hub.html` | ✅ word for word |
+| Wise College (degree level, PU, full description) | Home card, `wise-college.html` | ✅ word for word |
+| Wise Institute of Employability Skills (NAVTTC) | — | ❌ **removed on purpose** (owner decision; NAVTTC logo removed too) |
+| Wise-Teck Earning Centre — about, pathway, outcome, What We Provide (6 points) | `earning-centre.html` (+ incubation / placement pages) | ✅ — program list shows the three remaining programs |
+| Our Earning Blocks — all 6 blocks + How Earning Blocks Work | `earning-blocks.html` | ✅ word for word |
+| Professional Paid Courses (objective 8) | Home card, `professional-paid-courses.html` | ✅ |
+| Corporate Services, Business Incubation, Student Loan, Job Placement (objectives 3–6) | Their own inner pages | ✅ |
+
+### Sentence-by-sentence map (every line of the document)
+
+Checked automatically against all 13 pages. Format: *page → section heading*. "Hero" = the top banner of that page.
+
+| # | Text from the document | Where it is on the site |
+|---|---|---|
+| 1 | Wise-Teck (Registered with Registrar firm, Lahore) | about.html → Hero (fact badge); contact.html → Hero — *written as "Registrar Firms"* |
+| 2 | Tagline: Transforming Learning into Earning through Technology, Innovation and Entrepre… | Home → Hero (intro line); about.html → quote card; business-incubation.html; page &lt;meta&gt; description |
+| 3 | Bridging Education, Industry & Self-Earning | about.html → Hero |
+| 4 | Wise-Teck, a project of Wise Education Society, is a professional skills development, b… | about.html → A Skills, Incubation & Earning Platform; business-incubation.html → Supporting Emerging Entrepreneurs |
+| 5 | Operating through an integrated education-to-earning ecosystem, Wise-Teck connects stud… | about.html → A Skills, Incubation & Earning Platform |
+| 6 | Its core focus is to develop a skilled workforce, support emerging entrepreneurs, and e… | about.html → A Skills, Incubation & Earning Platform; business-incubation.html → Supporting Emerging Entrepreneurs |
+| 7 | Turning Students into Self-Earning Individuals. | about.html → A Skills, Incubation & Earning Platform; business-incubation.html → Supporting Emerging Entrepreneurs |
+| 8 | To create a future where education goes beyond degrees, equipping every student with pr… | about.html → Education That Goes Beyond Degrees |
+| 9 | Skills Training: Provide students with professional and technical skills needed in toda… | about.html → Eight Objectives, One Goal |
+| 10 | Self-Earning: Help students use their skills to earn money through real projects, freel… | about.html → Eight Objectives, One Goal |
+| 11 | Student Loan Support: Help eligible students get loans to start their own businesses. | about.html → Eight Objectives, One Goal |
+| 12 | Job Placement: Help students and graduates find jobs, internships, and earning opportun… | about.html → Eight Objectives, One Goal |
+| 13 | Corporate Services: Provide IT, software development, digital marketing, and other tech… | about.html → Eight Objectives, One Goal |
+| 14 | Business Incubation Centre: Help students turn their business ideas into real businesse… | about.html → Eight Objectives, One Goal |
+| 15 | Industry Partnerships: Build connections with companies, software houses, and industry … | about.html → Eight Objectives, One Goal |
+| 16 | Professional Paid Courses: Offer paid courses to help students, graduates, and working … | about.html → Eight Objectives, One Goal |
+| 17 | Programs Working Under Wise-Teck | Home → Programs Working Under WISE-TECK; about.html → Programs Working Under Wise-Teck; earning-centre.html → Programs Working Under Wise-Teck |
+| 18 | Wise-Teck brings together four educational and training programs. | about.html → Programs Working Under Wise-Teck — *edited: four→three / Firms* |
+| 19 | Each program provides different education and training opportunities, while Wise-Teck h… | about.html → Programs Working Under Wise-Teck |
+| 20 | Students from all four programs come to Wise-Teck to learn professional skills. | Home → From Education to Self-Earning; wise-support-hub.html → Explore All Three WISE Programs; wise-college.html → Explore All Three WISE Programs; professional-paid-courses.html → Explore All Three WISE Programs (+2 more) — *edited: four→three / Firms* |
+| 21 | After completing their skills training, they move to the Wise-Teck Earning Centre, wher… | Home → From Education to Self-Earning |
+| 22 | Fully Funded Educational & Skills Training Program | Home → Programs Working Under WISE-TECK; about.html → Programs Working Under Wise-Teck; wise-support-hub.html → Hero; wise-support-hub.html → A Better, Financially Independent Future (+5 more) |
+| 23 | Intermediate Level | Home → From Education to Self-Earning; Home → Programs Working Under WISE-TECK; about.html → Programs Working Under Wise-Teck; wise-support-hub.html → Hero (+6 more) |
+| 24 | Affiliated with Board of Intermediate and Secondary Education (BISE) | wise-support-hub.html → A Better, Financially Independent Future; also "Affiliated with BISE" badge in its Hero |
+| 25 | Wise Support Hub provides fully funded intermediate (ICS) education for orphaned and un… | wise-support-hub.html → A Better, Financially Independent Future |
+| 26 | Higher Education with Professional Skills | Home → Programs Working Under WISE-TECK; about.html → Programs Working Under Wise-Teck; wise-support-hub.html → Explore All Three WISE Programs; wise-college.html → Hero (+5 more) |
+| 27 | Degree Level Program | about.html → Programs Working Under Wise-Teck; wise-support-hub.html → Explore All Three WISE Programs; wise-college.html → Hero; wise-college.html → Degrees That Lead to Earning (+4 more) |
+| 28 | Affiliated with University of the Punjab (PU) | wise-college.html → Hero; wise-college.html → Degrees That Lead to Earning |
+| 29 | Wise College offers ADP and BS degree programs in Artificial Intelligence, E-Commerce, … | wise-college.html → Degrees That Lead to Earning |
+| 30 | Wise Institute of Employability Skills (NAVTTC) | ❌ Removed on purpose (NAVTTC program dropped) |
+| 31 | Govt Fully Funded Project | ❌ Removed on purpose (NAVTTC program dropped) |
+| 32 | Hi-Tech / Hi-End / Conventional Skills Training | ❌ Removed on purpose (NAVTTC program dropped) |
+| 33 | Registered & Accredited with National Vocational and Technical Training Commission (NAV… | ❌ Removed on purpose (NAVTTC program dropped) |
+| 34 | Wise Institute of Employability Skills provides professional and technical skills train… | ❌ Removed on purpose (NAVTTC program dropped) |
+| 35 | After completing their training, students join the Wise-Teck Earning Centre, where they… | ❌ Removed on purpose (NAVTTC program dropped) |
+| 36 | From Professional Skills to Self-Earning | earning-centre.html → Hero |
+| 37 | Wise-Teck Earning Centre is the final stage of Wise Education Society's education-to-ea… | earning-centre.html → Where Skills Start Earning |
+| 38 | Students from all four WISE programs — Wise Support Hub, Wise College Degree Programs, … | earning-centre.html → Where Skills Start Earning; business-incubation.html → Open to Students from All Three WISE Programs — *edited: four→three / Firms* |
+| 39 | After developing their skills, students move to the Wise-Teck Earning Centre, where the… | earning-centre.html → Where Skills Start Earning |
+| 40 | The Earning Centre helps students build their careers through freelancing, employment, … | earning-centre.html → Where Skills Start Earning; placement.html → Three Ways to Earn |
+| 41 | WISE Educational & Training Programs → Wise-Teck Skills Training → Wise-Teck Earning Ce… | about.html → From Education to Self-Earning; wise-support-hub.html → From Education to Self-Earning; wise-college.html → From Education to Self-Earning; professional-paid-courses.html → From Education to Self-Earning |
+| 42 | To help students turn their education and professional skills into real earning opportu… | earning-centre.html → Where Skills Start Earning; business-incubation.html → Become Financially Independent |
+| 43 | Practical experience through real-world projects | earning-centre.html → Support at Every Step; business-incubation.html → From Idea to Your Own Business |
+| 44 | Guidance from experienced professionals | earning-centre.html → Support at Every Step; business-incubation.html → From Idea to Your Own Business; placement.html → From Skills to Careers |
+| 45 | Freelancing and client work opportunities | earning-centre.html → Support at Every Step; business-incubation.html → From Idea to Your Own Business; placement.html → From Skills to Careers |
+| 46 | Job and career support | earning-centre.html → Support at Every Step; placement.html → Hero; placement.html → From Skills to Careers |
+| 47 | Business startup guidance and mentorship | earning-centre.html → Support at Every Step; business-incubation.html → From Idea to Your Own Business |
+| 48 | Industry connections and professional networking | earning-centre.html → Support at Every Step; placement.html → From Skills to Careers |
+| 49 | Different Skills. Different Opportunities. One Goal: Self-Earning. | earning-centre.html → Different Skills. Different Opportunities.; earning-blocks.html → Hero |
+| 50 | Wise-Teck Earning Centre has different earning blocks where students use their skills t… | earning-blocks.html → Hero |
+| 51 | Students develop websites, software, and online solutions for businesses and clients. | earning-blocks.html → Choose Your Earning Block |
+| 52 | Students learn online selling, product management, and order handling through Dehleze, … | earning-blocks.html → Choose Your Earning Block |
+| 53 | Students work on graphic design, video editing, social media management, content creati… | earning-blocks.html → Choose Your Earning Block |
+| 54 | Students learn how to find online clients, create freelance profiles, write proposals, … | earning-blocks.html → Choose Your Earning Block |
+| 55 | Students use AI, Power BI, data analysis, and other digital tools to work on business p… | earning-blocks.html → Choose Your Earning Block |
+| 56 | Students receive guidance to develop business ideas, start small businesses, and create… | earning-blocks.html → Choose Your Earning Block |
+| 57 | Skills Development → Earning Block Selection → Practical Projects → Client Work → Self-… | earning-blocks.html → From Skills to Self-Earning |
+| 58 | Students join an earning block according to their skills and interests. | earning-blocks.html → Choose Your Earning Block; earning-blocks.html → From Skills to Self-Earning; business-incubation.html → Your Path to Self-Earning |
+
+**Result:** 52 of 58 lines are on the site word for word (3 with the agreed edits); the 6 NAVTTC lines are removed on purpose. Nothing from the document is missing.
+
+Only intentional edits to the PDF text: "four" → "three" programs, NAVTTC program removed,
+"Registrar firm" written as "Registrar Firms".
+
+### Content still missing (not in the PDF — to be supplied by Wise-Teck)
+
+| Page | Needed |
+|---|---|
+| Professional Paid Courses | Course list, duration, fees, weekend timings, start dates |
+| Corporate Services | Service packages, process, industries served, past clients |
+| Student Loan Scheme | Eligibility, loan amounts, partner institutions, documents, how to apply |
+| Placement | Hiring partners, placement process, results |
+| Success Stories | More stories (name, program, earning result, photo) |
+| Contact | Form connected to email; Google Map (optional) |
+| Whole site | Real photos (current images are samples), social media links, "Watch Overview" video, partner logo approval |
+
+### How to add missing content
+
+1. Open `tools/pages.py`, find the page (e.g. `"courses"`) and replace the `placeholder(...)` block with the real text.
+2. Rebuild: `.venv\Scripts\python tools\pages.py`
+3. Check in the browser, then commit and push (section 6).
+
+---
+
+## 6. Git & GitHub workflow
 
 Repository: **https://github.com/Engineer00/wise_teck_v3**
 

@@ -317,7 +317,8 @@ def page_hero(key, crumbs, eyebrow, title, lead, ctas, visual, facts=None):
     fx = ""
     if facts:
         fx = '<div class="hero-facts">' + "".join(f'<span class="fact"><i class="fa-solid {i}"></i>{t}</span>' for i, t in facts) + "</div>"
-    return f'''<header class="hero page-hero page-hero--compact wt-sec">
+    feature = f'<div class="page-feature">{visual}</div>' if visual else ""
+    return f'''<header class="hero page-hero page-hero--center wt-sec">
   {INNER_HERO_ART}
 {nav(key)}
   <div class="container hero-body">
@@ -329,9 +330,9 @@ def page_hero(key, crumbs, eyebrow, title, lead, ctas, visual, facts=None):
       {fx}
       <div class="ctas">{ctas}</div>
     </div>
-    {visual}
   </div>
-</header>'''
+</header>
+{feature}'''
 
 
 def photo(src, alt, badge=None):
