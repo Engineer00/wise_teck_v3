@@ -92,7 +92,8 @@ def art(sym, h, cls):
             f'<use href="#{sym}"/></svg>')
 
 
-HERO_ART = art("wv-hero", 320, "wv-hero-art") + motif("hero")
+HERO_ART = art("wv-hero", 320, "wv-hero-art") + motif("hero")            # home hero: full wave + globe motif
+INNER_HERO_ART = art("wv-hero", 320, "wv-hero-art") + motif("inner-hero")  # inner pages: calmer (dots only)
 FOOT_ART = art("wv-foot", 170, "wv-foot-art") + motif("footer")
 _div_n = [0]
 
@@ -316,8 +317,8 @@ def page_hero(key, crumbs, eyebrow, title, lead, ctas, visual, facts=None):
     fx = ""
     if facts:
         fx = '<div class="hero-facts">' + "".join(f'<span class="fact"><i class="fa-solid {i}"></i>{t}</span>' for i, t in facts) + "</div>"
-    return f'''<header class="hero page-hero wt-sec">
-  {HERO_ART}
+    return f'''<header class="hero page-hero page-hero--compact wt-sec">
+  {INNER_HERO_ART}
 {nav(key)}
   <div class="container hero-body">
     <div class="reveal">

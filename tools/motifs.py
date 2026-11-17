@@ -149,6 +149,8 @@ def network():
 def motif(kind):
     if kind == "hero":
         return globe() + dots("m-dots-hero")
+    if kind == "inner-hero":                     # compact inner page header: calmer, dots only
+        return dots("m-dots-hero")
     if kind == "eco":
         return circuits() + circuits(True) + dots("m-dots-tl") + dots("m-dots-tr")
     if kind == "programs":

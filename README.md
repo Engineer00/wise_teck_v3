@@ -175,6 +175,66 @@ git pull origin main
 git branch -d feature/<short-name>
 ```
 
+### How to use a feature branch (example: `feature/inner-page-headers`)
+
+A feature branch holds one piece of work, separate from `main`, until it is reviewed and merged.
+
+```bash
+# 1. get the branch from GitHub and switch to it
+git fetch origin
+git checkout feature/inner-page-headers        # first time: creates a local copy tracking origin
+
+# 2. bring it up to date with main before working on / reviewing it
+git pull origin main
+
+# 3. view the site from this branch
+py -m http.server 8020                          # open http://127.0.0.1:8020/
+
+# 4. see what the branch changes compared with main
+git log --oneline main..feature/inner-page-headers
+git diff --stat main..feature/inner-page-headers
+
+# 5. keep working on it (commit + push as often as you like)
+git add -A
+git commit -m "Describe the change"
+git push origin feature/inner-page-headers
+
+# 6. switch back to main at any time (your branch work stays saved on the branch)
+git checkout main
+```
+
+**Merge the branch into main** — recommended: through a pull request on GitHub
+
+```bash
+gh pr create --base main --head feature/inner-page-headers --title "Compact inner page headers" --fill
+gh pr view --web                                # review it in the browser, then click "Merge"
+```
+
+or merge locally
+
+```bash
+git checkout main
+git pull origin main
+git merge feature/inner-page-headers
+git push origin main
+```
+
+**Delete the branch after merging**
+
+```bash
+git branch -d feature/inner-page-headers                 # local
+git push origin --delete feature/inner-page-headers      # on GitHub
+```
+
+### Commit author
+
+Commits are authored as **Engineer00 &lt;salman.k.786000@gmail.com&gt;** (set once per clone):
+
+```bash
+git config user.name "Engineer00"
+git config user.email "salman.k.786000@gmail.com"
+```
+
 ### Handy commands
 
 ```bash
