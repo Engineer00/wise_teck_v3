@@ -1205,3 +1205,89 @@
   body.inner section.blk .motif{opacity:.35}
 }
 @layer site{ .v3 .page-feature .hero-photo::after{content:none} }
+/* feature photo spans the content column (aligns with the sections below) */
+@layer site{
+  .v3 .page-feature{max-width:var(--container);padding:0 24px}
+  .v3 .page-feature .hero-photo{max-width:none}
+  .v3 .page-feature .hero-photo .frame{aspect-ratio:21/8}
+  .v3 .page-feature .hero-photo::before{inset:22px -22px -22px 22px}
+}
+
+/* ===== inner feature photo: premium treatment =====
+   glowing gradient aura + gradient frame ring + tint & light sweep + glass badge + dot accents */
+@layer site{
+  .v3 .page-feature .hero-photo{isolation:isolate}
+  /* aura (replaces the solid offset card) */
+  .v3 .page-feature .hero-photo::before{content:"";position:absolute;z-index:-1;inset:-34px -26px -40px;border-radius:60px;opacity:.6;filter:blur(42px);
+    background:conic-gradient(from 0deg at 50% 50%,#8b5cf6,#6366f1,#22d3ee55,#f5b335aa,#c026d3,#8b5cf6);animation:pfAura 14s linear infinite}
+  /* gradient frame ring */
+  .v3 .page-feature .hero-photo::after{content:"";position:absolute;z-index:1;inset:-3px;border-radius:31px;border:0;width:auto;height:auto;
+    background:linear-gradient(135deg,#c4b5fd,#7c3aed 35%,#4f46e5 65%,#f5b335);box-shadow:0 40px 80px -40px rgba(49,26,140,.7)}
+  .v3 .page-feature .hero-photo .frame{z-index:2;box-shadow:none}
+  /* tint + light sweep over the photo */
+  .v3 .page-feature .hero-photo .frame::before{content:"";position:absolute;inset:0;z-index:1;pointer-events:none;
+    background:linear-gradient(180deg,rgba(30,16,90,0) 45%,rgba(30,16,90,.38) 100%),linear-gradient(90deg,rgba(124,58,237,.18),rgba(124,58,237,0) 35%,rgba(245,179,53,0) 70%,rgba(245,179,53,.14))}
+  .v3 .page-feature .hero-photo .frame::after{content:"";position:absolute;top:0;bottom:0;left:-40%;width:30%;z-index:1;pointer-events:none;
+    background:linear-gradient(100deg,transparent,rgba(255,255,255,.28),transparent);transform:skewX(-18deg);animation:pfSweep 7s ease-in-out infinite 1.5s}
+  /* glass badge */
+  .v3 .page-feature .badge-float{background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(14px) saturate(1.4);backdrop-filter:blur(14px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.8);box-shadow:0 18px 40px -16px rgba(49,26,140,.45)}
+  /* dot accents at two corners */
+  .v3 .page-feature::before,.v3 .page-feature::after{content:"";position:absolute;z-index:0;width:150px;height:110px;pointer-events:none;
+    background-image:radial-gradient(rgba(124,58,237,.45) 1.6px,transparent 1.8px);background-size:16px 16px}
+  .v3 .page-feature::before{right:-4px;top:-46px}
+  .v3 .page-feature::after{left:-4px;bottom:-40px;background-image:radial-gradient(rgba(245,179,53,.6) 1.6px,transparent 1.8px)}
+  .v3 .page-feature:has(.hero__visual)::before,.v3 .page-feature:has(.hero__visual)::after{content:none}
+  @keyframes pfAura{to{transform:rotate(360deg)}}
+  @keyframes pfSweep{0%,60%{left:-40%}100%{left:130%}}
+  @media (prefers-reduced-motion:reduce){.v3 .page-feature .hero-photo::before,.v3 .page-feature .hero-photo .frame::after{animation:none}}
+}
+@layer site{
+  .v3 .page-feature .hero-photo::before{inset:24px -10px -26px;opacity:.42;filter:blur(34px);border-radius:48px}
+  .v3 .page-feature::after{left:auto;right:-4px;bottom:-40px}
+}
+
+/* inner banner: uniform symmetrical wave at the bottom (4 even crests, 2 layers) + taller photo + stat cards */
+@layer site{
+  .v3 .page-hero--center .ph-wave{position:absolute;left:0;right:0;bottom:-1px;width:100%;height:150px;display:block}
+  .v3 .page-hero--center .hero-body{padding-bottom:150px}
+  .v3 .page-feature{margin-top:-110px}
+  .v3 .page-feature .hero-photo .frame{aspect-ratio:16/7}
+  .v3 .page-feature .badge-float{top:28px;bottom:auto;left:-26px}
+  .v3 .page-feature.has-stats{margin-bottom:84px}
+  .v3 .pf-stats{position:absolute;z-index:4;left:50%;bottom:-46px;transform:translateX(-50%);display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;width:min(760px,80%)}
+  .v3 .pf-stat{display:flex;align-items:center;gap:14px;padding:16px 20px;border-radius:20px;
+    background:rgba(255,255,255,.78);-webkit-backdrop-filter:blur(16px) saturate(1.4);backdrop-filter:blur(16px) saturate(1.4);
+    border:1px solid rgba(255,255,255,.9);box-shadow:0 22px 44px -22px rgba(49,26,140,.5);transition:transform .3s ease}
+  .v3 .pf-stat:hover{transform:translateY(-4px)}
+  .v3 .pf-ic{flex:none;display:grid;place-items:center;width:44px;height:44px;border-radius:14px;color:#fff;font-size:17px;
+    background:linear-gradient(135deg,#8b5cf6,#5b21b6);box-shadow:0 10px 20px -10px rgba(91,33,182,.8)}
+  .v3 .pf-stat:nth-child(2) .pf-ic{background:linear-gradient(135deg,#f7c75a,#e79a1c);box-shadow:0 10px 20px -10px rgba(231,154,28,.8)}
+  .v3 .pf-stat span:last-child{display:flex;flex-direction:column;min-width:0}
+}
+@layer type{
+  body.v3 .pf-stat b{font-size:20px;font-weight:800;line-height:1.15;color:var(--heading);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  body.v3 .pf-stat small{font-size:13px;font-weight:600;line-height:1.3;color:#5b6290}
+}
+
+/* inner feature: wave fully visible end to end (photo starts under it) + tilted photo like the home About photo */
+@layer site{
+  .v3 .page-hero--center .hero-body{padding-bottom:170px}
+  .v3 .page-feature{margin-top:-34px}
+  .v3 .page-feature::before,.v3 .page-feature::after{content:none}
+  .v3 .page-feature .hero-photo{transform:skewX(-6deg);padding:16px 20px 20px 10px;width:calc(100% - 40px)}
+  .v3 .page-feature .hero-photo::before{content:"";position:absolute;z-index:0;inset:auto;right:0;top:0;left:auto;bottom:auto;width:34%;height:52%;
+    background:none;filter:none;opacity:1;animation:none;border-radius:0 46px 0 0;
+    border:18px solid #f5b335;border-left-color:transparent;border-bottom-color:transparent}
+  .v3 .page-feature .hero-photo::after{content:"";position:absolute;z-index:0;inset:auto;right:0;bottom:0;left:auto;top:auto;width:52%;height:56%;
+    background:none;box-shadow:none;border-radius:0 0 46px 0;
+    border:18px solid #1b2f78;border-left-color:transparent;border-top-color:transparent}
+  .v3 .page-feature .hero-photo .frame{border:5px solid #fff;border-radius:36px;aspect-ratio:16/6.6;box-shadow:0 30px 60px -32px rgba(30,30,90,.5)}
+  .v3 .page-feature .hero-photo .frame img{transform:skewX(6deg) scale(1.08)}
+  .v3 .page-feature .badge-float{transform:skewX(6deg);top:34px;left:-18px}
+  .v3 .page-feature .pf-stats{bottom:-40px}
+}
+@layer site{ .v3 .page-hero--center .ph-wave{height:160px} .v3 .pf-stats--text{width:min(900px,88%)} }
+@layer type{
+  body.v3 .pf-stats--text .pf-stat b{font-size:15.5px;white-space:normal;overflow:visible;overflow-wrap:anywhere}
+}
