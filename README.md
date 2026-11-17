@@ -8,6 +8,28 @@ generator (`tools/`) builds every page from one shared layout so the whole site 
 
 ---
 
+## Tech stack
+
+| Layer | Technology | Used for |
+|---|---|---|
+| Markup | **HTML5** (static, semantic) | 13 pages: home + 12 inner pages — no server code, no database |
+| Styling | **CSS3** — one file `assets/css/wise-teck.css` | Design tokens (CSS custom properties), cascade layers (`vendor` → `site` → `type`), Grid & Flexbox, keyframe animations |
+| Scripting | **Vanilla JavaScript (ES6)** — no framework | Menu, scroll reveal, slider (`wt.js`); live animated waves drawn as SVG with `requestAnimationFrame` + `IntersectionObserver` (`wt-waves.js`) |
+| 3D | **Three.js** (bundled in `assets/js/vendor/`) | Spinning 3D coin in the hero (`hero-three.js`, from Wise-Teck v1) |
+| Graphics | **Inline SVG** | Wave art, section motifs (globe, circuits, hexagons, skyline, world map), static fallback `wt-curves.svg` |
+| Font | **Inter** (Google Fonts, weights 400–800) | All text, one uniform type scale |
+| Icons | **Font Awesome 6.5** (CDN) | UI and section icons |
+| Page generator | **Python 3** (`tools/build.py`, `tools/pages.py`) | Builds every HTML page from one shared layout + content file |
+| Dev tools | Python + Pillow, NumPy, OpenCV (in `.venv`) | Static wave artwork, design tracing, PDF content check |
+| Local server | `py -m http.server` | Viewing the site locally |
+| Version control | **Git + GitHub**, GitHub CLI (`gh`) | Branches, pull requests |
+| Hosting | Any static host (GitHub Pages, Netlify, cPanel, etc.) | Upload the HTML + `assets/` folder — no build step required |
+
+Accessibility & performance: decorative art is `aria-hidden`, animations pause when off-screen and
+respect *prefers-reduced-motion*, asset links carry a version query for cache-busting.
+
+---
+
 ## 1. Run the website locally
 
 You only need Python (any 3.x) — it is used as a simple local web server.
