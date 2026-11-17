@@ -1204,3 +1204,4 @@
     background:radial-gradient(30% 60% at 0 100%,rgba(139,92,246,.07),transparent 70%)}
   body.inner section.blk .motif{opacity:.35}
 }
+@layer site{ .v3 .page-feature .hero-photo::after{content:none} }
