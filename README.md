@@ -226,6 +226,26 @@ git branch -d feature/inner-page-headers                 # local
 git push origin --delete feature/inner-page-headers      # on GitHub
 ```
 
+### One-click setup script (Windows)
+
+`setup-wise-teck.ps1` does everything below automatically: installs Git/Python if missing, asks for your
+commit name/email once, clones or updates the project, switches to the feature branch, pulls the latest
+code and starts the site. Safe to run again any time to get the newest version.
+
+```powershell
+# download the script (first time only), then run it
+Invoke-WebRequest https://raw.githubusercontent.com/Engineer00/wise_teck_v3/feature/inner-page-headers/setup-wise-teck.ps1 -OutFile setup-wise-teck.ps1
+powershell -ExecutionPolicy Bypass -File .\setup-wise-teck.ps1
+
+# options
+powershell -ExecutionPolicy Bypass -File .\setup-wise-teck.ps1 -Path D:\Projects    # clone somewhere else (default D:\)
+powershell -ExecutionPolicy Bypass -File .\setup-wise-teck.ps1 -Branch main         # use another branch
+powershell -ExecutionPolicy Bypass -File .\setup-wise-teck.ps1 -SetupTools          # also prepare page rebuilding
+powershell -ExecutionPolicy Bypass -File .\setup-wise-teck.ps1 -NoServe             # update only, don't start the site
+```
+
+After the first run the script is also inside the project folder (`D:\wise_teck_v3\setup-wise-teck.ps1`).
+
 ### Pull the feature branch to your computer
 
 ```bash
