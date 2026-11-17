@@ -139,6 +139,38 @@ Font: **Inter** (Google Fonts) — everywhere. All values are CSS variables at t
 | **Navy** (anchor) | top bar, dark buttons, footer | **500 `#2f4c9f`** (footer) · 700 `#1b2f78` · **900 `#0d2158`** |
 | **Ink** (text) | headings, body, muted | 900 `#10123f` headings · 600 `#3a4068` body · 500 `#646a8f` muted (all WCAG AA) |
 
+**How many colours?** 5 colour families = **37 shades** in total — **3 brand colours** (violet, gold, navy)
++ **2 neutral families** (lavender, ink) + white and black. This 2–3 brand colours + neutrals size is the
+standard for a premium look.
+
+| # | Family | Type | Shades |
+|---|---|---|---|
+| 1 | Violet | Brand — primary | 11 |
+| 2 | Gold | Brand — accent | 6 |
+| 3 | Navy | Brand — anchor | 5 |
+| 4 | Lavender | Neutral — backgrounds | 7 |
+| 5 | Ink | Neutral — text | 6 |
+| | White + black | Base | 2 |
+| | **Total** | | **37** |
+
+**The 10 core colours you actually see** (the other 27 shades are their tints and shadows, used for
+gradients, borders, waves and hover effects):
+
+| Colour | Hex | Used for |
+|---|---|---|
+| Violet | `#7c3aed` | Highlighted words, icons, badges |
+| Deep violet | `#5b21b6` | Gradients, hover states |
+| Gold | `#f5b335` | Main buttons, short lines next to tag lines |
+| Light gold | `#fbe5a2` | Gold highlights on dark backgrounds |
+| Navy | `#0d2158` | Top bar, dark buttons |
+| Footer blue | `#2f4c9f` | Footer background |
+| Page lavender | `#f7f8fe` | Page background |
+| White | `#ffffff` | Cards |
+| Heading ink | `#10123f` | Headings |
+| Body ink | `#3a4068` | Paragraph text |
+
+Only exception: the PSDF and NIC partner logos keep their own brand red and blue.
+
 Spacing follows an 8px grid (`--space-1` … `--space-9` = 4, 8, 12, 16, 24, 32, 48, 64, 88px);
 paragraph gap `--p-gap` = 12px; radii `--r-sm` … `--r-pill`.
 
