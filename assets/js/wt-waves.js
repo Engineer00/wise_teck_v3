@@ -145,7 +145,7 @@
     var gold = el("path", { fill: grad(defs, [[0, "#f2c45c"], [.15, C.gold3], [.5, C.gold1], [.85, C.gold3], [1, "#f2c45c"]]) }, svg);
     var goldHi = el("path", { fill: grad(defs, [[0, "#fff1c4", .8], [1, "#fff1c4", 0]], "v") }, svg);
     // lighter royal navy, matching the footer body colour where the wave ends (see wt-v3.css)
-    var navy = el("path", { fill: "#2f4c9f" }, svg);   // flat; the footer body continues the same colour
+    var navy = el("path", { fill: "#3656ad" }, svg);   // flat; the footer body continues the same colour
     var navyHi = el("path", { fill: "#9db4ee", opacity: .32 }, svg);
     return function draw(W, t) {
       // three clean, even, symmetric waves (+ a gentle overall dip); breathes in place

@@ -17,7 +17,7 @@
    anchor   navy 500-900   (top bar, primary buttons, footer)
    text     ink 300-900    (headings 900, body 600, muted 500 = WCAG AA)
    Use var(--p-*) for every colour; partner logos keep their own brand colours. */
-:root{--p-violet-50:#f5f3ff;--p-violet-100:#ede9fe;--p-violet-200:#ddd6fe;--p-violet-300:#c4b5fd;--p-violet-400:#a78bfa;--p-violet-500:#8b5cf6;--p-violet-600:#7c3aed;--p-violet-700:#6d28d9;--p-violet-800:#5b21b6;--p-violet-900:#4c1d95;--p-violet-950:#2e1065;--p-lav-25:#fbfbff;--p-lav-50:#f7f8fe;--p-lav-100:#eef0fc;--p-lav-200:#e2e6fa;--p-lav-300:#cdd4f6;--p-lav-400:#b6c0f0;--p-lav-500:#9fabea;--p-gold-100:#fdf0cc;--p-gold-200:#fbe5a2;--p-gold-300:#f7c75a;--p-gold-400:#f5b335;--p-gold-500:#e9a21f;--p-gold-600:#d9961c;--p-navy-500:#2f4c9f;--p-navy-600:#1d3d8f;--p-navy-700:#1b2f78;--p-navy-800:#13265f;--p-navy-900:#0d2158;--p-ink-900:#10123f;--p-ink-800:#141a4e;--p-ink-700:#2b2d4a;--p-ink-600:#3a4068;--p-ink-500:#646a8f;--p-ink-300:#b7b9d9;--p-white:#ffffff;--p-black:#000000;}
+:root{--p-violet-50:#f5f3ff;--p-violet-100:#ede9fe;--p-violet-200:#ddd6fe;--p-violet-300:#c4b5fd;--p-violet-400:#a78bfa;--p-violet-500:#8b5cf6;--p-violet-600:#7c3aed;--p-violet-700:#6d28d9;--p-violet-800:#5b21b6;--p-violet-900:#4c1d95;--p-violet-950:#2e1065;--p-lav-25:#fbfbff;--p-lav-50:#f7f8fe;--p-lav-100:#eef0fc;--p-lav-200:#e2e6fa;--p-lav-300:#cdd4f6;--p-lav-400:#b6c0f0;--p-lav-500:#9fabea;--p-gold-100:#fdf0cc;--p-gold-200:#fbe5a2;--p-gold-300:#f7c75a;--p-gold-400:#f5b335;--p-gold-500:#e9a21f;--p-gold-600:#d9961c;--p-navy-500:#3656ad;--p-navy-600:#1d3d8f;--p-navy-700:#1b2f78;--p-navy-800:#13265f;--p-navy-900:#0d2158;--p-ink-900:#10123f;--p-ink-800:#141a4e;--p-ink-700:#2b2d4a;--p-ink-600:#3a4068;--p-ink-500:#646a8f;--p-ink-300:#b7b9d9;--p-white:#ffffff;--p-black:#000000;}
 
 :root{
   /* ---- type scale (desktop; h1/h2 scale down fluidly) ---- */
@@ -1350,3 +1350,5 @@
 /* footer contact: no outlined box — plain column like the other footer columns */
 @layer site{ body.v3 .ft-contact{border:0;background:none;border-radius:0;padding:0} }
 @layer site{ body.v3 .ft-contact{padding-top:31px} }
+/* lighter footer: hover uses light gold so it stays readable (WCAG AA) */
+@layer type{ body.v3 .ft-col a:not(.logo):hover,body.v3 .ft-col a:not(.logo):focus-visible{color:var(--p-gold-200)} }

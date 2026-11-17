@@ -170,7 +170,7 @@ div_b = swoosh(DH * 0.40, -44, 46)                         # swooshes curve DOWN
 
 # ---------------------------------------------------------------- footer top (1440 x 170)
 # Static fallback = the same design as the live footer wave in assets/js/wt-waves.js:
-# three even, symmetric crests; two lavender layers; slim gold ribbon; flat navy #2f4c9f (= footer body).
+# three even, symmetric crests; two lavender layers; slim gold ribbon; flat navy #3656ad (= footer body).
 FH = 170
 y_f = 104 + 8 * np.cos(T) + 18 * 0.93 * np.cos(3 * T)
 thick = 9 + 9 * np.abs(2 * X / W - 1) ** 2
@@ -178,7 +178,7 @@ foot = [f'<path class="wt-silk" d="{d_band(y_f - thick - 48, y_f - thick - 30)}"
         f'<path class="wt-silk" d="{d_band(y_f - thick - 24, y_f - thick - 4)}" fill="#a6b0ec" opacity=".65"/>',
         f'<path class="wt-gold" d="{d_band(y_f - thick, y_f + 14)}" fill="url(#wvGold)"/>',
         f'<path d="{d_band(y_f - thick, y_f - thick * 0.5)}" fill="url(#wvGoldHi)"/>',
-        f'<path class="wt-navy" d="{d_band(y_f, np.full_like(y_f, FH + 1))}" fill="#2f4c9f"/>',
+        f'<path class="wt-navy" d="{d_band(y_f, np.full_like(y_f, FH + 1))}" fill="#3656ad"/>',
         f'<path d="{d_band(y_f, y_f + 7)}" fill="#9db4ee" opacity=".32"/>']
 
 defs = """ <linearGradient id="wvSilkA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dde2fb"/><stop offset="1" stop-color="#b3bdf0"/></linearGradient>
