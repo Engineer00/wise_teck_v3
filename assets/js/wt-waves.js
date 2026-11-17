@@ -71,10 +71,11 @@
       navy: grad(defs, [[0, C.navy2], [1, C.navy1]])
     };
     ["wash", "a", "b", "sheen", "v", "c"].forEach(function (k) { P[k] = el("path", { fill: fills[k], opacity: k === "wash" ? 1 : k === "v" ? 1 : .92, "class": "wv-soft" }, svg); });
-    P.gold = el("path", { fill: fills.gold }, svg);
-    P.goldHi = el("path", { fill: fills.goldHi }, svg);
-    P.navy = el("path", { fill: fills.navy }, svg);
-    P.navyHi = el("path", { fill: "#6f8fd8", opacity: .28 }, svg);
+    P.page = el("path", { fill: "#f7f8fe", "class": "wv-page" }, svg);   // page colour under the silk (inner pages only)
+    P.gold = el("path", { fill: fills.gold, "class": "wv-gold" }, svg);
+    P.goldHi = el("path", { fill: fills.goldHi, "class": "wv-gold" }, svg);
+    P.navy = el("path", { fill: fills.navy, "class": "wv-navy" }, svg);
+    P.navyHi = el("path", { fill: "#6f8fd8", opacity: .28, "class": "wv-navy" }, svg);
     return function draw(W, t) {
       // UNIFORM + SYMMETRIC: every layer (silk, gold, navy) rides ONE shared curve Y(u) with fixed
       // offsets and fixed widths, so all bends match exactly. The curve = a gentle bowl (lowest in the
@@ -96,6 +97,7 @@
       P.b.setAttribute("d", L(-46, -26));
       P.v.setAttribute("d", L(-21, -17));
       P.c.setAttribute("d", L(-13, -2));
+      P.page.setAttribute("d", L(-3, H - 160));
       P.gold.setAttribute("d", L(0, 18));           // gold ribbon (tucks under the navy)
       P.goldHi.setAttribute("d", L(0, 6));
       P.navy.setAttribute("d", L(14, 44));          // navy band directly beneath

@@ -1323,3 +1323,14 @@
   .v3 .band{padding-bottom:74px}
 }
 @layer site{ .v3 .band > svg{height:76px;bottom:6px} .v3 .band{padding-bottom:92px} }
+
+/* inner banner: same lavender silk wave as the home hero, without the gold and navy ribbons */
+@layer site{
+  .v3 .wv-page{display:none}
+  .v3 .wv-hero-art--soft .wv-page{display:inline}
+  .v3 .wv-hero-art--soft .wv-gold,.v3 .wv-hero-art--soft .wv-navy{display:none}
+  .v3 .page-hero--center .wv-hero-art--soft{height:300px;z-index:1}
+  .v3 .page-hero--center .ph-grid{z-index:0}
+  .v3 .page-hero--center .hero-body{position:relative;z-index:2;padding-bottom:200px}
+  .v3 .page-feature{margin-top:-60px}
+}
