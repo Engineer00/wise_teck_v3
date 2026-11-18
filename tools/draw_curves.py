@@ -125,8 +125,8 @@ def main():
     defs = """ <linearGradient id="wtSilkA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#dfe4fb"/><stop offset="1" stop-color="#b6c0f1"/></linearGradient>
  <linearGradient id="wtSilkB" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset=".5" stop-color="#e6e9fc" stop-opacity=".5"/><stop offset="1" stop-color="#ffffff" stop-opacity=".85"/></linearGradient>
  <linearGradient id="wtSilkC" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c3cbf4" stop-opacity=".2"/><stop offset="1" stop-color="#9fabea"/></linearGradient>
- <linearGradient id="wtGold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#e3c77f"/><stop offset=".4" stop-color="#eeb43c"/><stop offset=".75" stop-color="#94712c"/><stop offset="1" stop-color="#d6b666"/></linearGradient>
- <linearGradient id="wtGoldHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fbf5e4" stop-opacity=".85"/><stop offset="1" stop-color="#fbf5e4" stop-opacity="0"/></linearGradient>
+ <linearGradient id="wtGold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#f0d27a"/><stop offset=".4" stop-color="#eeb43c"/><stop offset=".75" stop-color="#8a6a1f"/><stop offset="1" stop-color="#e2c25a"/></linearGradient>
+ <linearGradient id="wtGoldHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff8e1" stop-opacity=".85"/><stop offset="1" stop-color="#fff8e1" stop-opacity="0"/></linearGradient>
  <linearGradient id="wtNavy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1c3d92"/><stop offset=".6" stop-color="#0f2766"/><stop offset="1" stop-color="#0a1c4f"/></linearGradient>
  <linearGradient id="wtNavyHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#6f8fd8" stop-opacity=".35"/><stop offset="1" stop-color="#6f8fd8" stop-opacity="0"/></linearGradient>"""
     g = [f'  <path class="wt-silk" d="{d}" fill="url(#{gr})" opacity="{op}"/>' for d, gr, op in silk]
