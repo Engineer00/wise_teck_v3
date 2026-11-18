@@ -53,7 +53,7 @@
   }
 
   /* palette — flat 2D lavender family (no white) */
-  var C = { wash: "#dfe3fb", a: "#cbd2f7", sheen: "#e6e2fd", b: "#b7c0f1", c: "#a3adeb", v: "#8c79ef", gold1: "#f6d27c", gold2: "#e9a92a", gold3: "#d9961c", navy1: "#1c3d92", navy2: "#0d2158" };
+  var C = { wash: "#dfe3fb", a: "#cbd2f7", sheen: "#e6e2fd", b: "#b7c0f1", c: "#a3adeb", v: "#8c79ef", gold1: "#e3c77f", gold2: "#c29a45", gold3: "#94712c", navy1: "#1c3d92", navy2: "#0d2158" };
 
   /* ======================= HERO (height 320) ======================= */
   function hero(svg) {
@@ -67,7 +67,7 @@
       c: grad(defs, [[0, C.c, .85], [.6, C.c, .45], [1, C.c, 0]], "v"),          // lowest ribbon melts away at its bottom edge
       v: grad(defs, [[0, C.v, .25], [.5, C.v, .55], [1, C.v, .3]]),
       gold: grad(defs, [[0, C.gold1], [.5, C.gold2], [1, C.gold3]]),
-      goldHi: grad(defs, [[0, "#fff1c4", .85], [1, "#fff1c4", 0]], "v"),
+      goldHi: grad(defs, [[0, "#fbf3dc", .85], [1, "#fbf3dc", 0]], "v"),
       navy: grad(defs, [[0, C.navy2], [1, C.navy1]])
     };
     ["wash", "a", "b", "sheen", "v", "c"].forEach(function (k) { P[k] = el("path", { fill: fills[k], opacity: k === "wash" ? 1 : k === "v" ? 1 : .92, "class": "wv-soft" }, svg); });
@@ -142,8 +142,8 @@
     var H = 170, defs = el("defs", {}, svg);
     var l2 = el("path", { fill: grad(defs, [[0, C.b, .55], [.5, C.a, .35], [1, C.b, .55]]), "class": "wv-soft" }, svg);
     var l1 = el("path", { fill: grad(defs, [[0, C.c, .75], [.5, C.b, .5], [1, C.c, .75]]), "class": "wv-soft" }, svg);
-    var gold = el("path", { fill: grad(defs, [[0, "#f2c45c"], [.15, C.gold3], [.5, C.gold1], [.85, C.gold3], [1, "#f2c45c"]]) }, svg);
-    var goldHi = el("path", { fill: grad(defs, [[0, "#fff1c4", .8], [1, "#fff1c4", 0]], "v") }, svg);
+    var gold = el("path", { fill: grad(defs, [[0, "#d6b666"], [.15, C.gold3], [.5, C.gold1], [.85, C.gold3], [1, "#d6b666"]]) }, svg);
+    var goldHi = el("path", { fill: grad(defs, [[0, "#fbf3dc", .8], [1, "#fbf3dc", 0]], "v") }, svg);
     // lighter royal navy, matching the footer body colour where the wave ends (see wt-v3.css)
     var navy = el("path", { fill: "#3656ad" }, svg);   // flat; the footer body continues the same colour
     var navyHi = el("path", { fill: "#9db4ee", opacity: .32 }, svg);

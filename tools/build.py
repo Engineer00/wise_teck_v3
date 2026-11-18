@@ -133,7 +133,7 @@ def head(title, desc):
 SYMBOLS = '''<svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="wPurple" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#8b4dff"/><stop offset="1" stop-color="#4c1d95"/></linearGradient>
-    <linearGradient id="wGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fbe5a2"/><stop offset=".5" stop-color="#f2bd4b"/><stop offset="1" stop-color="#d9961c"/></linearGradient>
+    <linearGradient id="wGold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ecd9a6"/><stop offset=".5" stop-color="#d4b062"/><stop offset="1" stop-color="#94712c"/></linearGradient>
     <symbol id="wmark" viewBox="0 0 60 48"><path d="M2 6 L13 6 L22 34 L30 12 L38 34 L46 6 L58 6 L44 44 L34 44 L30 30 L26 44 L16 44 Z"/></symbol>
   </defs>
 </svg>'''
@@ -306,7 +306,7 @@ def _single_root(x):
 def cta(tag, title, text, primary, secondary=None):
     sec = btn(secondary[0], secondary[1], "outline-light") if secondary else ""
     return blk(f'''<div class="band reveal">
-      <svg viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C260,20 520,110 800,60 C980,30 1100,70 1200,50" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/><path d="M0,95 C300,55 560,125 840,85 C1010,62 1120,95 1200,80" fill="none" stroke="#f2bd4b" stroke-opacity=".5" stroke-width="2"/></svg>
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C260,20 520,110 800,60 C980,30 1100,70 1200,50" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/><path d="M0,95 C300,55 560,125 840,85 C1010,62 1120,95 1200,80" fill="none" stroke="#d4b062" stroke-opacity=".5" stroke-width="2"/></svg>
       <div style="position:relative;z-index:1"><div class="tag">{tag}</div><h2>{title}</h2><p>{text}</p></div>
       <div class="acts">{btn(primary[0], primary[1])}{sec}</div></div>''', "tight", sid="cta") + '<div style="height:60px"></div>'
 

@@ -204,8 +204,8 @@ def main():
         '<defs>\n'
         ' <linearGradient id="wtSilk" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#c9d0f6" stop-opacity=".95"/>'
         '<stop offset=".55" stop-color="#b3bdf0" stop-opacity=".85"/><stop offset="1" stop-color="#a3aeea" stop-opacity=".75"/></linearGradient>\n'
-        ' <linearGradient id="wtGold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#fbe39a"/>'
-        '<stop offset=".45" stop-color="#f2bd4b"/><stop offset="1" stop-color="#d9961c"/></linearGradient>\n'
+        ' <linearGradient id="wtGold" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#ecd9a6"/>'
+        '<stop offset=".45" stop-color="#d4b062"/><stop offset="1" stop-color="#94712c"/></linearGradient>\n'
         ' <linearGradient id="wtNavy" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a3a8f"/><stop offset="1" stop-color="#0b1f55"/></linearGradient>\n'
         ' <g id="wt-curves">\n' + "\n".join(body) + "\n </g>\n</defs>\n</svg>\n"
     )

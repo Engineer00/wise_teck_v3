@@ -8,8 +8,8 @@
  <linearGradient id="wvFadeR2" x1="1" y1="0" x2="0" y2="0"><stop offset="0" stop-color="#dcd6fb" stop-opacity=".8"/><stop offset="1" stop-color="#dcd6fb" stop-opacity="0"/></linearGradient>
  <linearGradient id="wvFadeLL" gradientUnits="userSpaceOnUse" x1="0" y1="0" x2="660" y2="0"><stop offset="0" stop-color="#9aa6ea"/><stop offset="1" stop-color="#c9cff6" stop-opacity="0"/></linearGradient>
  <linearGradient id="wvFadeRL" gradientUnits="userSpaceOnUse" x1="1440" y1="0" x2="780" y2="0"><stop offset="0" stop-color="#9aa6ea"/><stop offset="1" stop-color="#c9cff6" stop-opacity="0"/></linearGradient>
- <linearGradient id="wvGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#f2c45c"/><stop offset=".15" stop-color="#d9961c"/><stop offset=".5" stop-color="#f6d27c"/><stop offset=".85" stop-color="#d9961c"/><stop offset="1" stop-color="#f2c45c"/></linearGradient>
- <linearGradient id="wvGoldHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff3c8" stop-opacity=".8"/><stop offset="1" stop-color="#fff3c8" stop-opacity="0"/></linearGradient>
+ <linearGradient id="wvGold" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#d6b666"/><stop offset=".15" stop-color="#94712c"/><stop offset=".5" stop-color="#e3c77f"/><stop offset=".85" stop-color="#94712c"/><stop offset="1" stop-color="#d6b666"/></linearGradient>
+ <linearGradient id="wvGoldHi" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#faf2da" stop-opacity=".8"/><stop offset="1" stop-color="#faf2da" stop-opacity="0"/></linearGradient>
  <linearGradient id="wvNavy" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#1c3d92"/><stop offset=".5" stop-color="#0d2158"/><stop offset="1" stop-color="#1c3d92"/></linearGradient>
  <linearGradient id="wvWash" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#d3d9f8" stop-opacity=".7"/><stop offset=".45" stop-color="#e2e6fb" stop-opacity=".4"/><stop offset=".8" stop-color="#eef0fc" stop-opacity="0"/></linearGradient>
  <linearGradient id="wvRibA" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#a9b4ec"/><stop offset=".5" stop-color="#bcc4f1"/><stop offset="1" stop-color="#a3aeea"/></linearGradient>
