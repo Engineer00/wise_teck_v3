@@ -15,7 +15,27 @@
 
   /* ---- mobile menu ---- */
   var burger = document.querySelector('.burger'), menu = document.getElementById('menu');
-  if (burger && menu) burger.addEventListener('click', function () { menu.classList.toggle('open'); });
+  if (burger && menu) {
+    burger.setAttribute('aria-controls', 'menu'); burger.setAttribute('aria-expanded', 'false');
+    burger.addEventListener('click', function () {
+      var open = menu.classList.toggle('open');
+      burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+      burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      var ic = burger.querySelector('i'); if (ic) { ic.classList.toggle('fa-bars', !open); ic.classList.toggle('fa-xmark', open); }
+    });
+    /* mobile menu: submenus are an accordion (one open at a time), so the list stays short
+       and the Apply Now button at the bottom stays in reach */
+    var mobile = window.matchMedia('(max-width: 1100px)');
+    [].forEach.call(menu.querySelectorAll('.dd > button'), function (b) {
+      b.setAttribute('aria-expanded', 'false');
+      b.addEventListener('click', function () {
+        if (!mobile.matches) return;
+        var dd = b.parentNode, open = !dd.classList.contains('open');
+        [].forEach.call(menu.querySelectorAll('.dd.open'), function (o) { o.classList.remove('open'); o.firstElementChild.setAttribute('aria-expanded', 'false'); });
+        dd.classList.toggle('open', open); b.setAttribute('aria-expanded', open ? 'true' : 'false');
+      });
+    });
+  }
 
   /* ---- testimonial slider ---- */
   var slides = document.getElementById('stSlides');

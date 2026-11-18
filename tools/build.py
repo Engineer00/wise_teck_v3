@@ -119,7 +119,7 @@ def head(title, desc):
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
 <title>{title}</title>
 <meta name="description" content="{escape(desc)}"/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
@@ -138,9 +138,9 @@ SYMBOLS = '''<svg width="0" height="0" style="position:absolute" aria-hidden="tr
   </defs>
 </svg>'''
 
-TOPBAR = '''<div class="topbar" style="min-height:54px">
-  <div class="container" style="min-height:54px">
-    <div class="group"><span><i class="fa-solid fa-location-dot"></i>A Project of WISE Education Society</span></div>
+TOPBAR = '''<div class="topbar">
+  <div class="container">
+    <div class="group topbar-org"><span><i class="fa-solid fa-building-columns"></i>A Project of WISE Education Society</span></div>
     <div class="group">
       <a href="tel:+923008410868"><i class="fa-solid fa-phone"></i>+92 300 8410868</a>
       <a href="mailto:info@wise-teck.org"><i class="fa-solid fa-envelope"></i>info@wise-teck.org</a>
@@ -165,7 +165,7 @@ def nav(active):
     return f'''  <div class="nav-wrap">
     <nav class="nav" aria-label="Main">
       <a class="logo" href="{P["home"]}"><span class="brand__spin" aria-hidden="true"><img class="brand__face" src="assets/img/logo-round.svg" alt="" width="44" height="44"/><img class="brand__face brand__face--back" src="assets/img/logo-round.svg" alt="" width="44" height="44"/></span><span><b>WISE-TECK</b><small>A Project of WISE</small></span></a>
-      <div class="menu" id="menu">{"".join(items)}</div>
+      <div class="menu" id="menu">{"".join(items)}<a class="btn btn-gold menu-apply" href="{P["contact"]}">Apply Now <i class="fa-solid fa-arrow-right"></i></a></div>
       <a class="btn btn-gold" href="{P["contact"]}">Apply Now <i class="fa-solid fa-arrow-right"></i></a>
       <button class="burger" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
     </nav>
@@ -307,8 +307,8 @@ def cta(tag, title, text, primary, secondary=None):
     sec = btn(secondary[0], secondary[1], "outline-light") if secondary else ""
     return blk(f'''<div class="band reveal">
       <svg viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C260,20 520,110 800,60 C980,30 1100,70 1200,50" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/><path d="M0,95 C300,55 560,125 840,85 C1010,62 1120,95 1200,80" fill="none" stroke="#dcb84a" stroke-opacity=".5" stroke-width="2"/></svg>
-      <div style="position:relative;z-index:1"><div class="tag">{tag}</div><h2>{title}</h2><p>{text}</p></div>
-      <div class="acts">{btn(primary[0], primary[1])}{sec}</div></div>''', "tight", sid="cta") + '<div style="height:60px"></div>'
+      <div class="band-copy"><div class="tag">{tag}</div><h2>{title}</h2><p>{text}</p></div>
+      <div class="acts">{btn(primary[0], primary[1])}{sec}</div></div>''', "tight", sid="cta")
 
 
 

@@ -45,9 +45,9 @@ def home():
 
     eco = f'''<section class="section eco wt-sec" id="ecosystem" {S("eco")}>
   <div class="container">
-    <div class="sec-head reveal" style="margin-bottom:30px"><span class="kicker">Our Ecosystem</span><h2>From Education to <span class="accent">Self-Earning</span></h2></div>
+    <div class="sec-head reveal"><span class="kicker">Our Ecosystem</span><h2>From Education to <span class="accent">Self-Earning</span></h2></div>
     <div class="eco-grid">
-      <figure class="reveal" style="margin:0">
+      <figure class="reveal">
         <div class="eorbit eorbit--in" style="--n:3">
           <div class="eorbit__system" aria-hidden="true"><svg class="eorbit__svg" viewBox="0 0 480 480" focusable="false">
             <defs><linearGradient id="orbitStroke" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b7cf6" stop-opacity=".6"/><stop offset="50%" stop-color="#6b4fd4" stop-opacity=".4"/><stop offset="100%" stop-color="#94a3b8" stop-opacity=".45"/></linearGradient><radialGradient id="orbitHalo"><stop offset="0" stop-color="#e4defd" stop-opacity=".95"/><stop offset=".7" stop-color="#ece9fd" stop-opacity=".55"/><stop offset="1" stop-color="#f1effe" stop-opacity="0"/></radialGradient></defs>
@@ -68,7 +68,7 @@ def home():
         <div class="badge"><i class="fa-solid fa-check"></i></div>
         <h3>Three Programs, One Earning Centre</h3>
         <p>Students from all three programs come to Wise-Teck to learn professional skills. After completing their skills training, they move to the Wise-Teck Earning Centre, where they work on practical projects and explore earning opportunities.</p>
-        <ul class="checks"><li><i class="fa-solid fa-check"></i>Wise Support Hub &mdash; Intermediate Level (ICS)</li><li><i class="fa-solid fa-check"></i>Wise College &mdash; ADP / BS Degree Programs</li><li><i class="fa-solid fa-check"></i>Professional Paid Courses &mdash; Weekend Classes</li><li><i class="fa-solid fa-check"></i>Wise-Teck Earning Centre &mdash; practical projects &amp; self-earning</li></ul><a class="more" href="{P["centre"]}" style="margin-top:16px;display:inline-flex">Explore the Earning Centre <i class="fa-solid fa-arrow-right"></i></a>
+        <ul class="checks"><li><i class="fa-solid fa-check"></i>Wise Support Hub &mdash; Intermediate Level (ICS)</li><li><i class="fa-solid fa-check"></i>Wise College &mdash; ADP / BS Degree Programs</li><li><i class="fa-solid fa-check"></i>Professional Paid Courses &mdash; Weekend Classes</li><li><i class="fa-solid fa-check"></i>Wise-Teck Earning Centre &mdash; practical projects &amp; self-earning</li></ul><a class="more" href="{P["centre"]}">Explore the Earning Centre <i class="fa-solid fa-arrow-right"></i></a>
       </div>
     </div>
   </div>
@@ -87,7 +87,7 @@ def home():
             pc.append(f'<div class="prog-arrow"><i class="fa-solid {arrow}"></i></div>')
     programs = f'''<section class="section programs wt-sec" id="programs" {S("programs")}>
   <div class="container">
-    <div class="sec-head reveal" style="margin-bottom:30px"><h2 class="lined">Programs Working Under WISE-TECK</h2><p>Three integrated programs that provide education, professional skills, practical experience and earning opportunities.</p></div>
+    <div class="sec-head reveal"><h2 class="lined">Programs Working Under WISE-TECK</h2><p>Three integrated programs that provide education, professional skills, practical experience and earning opportunities.</p></div>
     <div class="prog-row">{"".join(pc)}</div>
     <div class="flow">
       <svg viewBox="0 0 1200 110" preserveAspectRatio="none" aria-hidden="true"><defs><marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0,0 L10,5 L0,10 Z" fill="#6a2bd9"/></marker></defs>
@@ -105,9 +105,9 @@ def home():
           (H[8], "Video<br/>Editing"), (H[9], "Digital<br/>Marketing"), (H[10], "Freelancing")]
     services = f'''<section class="section wt-sec" id="services" {S("services")}>
   <div class="container">
-    <div class="sec-head reveal" style="margin-bottom:26px"><h2 class="lined">Our Professional Services</h2><p>End-to-end support for skill development, project execution and real earning opportunities.</p></div>
+    <div class="sec-head reveal"><h2 class="lined">Our Professional Services</h2><p>End-to-end support for skill development, project execution and real earning opportunities.</p></div>
     <div class="svc-grid">{"".join(f'<a class="svc reveal d{i % 4}" href="{h}"><i class="fa-solid {ic}"></i>{t}</a>' for i, (ic, t, h) in enumerate(svc))}</div>
-    <h2 class="reveal" style="margin:34px 0 18px">Practical Skills, Real Projects, Earning Opportunities.</h2>
+    <h2 class="sub-head reveal">Practical Skills, Real Projects, Earning Opportunities.</h2>
     <div class="sk-grid">{"".join(f'<a class="sk reveal d{i % 4}" href="{P["blocks"]}"><img src="{s}" alt="" loading="lazy"/><span>{t} <i class="fa-solid fa-arrow-right"></i></span></a>' for i, (s, t) in enumerate(sk))}</div>
   </div>
 </section>'''
@@ -136,16 +136,15 @@ def home():
   </div>
 </section>'''
 
+    # Corporate collaborations + trusted collaborators: one section (same topic), so the home page
+    # alternates big / compact sections instead of ending with four small strips in a row.
     corp = f'''<section class="section corp wt-sec" id="partners" {S("corp")}>
   <div class="container corp-grid">
     <div class="reveal"><h2>Corporate &amp; Industry Collaborations</h2><p>We work with leading industry partners to provide real projects, internships and earning opportunities for our students and graduates.</p>{btn("Explore Partnerships", P["corporate"])}</div>
     <div class="ph reveal d2"><img src="{H[14]}" alt="Corporate collaboration meeting"/></div>
   </div>
-</section>'''
-
-    collab = f'''<section class="section wt-sec collab-strip" {S("collab")} style="text-align:center">
-  <div class="container">
-    <h2 class="reveal" style="margin-bottom:18px">Trusted Industry Collaborators</h2>
+  <div class="container collab-block">
+    <h3 class="sub-head reveal">Trusted Industry Collaborators</h3>
     <div class="collab-row">
       <div class="pcard reveal"><span class="lg"><span class="psdf"><span class="box">PSDF</span><small>PUNJAB SKILLS<br/>DEVELOPMENT<br/>FUND</small></span></span><div><b>Punjab Skills Development Fund</b><small>Industry Collaborator</small></div></div>
       <div class="pcard reveal d1"><span class="lg"><span class="nic"><span class="n">Ni</span><span class="c">C</span><span class="l">Lahore</span></span></span><div><b>National Incubation Center Lahore</b><small>Industry Collaborator</small></div></div>
@@ -157,9 +156,9 @@ def home():
     # section background motifs (lavender / violet, faint, behind the content) - tools/motifs.py
     def _m(sec, kind):
         return sec.replace('<div class="container', motif(kind) + '<div class="container', 1)
-    eco, programs, services, stories, collab = (_m(eco, "eco"), _m(programs, "programs"), _m(services, "services"),
-                                                _m(stories, "stories"), _m(collab, "collab"))
-    parts = [about, eco, programs, services, weekend, stories, corp, collab]
+    eco, programs, services, stories, corp = (_m(eco, "eco"), _m(programs, "programs"), _m(services, "services"),
+                                              _m(stories, "stories"), _m(corp, "collab"))
+    parts = [about, eco, programs, services, weekend, stories, corp]
     # like the reference: soft silk dividers only between the first four section pairs
     # (About|Ecosystem, Ecosystem|Programs, Programs|Services, Services|Weekend); the lower group
     # (Weekend, Stories, Corporate, Collaborators) is divided by spacing alone.
@@ -439,7 +438,7 @@ def contact():
         <label class="full">Message<textarea placeholder="How can we help?"></textarea></label>
         <button class="btn btn-gold" type="submit">Send Message <i class="fa-solid fa-paper-plane"></i></button>
       </form>
-    </div>''', sid="details", div=("about", "b")) + '<div style="height:90px"></div>'
+    </div>''', sid="details", div=("about", "b"))
     return page("contact", "Contact & Admissions | Wise-Teck", "Contact Wise-Teck — phone, email and address.", hero, body)
 
 
