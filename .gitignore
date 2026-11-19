@@ -1,16 +1,15 @@
-# Python environment and caches (tools only — the website itself is static HTML/CSS/JS)
-.venv/
+# Python
 __pycache__/
 *.pyc
+.venv/
+venv/
 
-# generated check images from the tracing tools
-tools/out/
+# local data (the server has its own database and uploads)
+db.sqlite3
+db.sqlite3-journal
+/media/*
+!/media/seed/
+/staticfiles/
 
-# temporary measurement pages
-_*.html
-
-# OS / editor files
-.DS_Store
-Thumbs.db
-.vscode/
-.idea/
+# secrets
+.env

@@ -1,0 +1,18 @@
+{% extends "base.html" %}{% load wt %}
+{% block hero %}<header class="hero page-hero page-hero--center wt-sec">
+  {% wave "wv-hero" 320 "wv-hero-art wv-hero-art--soft" %}<div class="ph-bg" aria-hidden="true"><i class="ph-grid"></i></div>{% motif "inner-hero" %}
+{% include "partials/nav.html" %}
+  <div class="container hero-body">
+    <div class="reveal">
+      <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Home</a><i class="fa-solid fa-chevron-right"></i>{% if parent %}<a href="{{ parent.get_absolute_url }}">{{ parent_label }}</a><i class="fa-solid fa-chevron-right"></i>{% endif %}<b>{{ title }}</b></nav>
+      {% if eyebrow %}<div class="eyebrow">{{ eyebrow }}</div>{% endif %}
+      <h1>{{ title }}</h1>
+      {% if meta %}<p class="lead">{{ meta|join:" · " }}</p>{% endif %}
+    </div>
+  </div>
+</header>
+{% if image %}<div class="page-feature"><div class="hero-photo reveal d2"><div class="frame"><img src="{{ image }}" alt="{{ title }}"/></div></div></div>{% endif %}{% endblock %}
+{% block content %}<section class="blk"><div class="container"><article class="glass panel article reveal">{% if kind == "blog" %}{{ obj.content|safe }}{% else %}{% if obj.short_description %}<blockquote class="article-quote">&ldquo;{{ obj.short_description }}&rdquo;</blockquote>{% endif %}{{ obj.description|paras }}{% endif %}</article></div></section>
+{% if more %}<div class="wave-div" aria-hidden="true">{% wave "wv-div-a" 130 "wv-div-art" %}</div>
+<section class="blk"><div class="container"><div class="sec-head reveal"><h2>{{ more_title }}</h2></div>{% if kind == "blog" %}<div class="blocks">{% for b in more %}<article class="blockc reveal d{{ forloop.counter0|mod:3 }}"><a class="ph" href="{{ b.get_absolute_url }}">{% if b.img %}<img src="{{ b.img }}" alt="" loading="lazy"/>{% endif %}</a><div class="bd"><h3><a href="{{ b.get_absolute_url }}">{{ b.title }}</a></h3><p>{{ b.short_description }}</p></div></article>{% endfor %}</div>{% else %}<div class="tgrid">{% for st in more %}{% include "partials/story.html" with reveal=True %}{% endfor %}</div>{% endif %}</div></section>{% endif %}
+{% for s in cta %}{% include "sections/cta.html" %}{% endfor %}{% endblock %}

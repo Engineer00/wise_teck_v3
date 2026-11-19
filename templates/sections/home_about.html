@@ -1,0 +1,11 @@
+{% load wt %}<section class="section about wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
+  {% motif s.motif %}<div class="container about-grid">
+    <div class="reveal">
+      {% if s.eyebrow %}<span class="kicker left">{{ s.eyebrow }}</span>{% endif %}
+      <h2>{{ s.title|hl:s.highlight }}</h2>
+      {{ s.body|paras }}
+      {% include "partials/buttons.html" %}
+    </div>
+    {% if s.img %}<div class="about-media reveal d2"><div class="frame"><img src="{{ s.img }}" alt="{{ s.image_alt }}"/></div></div>{% endif %}
+  </div>
+</section>

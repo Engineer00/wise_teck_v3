@@ -1,0 +1,1 @@
+{% if label %}{% if style == "ghost" %}<a class="btn btn-ghost" href="{{ url|default:'#' }}"><span class="play"><i class="fa-solid {{ icon|default:'fa-play' }}"></i></span>{{ label }}</a>{% else %}<a class="btn btn-{{ style|default:'gold' }}" href="{{ url|default:'#' }}">{{ label }} <i class="fa-solid {{ icon|default:'fa-arrow-right' }}"></i></a>{% endif %}{% endif %}

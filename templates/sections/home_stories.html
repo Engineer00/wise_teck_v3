@@ -1,0 +1,7 @@
+{% load wt %}{% with slides=s.story_slides %}<section class="section stories wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
+  {% motif s.motif %}<div class="container">
+    <div class="st-head reveal"><h2>{{ s.title|hl:s.highlight }}</h2>{% if slides|length > 1 %}<div class="arrows"><button class="arrow-btn" data-st="-1" aria-label="Previous"><i class="fa-solid fa-chevron-left"></i></button><button class="arrow-btn" data-st="1" aria-label="Next"><i class="fa-solid fa-chevron-right"></i></button></div>{% endif %}</div>
+    <div class="st-track reveal d1"><div class="st-slides" id="stSlides">{% for slide in slides %}<div class="st-slide">{% for st in slide %}{% include "partials/story.html" %}{% endfor %}</div>{% endfor %}</div></div>
+    <div class="dots" id="stDots">{% for slide in slides %}<button{% if forloop.first %} class="on"{% endif %} aria-label="Slide {{ forloop.counter }}"></button>{% endfor %}</div>
+  </div>
+</section>{% endwith %}

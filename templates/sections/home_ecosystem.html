@@ -1,0 +1,29 @@
+{% load wt static %}{% with nodes=s.main_items %}<section class="section eco wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
+  {% motif s.motif %}<div class="container">
+    {% include "sections/_head.html" %}
+    <div class="eco-grid">
+      <figure class="reveal">
+        <div class="eorbit eorbit--in" style="--n:{{ nodes|length }}">
+          <div class="eorbit__system" aria-hidden="true"><svg class="eorbit__svg" viewBox="0 0 480 480" focusable="false">
+            <defs><linearGradient id="orbitStroke" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#8b7cf6" stop-opacity=".6"/><stop offset="50%" stop-color="#6b4fd4" stop-opacity=".4"/><stop offset="100%" stop-color="#94a3b8" stop-opacity=".45"/></linearGradient><radialGradient id="orbitHalo"><stop offset="0" stop-color="#e4defd" stop-opacity=".95"/><stop offset=".7" stop-color="#ece9fd" stop-opacity=".55"/><stop offset="1" stop-color="#f1effe" stop-opacity="0"/></radialGradient></defs>
+            <circle class="eorbit__halo" cx="240" cy="240" r="132" fill="url(#orbitHalo)"/>
+            <circle class="eorbit__path" cx="240" cy="240" r="124" stroke="url(#orbitStroke)"/>
+            <circle class="eorbit__path eorbit__path--near" cx="240" cy="240" r="102" stroke="url(#orbitStroke)"/></svg></div>
+          {% for n in nodes %}<span class="eorbit__ray" style="--i:{{ forloop.counter0 }}" aria-hidden="true"><i class="ed ed1"></i><i class="ed ed2"></i></span>{% endfor %}
+          {% with src=site.logo_src %}<div class="eorbit__center" aria-hidden="true"><div class="eorbit__spin"><img class="eorbit__face" src="{% if src %}{{ src }}{% else %}{% static 'img/logo-round.svg' %}{% endif %}" alt="" width="140" height="140"/><img class="eorbit__face eorbit__face--back" src="{% if src %}{{ src }}{% else %}{% static 'img/logo-round.svg' %}{% endif %}" alt="" width="140" height="140"/></div></div>{% endwith %}
+          <a class="eorbit__clabel" href="{{ s.center_url|default:'#' }}"><span>{{ s.center_small }}</span><b>{{ s.center_big }}</b></a>
+          <ol class="eorbit__nodes">
+            {% for n in nodes %}<li class="eorbit__node" style="--i:{{ forloop.counter0 }}"><a href="{{ n.link_url|default:'#' }}"><span class="eorbit__badge"><i class="fa-solid {{ n.icon }}"></i></span><span class="eorbit__t">{{ n.title|br }}</span></a></li>
+            {% endfor %}
+          </ol>
+        </div>
+      </figure>
+      <div class="glass eco-card v1glow reveal d2">
+        <div class="badge"><i class="fa-solid fa-check"></i></div>
+        <h3>{{ s.list_title }}</h3>
+        {{ s.body|paras }}
+        <ul class="checks">{% for t in s.list_lines %}<li><i class="fa-solid fa-check"></i>{{ t }}</li>{% endfor %}</ul>{% if s.button_label %}<a class="more" href="{{ s.button_url|default:'#' }}">{{ s.button_label }} <i class="fa-solid fa-arrow-right"></i></a>{% endif %}
+      </div>
+    </div>
+  </div>
+</section>{% endwith %}

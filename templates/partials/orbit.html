@@ -1,0 +1,9 @@
+{% load wt %}{% with o=s.orbit %}<div class="hero__visual{% if o.six %} hero__visual--six{% endif %} reveal d2">
+      <div class="hring" aria-hidden="true">
+        <svg class="hring__sys" viewBox="0 0 200 200" focusable="false"><circle class="hring__soft" cx="100" cy="100" r="96"/><circle class="hring__path" cx="100" cy="100" r="96"/>
+          <circle class="hring__p" cx="100" cy="4" r="3"/><circle class="hring__p hring__p--2" cx="100" cy="196" r="2.4"/><circle class="hring__p hring__p--3" cx="4" cy="100" r="2.4"/><circle class="hring__p hring__p--2" cx="196" cy="100" r="2"/></svg>
+        {% for a in o.spokes %}<i class="hring__spoke" style="--a:{{ a }}deg"></i>{% endfor %}
+      </div>
+      <div class="hero__three-stage" id="heroThreeStage"{% if site.coin_base_color %} data-coin-base="{{ site.coin_base_color }}"{% endif %}{% if site.coin_ring_color %} data-coin-ring="{{ site.coin_ring_color }}"{% endif %}{% if site.coin_ring2_color %} data-coin-ring2="{{ site.coin_ring2_color }}"{% endif %}><p class="hero__three-fallback" hidden>Loading 3D…</p><canvas id="heroThreeCanvas" aria-hidden="true"></canvas></div>
+      <ul class="orbit-tags">{% for t in o.tags %}{% if o.six %}<li class="orbit-tag orbit-tag--hex{% if t.top %} orbit-tag--top{% endif %}" style="--a:{{ t.angle }}deg">{% else %}<li class="orbit-tag orbit-tag--{{ t.n }}">{% endif %}<span class="orbit-tag__ic"><i class="fa-solid {{ t.item.icon }}"></i></span><span class="orbit-tag__t">{{ t.item.title|nobr }}</span></li>{% endfor %}</ul>
+    </div>{% endwith %}

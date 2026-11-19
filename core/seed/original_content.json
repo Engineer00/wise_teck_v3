@@ -1,0 +1,219 @@
+{
+ "stories": [
+  {
+   "title": "Rimisha — From E-Commerce Skills to Self-Earning",
+   "slug": "rimisha-ecommerce-self-earning",
+   "client_name": "Rimisha",
+   "short_description": "Completed a professional E-Commerce course at Wise College, launched her own online store, and now earns independently while studying ADP Commerce.",
+   "description": "Rimisha (Rimsha) is a motivated and confident student who turned learning into real-world success. She completed a professional E-Commerce course at Wise College, gaining practical skills in online business, product listing, digital marketing, order management, and customer handling.\n\nAfter the course, she successfully launched her own E-Commerce store and is now self-earning — managing her online business independently and generating income through digital platforms. Alongside this, she continues as an ADP Commerce student at Wise College, proving that with the right skills and guidance, students can continue education while becoming financially independent.\n\nHer journey reflects the mission of Wise College: equipping students with industry-relevant skills that lead to employment, entrepreneurship, and self-reliance — especially for young women building a brighter future.",
+   "image": "seed/stories/rimisha.jpg",
+   "category": "Entrepreneurship",
+   "is_featured": true,
+   "is_active": true
+  },
+  {
+   "title": "Kinza — From Struggle to Assistant Account Manager",
+   "slug": "kinza-assistant-account-manager",
+   "client_name": "Kinza",
+   "short_description": "Received free education from I.Com to B.Com plus IT and incubation training at Wise, then secured a role at Chughtai Lab earning Rs. 65,000 per month.",
+   "description": "Kinza’s journey is a story of courage, hope, and transformation. She belongs to a very poor family where even basic needs were difficult to manage. Her father is a carpenter with a small and uncertain income. As the eldest among her siblings, she carried responsibility early — and higher education once felt like a distant dream.\n\nA friend told her about Wise College, which changed her life. She received free education from I.Com to B.Com, along with IT skills training for self-earning. She further polished her skills at Wise Earning Village, gained practical exposure at the Wise Incubation Centre under expert mentorship, and received CV writing and job interview training.\n\nHer hard work paid off when she secured a job at Chughtai Lab as an Assistant Account Manager. Today she earns Rs. 65,000 per month and stands as financial support for her family — helping her father, caring for her siblings, and bringing stability home. Kinza’s success reflects Wise’s mission: uplift deserving students through free education, skill development, and compassionate support.",
+   "image": "seed/stories/kinza.jpg",
+   "category": "Career",
+   "is_featured": true,
+   "is_active": true
+  },
+  {
+   "title": "Noor Sayyam — From Head Girl to Assistant Manager",
+   "slug": "noor-sayyam-assistant-manager",
+   "client_name": "Noor Sayyam",
+   "short_description": "Wise College B.Com graduate and first Head Girl; completed an AI course, grew from Accounts to Sales to Assistant Manager, now earning Rs. 55,000 per month.",
+   "description": "Noor Sayyam is a proud graduate of Wise College, where she completed her B.Com and enhanced her skills with an AI course alongside her studies. From the beginning she showed leadership, confidence, and dedication — becoming the first Head Girl of Wise College, a role that reflected her strong character and vision.\n\nAfter graduation, Noor began her professional career in Accounts, then successfully transitioned into Sales, and through hard work and continuous learning rose to Assistant Manager. Today she earns Rs. 55,000 per month and continues building a strong professional future.\n\nHer story represents Wise College’s mission of combining education with practical skills and leadership development. As she says: “The journey from student to professional is the evolution of learning your potential to finally realizing it.”",
+   "image": "seed/stories/noor-sayyam.jpg",
+   "category": "Leadership",
+   "is_featured": true,
+   "is_active": true
+  },
+  {
+   "title": "Umm-e-Rubab — Academic Excellence at Punjab University",
+   "slug": "umm-e-rubab-academic-excellence",
+   "client_name": "Umm-e-Rubab",
+   "short_description": "Completed B.Com at Wise College with continuous 1st positions in class and achieved 2nd position in Punjab University — a proud academic success story.",
+   "description": "Umm-e-Rubab is a brilliant and hardworking student of Wise College who completed her B.Com with outstanding academic excellence. Throughout her journey she consistently secured 1st position in her class. Her effort and passion for education were rewarded when she achieved 2nd position in Punjab University — a remarkable achievement that made her family and institution proud.\n\nHer path to Wise began when her sister learned about Wise College’s mission of free education and skill-based training for self-earning. Coming from a humble background — her father works at a dry-cleaning company with limited income — continuing higher education was a major challenge. As the eldest among her siblings, Rubab felt a deep responsibility to support her family and build a secure future.\n\nChoosing Wise College proved life-changing. Along with quality education, she benefited from mentorship and a supportive environment that strengthened her confidence. Today she stands as a shining example of how free education, determination, and hard work can transform lives and turn dreams into reality.",
+   "image": "seed/stories/umm-e-rubab.jpg",
+   "category": "Academics",
+   "is_featured": true,
+   "is_active": true
+  }
+ ],
+ "team": [
+  {
+   "name": "Hamda Tariq",
+   "designation": "CEO",
+   "short_description": "Educationist and co-founder of Wise Education Society, leading WISE TECK with a focus on skills, self-earning, and youth empowerment.",
+   "description": "Prof. Hamda Tariq is an educationist, philanthropist, and Co-founder of Wise Education Society. As CEO of WISE TECK, she has worked since 1991 to train youth for self-earning and bridge academia with industry.",
+   "image": "seed/team/hamda-tariq.jpg",
+   "service": "Leadership",
+   "is_active": true,
+   "display_order": 1
+  },
+  {
+   "name": "Waseem Maqsood",
+   "designation": "CTO",
+   "short_description": "Leads technology strategy and platform architecture so WISE TECK products stay scalable, secure, and delivery-ready.",
+   "description": "Waseem Maqsood serves as Chief Technology Officer, guiding engineering direction, technical standards, and the systems that power WISE TECK services.",
+   "image": "seed/team/wasif-maqsood.jpg",
+   "service": "Technology",
+   "is_active": true,
+   "display_order": 2
+  },
+  {
+   "name": "Muhammad Asif",
+   "designation": "IT Head",
+   "short_description": "Oversees IT operations, infrastructure, and day-to-day systems reliability across WISE TECK.",
+   "description": "Muhammad Asif heads IT at WISE TECK, keeping infrastructure, tooling, and internal systems running smoothly for teams and learners.",
+   "image": "seed/team/muhammad-asif.webp",
+   "service": "IT",
+   "is_active": true,
+   "display_order": 3
+  },
+  {
+   "name": "Hamid Amin",
+   "designation": "Web Developer",
+   "short_description": "Builds clean, modern web experiences for WISE TECK products and client-facing platforms.",
+   "description": "Aika Hamid is a web developer focused on frontend craft, responsive interfaces, and shipping polished digital experiences.",
+   "image": "seed/team/hamid-amin.jpg",
+   "service": "Web Development",
+   "is_active": true,
+   "display_order": 4
+  },
+  {
+   "name": "Hamza Arif",
+   "designation": "Junior Developer",
+   "short_description": "Supports WISE TECK product builds — from implementation details to polished delivery alongside the dev team.",
+   "description": "Hamza Arif is a junior developer contributing to WISE TECK web and software work, learning in production while shipping reliable features.",
+   "image": "seed/team/hamza_junior_developer.jpeg",
+   "service": "Development",
+   "is_active": true,
+   "display_order": 5
+  },
+  {
+   "name": "Muhammad Abdul Rehman",
+   "designation": "Junior Developer",
+   "short_description": "Part of the WISE TECK service team, contributing to delivery and day-to-day technology work.",
+   "description": "Abdul Rehman Gujjar is a member of the WISE TECK service team, supporting projects and helping deliver reliable outcomes.",
+   "image": "seed/team/abdul-rehman-gujjar.jpg",
+   "service": "Services",
+   "is_active": true,
+   "display_order": 6
+  }
+ ],
+ "blog": [
+  {
+   "title": "How AI Automation Is Reshaping Everyday IT Work",
+   "slug": "ai-automation-reshaping-everyday-it-work",
+   "short_description": "From help desks to cloud operations, artificial intelligence is rewriting daily IT work. This full guide explains what is changing, where value appears, which skills matter, and how learners can prepare for an AI-assisted career.",
+   "content": "<p>Five years ago, most IT teams treated artificial intelligence as a distant presentation topic — interesting, optional, and mostly disconnected from Monday morning tickets. Today the story is different. Support agents draft replies with assistants. Operations engineers receive alert summaries before users complain. Developers ship faster with tools that write tests, explain legacy code, and suggest safer refactors. AI automation has entered everyday IT work, and it is reshaping careers in real time.</p>\n\n<p>This article is a complete walkthrough of that shift. It is written for students, early-career professionals, and team leads who want more than slogans. You will learn what AI automation actually means, why organizations are adopting it now, where impact appears first, which human skills become more valuable, and how to adopt tools responsibly without destroying trust.</p>\n\n<p>At WISE TECK, our mission is practical: help people turn capability into independence. AI is one of the tools that can accelerate that journey — if it is used with judgment, discipline, and clear accountability.</p>\n\n<h2>A short history of how we got here</h2>\n<p>IT automation is not new. Scripts, cron jobs, configuration management, and CI/CD pipelines have existed for years. What changed is the type of work machines can now assist with. Older automation followed fixed rules: if X happens, do Y. Modern AI systems recognize patterns in language, logs, images, and code. That means they can help with tasks that previously required a person to read, interpret, and decide.</p>\n\n<p>The leap from rule-based scripts to AI-assisted workflows happened because three things matured together: better models, cheaper compute, and huge amounts of digital work already stored in tickets, repositories, and monitoring systems. Organizations realized they could reduce repetitive load without hiring endlessly for every new system.</p>\n\n<p>Still, history offers a warning. Every wave of automation created winners and confused teams. Those who treated tools as magic failed. Those who treated tools as amplifiers for skilled people improved quality and speed. The same rule applies now.</p>\n\n<h2>What AI automation actually means in IT</h2>\n<p>AI automation is not “replace every human with a chatbot.” It is the practice of handing repetitive, pattern-based work to software so people can focus on judgment, architecture, communication, and accountability. The strongest implementations keep humans in the loop whenever a decision affects customers, money, privacy, access, or safety.</p>\n\n<p>In practical terms, AI automation can look like:</p>\n<ul>\n  <li>a support workflow that answers common questions and escalates complex cases to a specialist,</li>\n  <li>a monitoring system that clusters alerts and highlights the most likely root cause,</li>\n  <li>a development assistant that writes boilerplate while an engineer reviews and owns the final code,</li>\n  <li>a knowledge assistant that summarizes long incident threads for on-call engineers,</li>\n  <li>a learning platform that adapts practice tasks to a student’s weak areas.</li>\n</ul>\n\n<p>Notice the pattern: machines accelerate the routine; people remain responsible for outcomes. That balance is the difference between useful automation and dangerous dependency.</p>\n\n<h2>Why IT teams are adopting AI right now</h2>\n<p>Three forces are pushing adoption at the same time. First, ticket volume and system complexity keep rising while teams stay lean. Second, cloud platforms and SaaS tools produce more data than humans can inspect manually. Third, customers expect faster responses with fewer errors. AI becomes attractive when it reduces backlogs without destroying service quality.</p>\n\n<p>Organizations that win treat automation as an operations improvement project, not a marketing campaign. They measure time saved, error rates, customer satisfaction, and engineer focus time. They also accept that early pilots will be imperfect and that governance must exist from day one — access controls, audit logs, data boundaries, and clear ownership.</p>\n\n<h2>Where impact shows up first</h2>\n<h3>1. IT support and service management</h3>\n<p>Password resets, access requests, FAQ answers, and first-level triage are classic candidates. An AI assistant can gather context, suggest next steps, and draft replies. A human agent still handles sensitive access changes and emotionally charged conversations. Done well, queues shrink and specialists spend more time on complex incidents.</p>\n\n<p>The hidden benefit is consistency. Humans get tired at 5 p.m. A well-designed workflow applies the same checklist every time, then asks a person to confirm when risk is high.</p>\n\n<h3>2. Infrastructure and reliability</h3>\n<p>Modern observability stacks already collect metrics, logs, and traces. AI can correlate signals across services, detect anomalies, and summarize incident timelines. That does not remove the need for strong runbooks. It makes those runbooks easier to execute under pressure.</p>\n\n<p>Reliability still depends on fundamentals: clear ownership, actionable alerts, rollback plans, and post-incident learning. AI is another sensor and summarizer — not a replacement for engineering discipline.</p>\n\n<h3>3. Software delivery</h3>\n<p>Code assistants, test generators, and documentation helpers can compress the boring parts of delivery. Senior engineers still define architecture, review security-sensitive changes, and protect product quality. Junior engineers who learn to verify AI output carefully grow faster than those who paste blindly.</p>\n\n<p>A healthy team rule is simple: if AI wrote it, a human must understand it before it reaches production. Ownership cannot be outsourced to a model.</p>\n\n<h3>4. Learning and skills development</h3>\n<p>Personalized practice, instant feedback, and scenario-based labs help students close gaps quicker. At WISE TECK, this fits our mission: turn capability into independence through applied skill, not passive content consumption. AI tutors can accelerate practice, but mentors still teach standards, ethics, and professional judgment.</p>\n\n<h2>Skills that become more valuable, not less</h2>\n<p>As routine work shrinks, scarce human skills rise in value:</p>\n<ul>\n  <li><strong>Problem framing:</strong> defining the real question before asking a model for help.</li>\n  <li><strong>Verification:</strong> checking answers against docs, tests, and production reality.</li>\n  <li><strong>Systems thinking:</strong> understanding how networks, databases, APIs, and people interact.</li>\n  <li><strong>Communication:</strong> explaining trade-offs to non-technical stakeholders.</li>\n  <li><strong>Ethics and privacy:</strong> knowing what data should never enter a prompt or third-party tool.</li>\n  <li><strong>Change leadership:</strong> helping teammates adopt new workflows without fear or chaos.</li>\n</ul>\n\n<p>Prompting alone is not a career path. Pairing AI tools with fundamentals — programming, databases, networking, security, and product sense — is the durable strategy.</p>\n\n<h2>A responsible adoption roadmap</h2>\n<ol>\n  <li><strong>Choose one process</strong> with high volume and clear rules (for example, FAQ triage).</li>\n  <li><strong>Define metrics</strong> before the pilot: handle time, resolution rate, escalations, and user satisfaction.</li>\n  <li><strong>Keep humans in control</strong> for approvals, access changes, and customer-sensitive replies.</li>\n  <li><strong>Review risk:</strong> data residency, prompt injection, bias, audit logs, and access permissions.</li>\n  <li><strong>Train the team weekly</strong> — tools improve only when people learn how to use and correct them.</li>\n  <li><strong>Scale carefully</strong> after evidence, not after excitement.</li>\n  <li><strong>Document everything</strong> so improvements survive staff changes and tool updates.</li>\n</ol>\n\n<h2>Common mistakes teams make</h2>\n<p>Teams often fail by automating messy processes without fixing them first. Automating confusion creates faster confusion. Another mistake is trusting model output in production without tests, monitoring, or rollback plans. A third mistake is skipping change management — people resist tools they do not understand or trust.</p>\n\n<p>A fourth mistake is secrecy. If leadership announces “AI will replace roles” without a reskilling plan, culture breaks. A better message is honest: some tasks will change, and the organization will invest in people who learn the new workflow.</p>\n\n<p>The antidote is simple: clean the process, pilot with supervision, measure honestly, communicate clearly, and keep humans accountable.</p>\n\n<h2>A day-in-the-life story</h2>\n<p>Imagine a mid-size product company. In the morning, the support queue is already long. An AI assistant handles twenty FAQ tickets and prepares drafts for five billing questions. A human agent reviews the drafts, edits tone, and closes them. Meanwhile, the on-call engineer receives a summarized alert: “Checkout latency rising after last deploy; likely tied to payment service timeout.” Instead of reading two thousand log lines first, the engineer starts with a focused hypothesis, confirms it, and rolls back quickly.</p>\n\n<p>In the afternoon, a junior developer uses an assistant to draft unit tests for a new API endpoint. A senior reviews the tests, catches one weak assertion, and teaches why it matters. By evening, the team shipped a safer release and reduced support backlog. Nobody was replaced. The work simply became less wasteful.</p>\n\n<p>That is the realistic picture of AI automation done well.</p>\n\n<h2>How learners can prepare this year</h2>\n<p>If you are a student or early-career professional, build a portfolio that proves you can work with AI responsibly:</p>\n<ul>\n  <li>document a before/after automation for a small workflow,</li>\n  <li>show how you validated AI-generated code with tests,</li>\n  <li>write a short risk note for any tool that touches user data,</li>\n  <li>practice explaining technical decisions in plain language,</li>\n  <li>keep a learning log of tools you tried, what failed, and what you fixed.</li>\n</ul>\n\n<p>Employers notice craft plus judgment. Tools change. Standards of responsibility do not.</p>\n\n<h2>The WISE TECK perspective</h2>\n<p>Technology should help people stand on their own feet. AI automation, used with discipline, can help learners deliver enterprise-grade outcomes sooner while keeping accountability human. Start small. Stay curious. Measure real results. Review risks openly. Teach others what you learn.</p>\n\n<p>That is how capability becomes independence — and how the next generation of IT professionals will lead, not merely follow, the AI shift.</p>",
+   "featured_image": "seed/blog/ai-automation.jpg",
+   "author": "WISE TECK",
+   "category": "Artificial Intelligence",
+   "is_featured": true,
+   "is_active": true,
+   "published_at": "2026-09-22 00:25:33"
+  },
+  {
+   "title": "Cybersecurity Basics Every IT Professional Should Master",
+   "slug": "cybersecurity-basics-every-it-professional-should-master",
+   "short_description": "A complete practical guide to cybersecurity for IT learners and professionals: threats, weekly habits, project checklists, cloud risks, incident readiness, and the security mindset every career needs.",
+   "content": "<p>Every modern organization runs on digital systems — email, cloud apps, customer databases, payment flows, remote access, and mobile devices. That means cybersecurity is no longer a niche specialty reserved for a closed security operations center. It is a core IT skill. Whether you write code, manage servers, design networks, support end users, or ship student projects, your daily decisions either reduce risk or quietly increase it.</p>\n\n<p>This article is a full beginner-to-practitioner guide. It explains why security belongs in every IT role, what common threats look like in plain language, which habits matter every week, how to build security into projects, and how to prepare for incidents without panic. The goal is not fear. The goal is competence.</p>\n\n<p>At WISE TECK, we teach applied technology with professional standards. Security literacy is part of that standard because real people depend on the systems you touch.</p>\n\n<h2>A brief history of why this matters more now</h2>\n<p>In earlier decades, many companies protected a single office network and a few servers. Today, work happens across laptops, phones, SaaS dashboards, cloud accounts, and third-party integrations. The “perimeter” is no longer one building. It is every identity, every API key, and every device that can reach business data.</p>\n\n<p>Attackers adapted faster than many teams. Phishing became more convincing. Ransomware became a business model. Misconfigured cloud storage became a recurring headline. The lesson is clear: security is not a one-time setup. It is an ongoing practice, like hygiene for digital systems.</p>\n\n<h2>Why cybersecurity belongs in every IT role</h2>\n<p>Attackers usually take the easiest path. They prefer weak passwords, unpatched software, over-permissioned accounts, and rushed deployments. Most incidents are not Hollywood-style genius hacks. They start with ordinary mistakes: a reused password, an open storage bucket, a phishing link clicked during a busy afternoon, or a leftover test server forgotten online.</p>\n\n<p>When security is treated as “someone else’s job,” small gaps accumulate until one incident becomes expensive — financially, legally, and reputationally. Building secure habits early protects customers, employers, classmates, and your own professional reputation.</p>\n\n<h2>The threat landscape in plain language</h2>\n<ul>\n  <li><strong>Phishing and social engineering:</strong> messages designed to steal credentials or trick someone into installing malware.</li>\n  <li><strong>Credential stuffing:</strong> attackers reuse leaked passwords across many sites hoping users reused them.</li>\n  <li><strong>Ransomware:</strong> systems and files are encrypted and held hostage until payment or recovery from backups.</li>\n  <li><strong>Misconfiguration:</strong> public cloud storage, open admin panels, default passwords, or forgotten environments left exposed.</li>\n  <li><strong>Supply-chain risk:</strong> compromised libraries, plugins, or vendor tools that enter your environment through trust.</li>\n  <li><strong>Insider risk:</strong> excessive access, accidental leaks, or poor offboarding after someone leaves a team.</li>\n  <li><strong>Business email compromise:</strong> attackers impersonate leaders or vendors to redirect payments or approvals.</li>\n</ul>\n\n<p>You do not need to memorize every attack name on day one. You do need to understand that identity, patching, access control, backups, and monitoring sit at the center of most defenses.</p>\n\n<h2>Foundations you should practice every week</h2>\n<ol>\n  <li><strong>Identity first:</strong> unique passwords, a password manager, and multi-factor authentication on email, cloud consoles, banking, and admin panels.</li>\n  <li><strong>Least privilege:</strong> give accounts only the access required for the current task. Remove temporary permissions when work ends.</li>\n  <li><strong>Patch promptly:</strong> keep operating systems, browsers, frameworks, plugins, and devices updated on a schedule.</li>\n  <li><strong>Backup and restore drills:</strong> backups only matter if you can restore them under time pressure.</li>\n  <li><strong>Secure defaults:</strong> review firewalls, cloud IAM policies, API keys, and public endpoints before go-live.</li>\n  <li><strong>Logging and alerts:</strong> if you cannot see unusual login or access patterns, you cannot respond quickly.</li>\n  <li><strong>Vendor awareness:</strong> know which third-party tools touch your data and what happens if they fail.</li>\n</ol>\n\n<p>These habits look boring. That is why they work. Security excellence is mostly consistency, not drama.</p>\n\n<h2>A practical security checklist for every project</h2>\n<p>Before shipping a feature, internal tool, client deliverable, or portfolio project, ask:</p>\n<ul>\n  <li>Who can access this system, and how is identity verified?</li>\n  <li>What sensitive data moves through it, and where is that data stored?</li>\n  <li>Are secrets (API keys, tokens, passwords) kept out of code, screenshots, and chat logs?</li>\n  <li>What happens if the service fails, is deleted, or is compromised?</li>\n  <li>How will we detect unusual activity, and who responds first?</li>\n  <li>Do we have a restore path if files or databases are lost?</li>\n  <li>Have we removed debug modes, sample credentials, and temporary public links?</li>\n</ul>\n\n<p>These questions turn security from a late panic into a design habit. Teams that ask them early ship with fewer surprises.</p>\n\n<h2>Secure development habits that pay off</h2>\n<p>Developers can prevent entire classes of incidents with reliable practices:</p>\n<ul>\n  <li>validate and sanitize inputs,</li>\n  <li>use parameterized queries to reduce injection risk,</li>\n  <li>never commit secrets to repositories,</li>\n  <li>review dependencies and remove unused packages,</li>\n  <li>separate development, staging, and production access,</li>\n  <li>write tests for authentication and authorization paths,</li>\n  <li>limit error messages so they do not leak internal system details.</li>\n</ul>\n\n<p>None of this requires celebrity-level expertise. It requires discipline. A junior developer who builds these habits becomes trusted quickly.</p>\n\n<h2>Cloud and remote-work realities</h2>\n<p>Hybrid work expanded the attack surface. Home networks, personal devices, and SaaS admin consoles are now part of the enterprise environment. Treat cloud consoles like production servers: strong MFA, limited roles, audited changes, and no shared root accounts.</p>\n\n<p>For remote access, prefer modern identity-aware approaches over exposing broad tunnels without monitoring. For student and startup teams, a simple rule helps: if a service stores real user data, it deserves production-level care even if the product is small.</p>\n\n<h2>A realistic incident story</h2>\n<p>Consider a growing team that used one shared admin password for a cloud dashboard “just for now.” One phishing email later, an attacker resets a mailbox rule, watches invoices, and quietly changes payment details. No malware was needed. Weak identity practices created the opening.</p>\n\n<p>Recovery required password resets, MFA enforcement, vendor notifications, and difficult conversations with clients. The technical fix was not exotic. The cultural fix was harder: stop normalizing shortcuts that feel convenient until they become catastrophic.</p>\n\n<p>Every IT professional should learn from stories like this before living them.</p>\n\n<h2>Incident readiness for beginners</h2>\n<p>Even strong teams face incidents. Preparation beats improvisation:</p>\n<ol>\n  <li>Keep an emergency contact list (owner, hosting, domain, payment, legal).</li>\n  <li>Know how to revoke access quickly (users, API keys, sessions, devices).</li>\n  <li>Preserve evidence before wiping systems if investigation matters.</li>\n  <li>Communicate honestly with stakeholders — silence destroys trust faster than bad news.</li>\n  <li>Run a short post-incident review and fix the root cause, not only the symptom.</li>\n  <li>Update your checklist so the same failure is harder next time.</li>\n</ol>\n\n<h2>How to build this skill at WISE TECK</h2>\n<p>We believe strong IT careers are built through applied practice: labs, realistic scenarios, mentoring, and delivery standards that mirror professional work. Cybersecurity literacy helps students become trusted contributors — the people organizations rely on when stakes are high.</p>\n\n<p>If you are learning now, create a personal security portfolio:</p>\n<ul>\n  <li>harden one project with MFA, secrets management, and least privilege,</li>\n  <li>write a one-page threat note for an app you built,</li>\n  <li>practice restoring a backup,</li>\n  <li>document what you would do in the first hour of a suspected breach.</li>\n</ul>\n\n<p>Start with fundamentals. Stay disciplined. Treat every system as if real people depend on it. They do. That mindset is the real foundation of digital trust — and a durable advantage in any IT career.</p>\n\n<p>Cybersecurity is not only a job title. It is a professional standard. Master the basics, practice them weekly, and you will stand out in a world where almost every career path now touches technology.</p>",
+   "featured_image": "seed/blog/cybersecurity-it.jpg",
+   "author": "WISE TECK",
+   "category": "Cybersecurity",
+   "is_featured": true,
+   "is_active": true,
+   "published_at": "2026-09-21 00:25:33"
+  }
+ ],
+ "services": [
+  {
+   "name": "Web Development",
+   "short_description": "Responsive, high-performance websites and web apps built with modern stacks and clean architecture.",
+   "image": "seed/services/svc-card-web.jpg",
+   "icon_file": "seed/services/icons/svc-web.svg",
+   "link_url": "/contact/",
+   "display_order": 1,
+   "is_active": true
+  },
+  {
+   "name": "Mobile App Development",
+   "short_description": "Native and cross-platform mobile experiences — from prototype to App Store and Play Store release.",
+   "image": "seed/services/svc-card-mobile.jpg",
+   "icon_file": "seed/services/icons/svc-mobile.svg",
+   "link_url": "/contact/",
+   "display_order": 2,
+   "is_active": true
+  },
+  {
+   "name": "Custom Software Development",
+   "short_description": "Tailored business systems, dashboards, and integrations that match your workflows and scale with growth.",
+   "image": "seed/services/svc-card-software.jpg",
+   "icon_file": "seed/services/icons/svc-software.svg",
+   "link_url": "/contact/",
+   "display_order": 3,
+   "is_active": true
+  },
+  {
+   "name": "AI",
+   "short_description": "Practical AI — automation, intelligent assistants, and data-driven features embedded in real products.",
+   "image": "seed/services/svc-card-ai.jpg",
+   "icon_file": "seed/services/icons/svc-ai.svg",
+   "link_url": "/contact/",
+   "display_order": 4,
+   "is_active": true
+  },
+  {
+   "name": "UI/UX Design",
+   "short_description": "Research-led interfaces and design systems that feel premium and convert users into customers.",
+   "image": "seed/services/svc-card-uiux.jpg",
+   "icon_file": "seed/services/icons/svc-uiux.svg",
+   "link_url": "/contact/",
+   "display_order": 5,
+   "is_active": true
+  },
+  {
+   "name": "E-Commerce Development",
+   "short_description": "Online stores, checkout flows, and catalog tools optimized for sales, fulfillment, and growth.",
+   "image": "seed/services/svc-card-ecommerce.jpg",
+   "icon_file": "seed/services/icons/svc-ecommerce.svg",
+   "link_url": "/contact/",
+   "display_order": 6,
+   "is_active": true
+  },
+  {
+   "name": "QA & Software Testing",
+   "short_description": "Manual and automated testing, regression suites, and release quality gates you can trust.",
+   "image": "seed/services/svc-card-qa.jpg",
+   "icon_file": "seed/services/icons/svc-qa.svg",
+   "link_url": "/contact/",
+   "display_order": 7,
+   "is_active": true
+  },
+  {
+   "name": "IT Consulting",
+   "short_description": "Technology strategy, architecture reviews, and roadmaps aligned with business outcomes.",
+   "image": "seed/services/svc-card-consulting.jpg",
+   "icon_file": "seed/services/icons/svc-consulting.svg",
+   "link_url": "/contact/",
+   "display_order": 8,
+   "is_active": true
+  },
+  {
+   "name": "Maintenance & Support",
+   "short_description": "Monitoring, updates, and responsive support to keep systems secure, stable, and fast.",
+   "image": "seed/services/svc-card-maintenance.jpg",
+   "icon_file": "seed/services/icons/svc-maintenance.svg",
+   "link_url": "/contact/",
+   "display_order": 9,
+   "is_active": true
+  }
+ ]
+}

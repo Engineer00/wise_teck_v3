@@ -1,0 +1,89 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}{{ page_title|default:"Admin" }} · Wise-Teck{% endblock %}</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/adminpanel.css' %}?v={{ asset_v }}">
+  <link rel="icon" href="{% static 'assets/favicon.png' %}">
+</head>
+<body class="ap-body">
+  <div class="ap-shell">
+    <aside class="ap-sidebar" id="apSidebar">
+      <div class="ap-brand">
+        <img class="ap-brand-logo" src="{% if site_logo %}{{ site_logo }}{% else %}{% static 'img/logo-round.svg' %}{% endif %}" alt="Wise-Teck">
+        <div>
+          <strong class="ap-brand-name">Wise-Teck</strong>
+          <span class="ap-brand-sub">Admin Panel</span>
+        </div>
+      </div>
+
+      <nav class="ap-nav" aria-label="Admin">
+        {% for item in nav_items %}
+        {% if item.heading %}
+        <p class="ap-nav-group">{{ item.heading }}</p>
+        {% else %}
+        <a href="{{ item.url }}" class="ap-nav-link{% if item.active %} is-active{% endif %}">
+          <span class="ap-nav-icon" data-icon="{{ item.icon }}"></span>
+          <span class="ap-nav-label">{{ item.label }}</span>
+          {% if item.count is not None %}
+          <span class="ap-nav-count">{{ item.count }}</span>
+          {% endif %}
+        </a>
+        {% endif %}
+        {% endfor %}
+      </nav>
+
+      <div class="ap-sidebar-foot">
+        <a href="/" class="ap-nav-link ap-nav-muted" target="_blank" rel="noopener">
+          <span class="ap-nav-icon" data-icon="external"></span>
+          <span class="ap-nav-label">View site</span>
+        </a>
+        <a href="{% url 'adminpanel_logout' %}" class="ap-nav-link ap-nav-muted">
+          <span class="ap-nav-icon" data-icon="logout"></span>
+          <span class="ap-nav-label">Log out</span>
+        </a>
+      </div>
+    </aside>
+
+    <div class="ap-main">
+      <header class="ap-topbar">
+        <button type="button" class="ap-menu-btn" id="apMenuBtn" aria-label="Toggle menu">
+          <span></span><span></span><span></span>
+        </button>
+        <div class="ap-topbar-title">
+          <h1>{{ page_title }}</h1>
+          {% block topbar_meta %}{% endblock %}
+        </div>
+        <div class="ap-topbar-user">
+          <span class="ap-avatar">{{ request.user.username|slice:":1"|upper }}</span>
+          <div class="ap-user-meta">
+            <strong>{{ request.user.get_full_name|default:request.user.username }}</strong>
+            <span>{% if request.user.is_superuser %}Superuser{% else %}Staff{% endif %}</span>
+          </div>
+        </div>
+      </header>
+
+      {% if messages %}
+      <div class="ap-messages">
+        {% for message in messages %}
+        <div class="ap-flash ap-flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      <main class="ap-content">
+        {% block content %}{% endblock %}
+      </main>
+    </div>
+  </div>
+
+  <div class="ap-backdrop" id="apBackdrop" hidden></div>
+  <script src="{% static 'js/adminpanel.js' %}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

@@ -1,0 +1,181 @@
+{% extends "adminpanel/base.html" %}{% load static %}
+
+{% block topbar_meta %}
+<p class="ap-topbar-sub">
+  {% if is_create %}Create a new {{ meta.singular|lower }}{% elif meta.singleton %}Logo, contact details, footer and other site-wide settings{% else %}Editing · {{ object }}{% endif %}
+</p>
+{% endblock %}
+
+{% block content %}
+<div class="ap-form-layout">
+  <form method="post" enctype="multipart/form-data" class="ap-panel ap-form-panel" novalidate>
+    {% csrf_token %}
+
+    {% if form.non_field_errors %}
+    <div class="ap-flash ap-flash-error">{{ form.non_field_errors }}</div>
+    {% endif %}
+    {% for hidden in form.hidden_fields %}{{ hidden }}{% endfor %}
+    {% if layout_guide %}<div class="ap-layout-help" id="apLayoutHelp" hidden></div>{% endif %}
+
+    {% for title, fields in groups %}
+    {% if fields %}
+    <fieldset class="ap-fieldset" data-group>
+      {% if title %}<legend class="ap-legend">{{ title }}</legend>{% endif %}
+      <div class="ap-form-grid">
+        {% for field in fields %}{% if not field.is_hidden %}{% include "adminpanel/_field.html" %}{% endif %}{% endfor %}
+      </div>
+    </fieldset>
+    {% endif %}
+    {% endfor %}
+
+    {% if formset %}
+    <fieldset class="ap-fieldset">
+      <legend class="ap-legend">{{ meta.formset_label }}</legend>
+      {% if layout_guide %}<p class="ap-help ap-items-help" id="apItemsHelp"></p>{% endif %}
+      {{ formset.management_form }}
+      {% if formset.non_form_errors %}<div class="ap-flash ap-flash-error">{{ formset.non_form_errors }}</div>{% endif %}
+      <div class="ap-inlines">
+        {% for f in formset %}
+        <div class="ap-inline{% if not f.instance.pk %} ap-inline-new{% endif %}">
+          <div class="ap-inline-head">
+            <strong>{% if f.instance.pk %}{{ f.instance }}{% else %}Add new{% endif %}</strong>
+            {% if f.instance.pk and formset.can_delete %}
+            <label class="ap-check-label ap-inline-del">{{ f.DELETE }}<span>Delete</span></label>
+            {% endif %}
+          </div>
+          {% for hidden in f.hidden_fields %}{{ hidden }}{% endfor %}
+          {% if f.non_field_errors %}<div class="ap-flash ap-flash-error">{{ f.non_field_errors }}</div>{% endif %}
+          <div class="ap-form-grid">
+            {% for field in f.visible_fields %}{% if field.name != 'DELETE' %}{% include "adminpanel/_field.html" %}{% endif %}{% endfor %}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+      <p class="ap-help">Fill in the empty card to add one. Save to get another empty card.</p>
+    </fieldset>
+    {% endif %}
+
+    <div class="ap-form-actions">
+      <button type="submit" class="ap-btn ap-btn-primary">{% if is_create %}Create{% else %}Save changes{% endif %}</button>
+      {% if not meta.singleton %}<a class="ap-btn" href="{% if back_url %}{{ back_url }}{% else %}{% url 'adminpanel_list' resource %}{% endif %}">Cancel</a>{% endif %}
+      {% if not is_create and not meta.singleton %}
+      <a class="ap-btn ap-btn-danger" href="{% url 'adminpanel_delete' resource object.pk %}">Delete</a>
+      {% endif %}
+    </div>
+  </form>
+
+  {% if object %}
+  <aside class="ap-panel ap-meta-panel">
+    <h2>Record info</h2>
+    <dl class="ap-dl">
+      <div><dt>ID</dt><dd>{{ object.pk }}</dd></div>
+      {% if object.created_at %}<div><dt>Created</dt><dd>{{ object.created_at|date:"M d, Y H:i" }}</dd></div>{% endif %}
+      {% if object.updated_at %}<div><dt>Updated</dt><dd>{{ object.updated_at|date:"M d, Y H:i" }}</dd></div>{% endif %}
+      {% if object.slug %}<div><dt>Slug</dt><dd><code>{{ object.slug }}</code></dd></div>{% endif %}
+    </dl>
+    {% if resource == 'pages' and object.is_draft %}
+    <div class="ap-draft-box">
+      <strong>This is a draft of “{{ object.draft_of.title }}”.</strong>
+      Visitors still see the live page. Edit the sections below, preview, then publish.
+      {% if object.publish_at %}<br/>It will go live automatically on <b>{{ object.publish_at|date:"M d, Y H:i" }}</b>.{% else %}<br/>To publish it automatically later, set “Go live at” and save.{% endif %}
+    </div>
+    <div class="ap-side-actions">
+      <a class="ap-btn ap-btn-block" href="{{ view_url }}" target="_blank" rel="noopener">Preview draft</a>
+      <form method="post" action="{% url 'adminpanel_publish_draft' object.pk %}" onsubmit="return confirm('Publish this draft now? It replaces the live page; the current live version is kept in the history.');">{% csrf_token %}
+        <button type="submit" class="ap-btn ap-btn-primary ap-btn-block">Publish now</button></form>
+      <a class="ap-btn ap-btn-block" href="{% url 'adminpanel_change' 'pages' object.draft_of_id %}">Open the live page</a>
+      <a class="ap-btn ap-btn-danger ap-btn-block" href="{% url 'adminpanel_delete' 'pages' object.pk %}">Discard draft</a>
+    </div>
+    {% else %}
+    {% if view_url %}<a class="ap-btn ap-btn-block" href="{{ view_url }}" target="_blank" rel="noopener">View on site</a>{% endif %}
+    {% endif %}
+    {% if resource == 'pages' and not object.is_draft %}
+    <div class="ap-side-actions">
+      <form method="post" action="{% url 'adminpanel_create_draft' object.pk %}">{% csrf_token %}
+        <button type="submit" class="ap-btn ap-btn-block" title="Copy this page privately, change it, preview, then publish">Create draft</button></form>
+    </div>
+    {% if drafts %}<ul class="ap-side-list">{% for d in drafts %}<li><a href="{% url 'adminpanel_change' 'pages' d.pk %}">Draft from {{ d.created_at|date:"M d, H:i" }}</a>{% if d.publish_at %} · goes live {{ d.publish_at|date:"M d, H:i" }}{% endif %}</li>{% endfor %}</ul>{% endif %}
+    {% endif %}
+    {% if resource == 'sections' and object.page.is_draft %}<div class="ap-draft-box"><strong>Part of a draft.</strong>Changes here are not live until the draft is published.</div>{% endif %}
+    {% if back_url %}<a class="ap-btn ap-btn-block" href="{{ back_url }}">Back to page</a>{% endif %}
+    {% if history is not None %}<a class="ap-btn ap-btn-block" href="{% if page_url %}{{ page_url }}{% endif %}#history">Version history{% if history %} ({{ history|length }}){% endif %}</a>{% endif %}
+    {% if resource == 'messages' %}
+    <form method="post" action="{% url 'adminpanel_contact_toggle_read' object.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="ap-btn ap-btn-block">
+        Mark as {% if object.is_read %}unread{% else %}read{% endif %}
+      </button>
+    </form>
+    {% endif %}
+  </aside>
+  {% endif %}
+</div>
+
+{% if children is not None %}
+<section class="ap-panel ap-children">
+  <div class="ap-panel-head">
+    <h2>Sections on this page</h2>
+    <a class="ap-btn ap-btn-primary" href="{% url 'adminpanel_add' 'sections' %}?page={{ object.pk }}">+ Add section</a>
+  </div>
+  {% if children %}
+  <div class="ap-table-wrap">
+    <table class="ap-table">
+      <thead><tr><th>Order</th><th>Layout</th><th>Title</th><th>Show</th><th class="ap-th-actions">Actions</th></tr></thead>
+      <tbody>
+        {% for s in children %}
+        <tr>
+          <td>{{ s.order }}</td>
+          <td>{{ s.get_layout_display }}</td>
+          <td><a class="ap-cell-link" href="{% url 'adminpanel_change' 'sections' s.pk %}">{{ s.title|default:s.eyebrow|default:"—" }}</a></td>
+          <td>{% if s.is_active %}<span class="ap-badge ap-badge-yes">Yes</span>{% else %}<span class="ap-badge ap-badge-no">No</span>{% endif %}</td>
+          <td class="ap-actions">
+            <a class="ap-action" href="{% url 'adminpanel_change' 'sections' s.pk %}">Edit</a>
+            <a class="ap-action ap-action-danger" href="{% url 'adminpanel_delete' 'sections' s.pk %}">Delete</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="ap-empty">This page has no sections yet.</p>
+  {% endif %}
+</section>
+{% endif %}
+
+{% if history is not None and not page_url %}
+<section class="ap-panel ap-children ap-history" id="history">
+  <div class="ap-panel-head">
+    <h2>Version history</h2>
+  </div>
+  <p class="ap-help">Every change keeps the version from before it.{% if history_is_page %} A page version includes all its sections and cards.{% endif %} Restoring also keeps the current version first, so it can be undone.</p>
+  {% if history %}
+  <div class="ap-table-wrap">
+    <table class="ap-table">
+      <thead><tr><th>Saved</th><th>Change</th><th>By</th><th class="ap-th-actions">Actions</th></tr></thead>
+      <tbody>
+        {% for r in history %}
+        <tr>
+          <td>{{ r.created_at|date:"M d, Y H:i" }}</td>
+          <td>{{ r.reason }}</td>
+          <td>{{ r.user.username|default:"—" }}</td>
+          <td class="ap-actions">
+            {% if history_is_page %}<a class="ap-action" href="{% url 'preview_revision' r.pk %}" target="_blank" rel="noopener">Preview</a>
+            <form method="post" action="{% url 'adminpanel_version_draft' r.pk %}">{% csrf_token %}<button class="ap-action" type="submit" title="Open this version as a draft to check it before it goes live">Open as draft</button></form>{% endif %}
+            <form method="post" action="{% url 'adminpanel_restore' r.pk %}" onsubmit="return confirm('Restore this version now? It goes live straight away; the current version is kept in the history.');">{% csrf_token %}<input type="hidden" name="back" value="{{ request.path }}#history"/><button class="ap-action" type="submit">Restore</button></form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p class="ap-empty">No earlier versions yet. They appear here after the first change.</p>
+  {% endif %}
+</section>
+{% endif %}
+{% if layout_guide %}
+{{ layout_guide|json_script:"apLayoutGuide" }}
+<script src="{% static 'js/adminpanel-layouts.js' %}"></script>
+{% endif %}
+{% endblock %}

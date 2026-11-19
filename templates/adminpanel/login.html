@@ -1,0 +1,56 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sign in · Wise-Teck Admin</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'css/adminpanel.css' %}?v={{ asset_v }}">
+</head>
+<body class="ap-login-body">
+  <div class="ap-login-stage">
+    <div class="ap-login-visual" aria-hidden="true">
+      <div class="ap-login-orb ap-login-orb-a"></div>
+      <div class="ap-login-orb ap-login-orb-b"></div>
+      <div class="ap-login-copy">
+        <p class="ap-login-eyebrow">Wise-Teck</p>
+        <h1>Manage your<br>digital presence.</h1>
+        <p>Stories, services, team, blogs, and inbound leads — one control room.</p>
+      </div>
+    </div>
+
+    <div class="ap-login-panel">
+      <form method="post" class="ap-login-form" novalidate>
+        {% csrf_token %}
+        <input type="hidden" name="next" value="{{ next }}">
+        <div class="ap-login-brand">
+          <img class="ap-brand-logo" src="{% if site_logo %}{{ site_logo }}{% else %}{% static 'img/logo-round.svg' %}{% endif %}" alt="Wise-Teck">
+          <div>
+            <strong>Admin Panel</strong>
+            <span>Sign in with a staff account</span>
+          </div>
+        </div>
+
+        {% if error %}
+        <div class="ap-flash ap-flash-error">{{ error }}</div>
+        {% endif %}
+
+        <label class="ap-field">
+          <span>Username</span>
+          <input class="ap-input" type="text" name="username" value="{{ username|default:'' }}" autocomplete="username" autofocus required>
+        </label>
+        <label class="ap-field">
+          <span>Password</span>
+          <input class="ap-input" type="password" name="password" autocomplete="current-password" required>
+        </label>
+
+        <button type="submit" class="ap-btn ap-btn-primary ap-btn-block">Log in</button>
+        <a href="/" class="ap-login-back">← Back to website</a>
+      </form>
+    </div>
+  </div>
+</body>
+</html>

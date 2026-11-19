@@ -1,0 +1,15 @@
+{% extends "base.html" %}{% load wt %}
+{% block title %}Page not found | {{ site.seo_name }}{% endblock %}
+{% block seo %}<meta name="robots" content="noindex, nofollow"/>{% endblock %}
+{% block hero %}<header class="hero page-hero page-hero--center wt-sec">
+  {% wave "wv-hero" 320 "wv-hero-art wv-hero-art--soft" %}<div class="ph-bg" aria-hidden="true"><i class="ph-grid"></i></div>{% motif "inner-hero" %}
+{% include "partials/nav.html" %}
+  <div class="container hero-body">
+    <div class="reveal">
+      <div class="eyebrow">404</div>
+      <h1>Page <span class="accent">Not Found</span></h1>
+      <p class="lead">The page you are looking for has moved or no longer exists.</p>
+      <div class="ctas"><a class="btn btn-navy" href="/">Back to Home <i class="fa-solid fa-arrow-right"></i></a></div>
+    </div>
+  </div>
+</header>{% endblock %}

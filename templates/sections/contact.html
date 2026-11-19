@@ -1,0 +1,19 @@
+{% load wt %}{% include "sections/_open.html" %}<div class="contact-grid">
+      <div class="cinfo">
+        {% for c in s.main_items %}<div class="ci reveal{% if not forloop.first %} d{{ forloop.counter0|mod:4 }}{% endif %}"><span><i class="fa-solid {{ c.icon }}"></i></span><div><b>{{ c.title }}</b>{% if c.link_url %}<a href="{{ c.link_url }}">{{ c.text }}</a>{% else %}<p>{{ c.text }}</p>{% endif %}</div></div>
+        {% endfor %}
+      </div>
+      {% with L=s.form_labels %}<form class="glass form reveal d1" id="contact-form" method="post" action="{{ request.path }}#contact-form" novalidate>
+        {% csrf_token %}<input type="hidden" name="section" value="{{ s.pk }}"/>
+        <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"/></label></div>
+        <h3>{{ s.form_title }}</h3>
+        {% if messages %}{% for m in messages %}<p class="form-msg form-msg--{{ m.tags }}" role="status">{{ m }}</p>{% endfor %}{% endif %}
+        {% if form.errors %}<p class="form-msg form-msg--error" role="alert">Please check the highlighted fields.</p>{% endif %}
+        <label{% if form.name.errors %} class="has-error"{% endif %}>{{ L.0.0 }}<input name="name" required maxlength="120" autocomplete="name" placeholder="{{ L.0.1 }}" value="{{ form.name.value|default:'' }}"/></label>
+        <label{% if form.phone.errors %} class="has-error"{% endif %}>{{ L.1.0 }}<input name="phone" required maxlength="40" autocomplete="tel" inputmode="tel" placeholder="{{ L.1.1 }}" value="{{ form.phone.value|default:'' }}"/></label>
+        <label class="full{% if form.email.errors %} has-error{% endif %}">{{ L.2.0 }}<input type="email" name="email" autocomplete="email" placeholder="{{ L.2.1 }}" value="{{ form.email.value|default:'' }}"/></label>
+        <label class="full">{{ L.3.0 }}<select name="interest">{% for t in s.list_lines %}<option{% if form.interest.value == t %} selected{% endif %}>{{ t }}</option>{% endfor %}</select></label>
+        <label class="full">{{ L.4.0 }}<textarea name="message" placeholder="{{ L.4.1 }}">{{ form.message.value|default:'' }}</textarea></label>
+        <button class="btn btn-gold" type="submit">{{ s.button_label|default:"Send Message" }} <i class="fa-solid {{ s.button_icon|default:'fa-paper-plane' }}"></i></button>
+      </form>{% endwith %}
+    </div></div></section>

@@ -1,0 +1,17 @@
+{% load wt %}<header class="hero page-hero page-hero--center wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
+  {% wave "wv-hero" 320 "wv-hero-art wv-hero-art--soft" %}<div class="ph-bg" aria-hidden="true"><i class="ph-grid"></i></div>{% motif "inner-hero" %}
+{% include "partials/nav.html" %}
+  <div class="container hero-body">
+    <div class="reveal">
+      {% with c=s.crumb_list %}{% if c %}<nav class="crumbs" aria-label="Breadcrumb">{% for label, url in c %}{% if forloop.last %}<b>{{ label }}</b>{% else %}<a href="{{ url }}">{{ label }}</a><i class="fa-solid fa-chevron-right"></i>{% endif %}{% endfor %}</nav>{% endif %}{% endwith %}
+      {% if s.eyebrow %}<div class="eyebrow">{{ s.eyebrow }}</div>{% endif %}
+      <h1>{{ s.title|hl:s.highlight }}</h1>
+      {% if s.subtitle %}<p class="lead">{{ s.subtitle|rich }}</p>{% endif %}
+      {% with f=s.facts %}{% if f %}<div class="hero-facts">{% for x in f %}<span class="fact"><i class="fa-solid {{ x.icon }}"></i>{{ x.title }}</span>{% endfor %}</div>{% endif %}{% endwith %}
+      <div class="ctas">{% include "partials/buttons.html" %}</div>
+    </div>
+  </div>
+</header>
+{% if s.visual == "orbit" %}<div class="page-feature">{% include "partials/orbit.html" %}</div>
+{% elif s.visual == "photo" and s.img %}{% with st=s.stats %}<div class="page-feature{% if st %} has-stats{% endif %}">{% if st and s.img2 %}<div class="pf-pair">{% endif %}<div class="hero-photo reveal d2"><div class="frame"><img src="{{ s.img }}" alt="{{ s.image_alt }}"/></div>{% if not st and s.badge_text %}<div class="badge-float"><span><i class="fa-solid {{ s.badge_icon|default:'fa-star' }}"></i></span>{{ s.badge_text }}</div>{% endif %}</div>{% if st and s.img2 %}<div class="hero-photo pf-small"><div class="frame"><img src="{{ s.img2 }}" alt="" loading="lazy"/></div></div></div>{% endif %}{% if st %}<div class="pf-stats{% if s.stats_style == "text" or not s.stats_style and st|longest %} pf-stats--text{% endif %}">{% for x in st %}<div class="pf-stat"><span class="pf-ic"><i class="fa-solid {{ x.icon }}"></i></span><span><b>{{ x.title }}</b><small>{{ x.subtitle }}</small></span></div>{% endfor %}</div>{% endif %}</div>{% endwith %}
+{% endif %}

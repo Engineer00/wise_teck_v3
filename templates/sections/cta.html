@@ -1,0 +1,4 @@
+{% load wt %}{% include "sections/_open.html" %}<div class="band reveal">
+      <svg viewBox="0 0 1200 120" preserveAspectRatio="none" aria-hidden="true"><path d="M0,70 C260,20 520,110 800,60 C980,30 1100,70 1200,50" fill="none" stroke="#fff" stroke-opacity=".25" stroke-width="2"/><path d="M0,95 C300,55 560,125 840,85 C1010,62 1120,95 1200,80" fill="none" stroke="#dcb84a" stroke-opacity=".5" stroke-width="2"/></svg>
+      <div class="band-copy">{% if s.eyebrow %}<div class="tag">{{ s.eyebrow }}</div>{% endif %}<h2>{{ s.title|hl:s.highlight }}</h2>{% if s.subtitle %}<p>{{ s.subtitle|rich }}</p>{% endif %}</div>
+      <div class="acts">{% include "partials/buttons.html" %}</div></div></div></section>

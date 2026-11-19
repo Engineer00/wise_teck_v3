@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% load wt %}
+{% block hero %}{% for s in sections %}{% if s.is_hero %}{% include "sections/"|add:s.layout|add:".html" %}{% endif %}{% endfor %}{% endblock %}
+{% block content %}{% for s in sections %}{% if not s.is_hero %}{% include "sections/"|add:s.layout|add:".html" %}{% if s.divider_after %}
+<div class="wave-div" aria-hidden="true">{% wave "wv-div-"|add:s.divider_after 130 "wv-div-art" %}</div>{% endif %}
+{% endif %}{% endfor %}{% endblock %}

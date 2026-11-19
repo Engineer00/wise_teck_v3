@@ -1,0 +1,140 @@
+{% extends "adminpanel/base.html" %}
+
+{% block topbar_meta %}
+<p class="ap-topbar-sub">Overview of Wise-Teck content &amp; leads</p>
+{% endblock %}
+
+{% block content %}
+<section class="ap-stats">
+  {% for s in stats %}
+  <a href="{{ s.url }}" class="ap-stat" data-icon="{{ s.icon }}">
+    <div class="ap-stat-icon" data-icon="{{ s.icon }}"></div>
+    <div class="ap-stat-body">
+      <span class="ap-stat-label">{{ s.label }}</span>
+      <strong class="ap-stat-value">{{ s.total }}</strong>
+      <span class="ap-stat-extra">
+        {% if s.extra.unread is not None %}
+          {{ s.extra.unread }} unread
+        {% elif s.extra.active is not None %}
+          {{ s.extra.active }} active
+        {% else %}
+          Total records
+        {% endif %}
+      </span>
+    </div>
+  </a>
+  {% endfor %}
+</section>
+
+<div class="ap-grid-2">
+  <section class="ap-panel">
+    <div class="ap-panel-head">
+      <h2>Recent messages</h2>
+      <a href="{% url 'adminpanel_list' 'messages' %}" class="ap-link">View all</a>
+    </div>
+    {% if recent_contacts %}
+    <ul class="ap-feed">
+      {% for c in recent_contacts %}
+      <li>
+        <a href="{% url 'adminpanel_change' 'messages' c.pk %}">
+          <div class="ap-feed-main">
+            <strong>{{ c.name }}</strong>
+            <span>{{ c.email }}{% if c.interest %} · {{ c.interest }}{% endif %}</span>
+          </div>
+          <div class="ap-feed-meta">
+            {% if not c.is_read %}<em class="ap-pill ap-pill-warn">New</em>{% endif %}
+            <time>{{ c.created_at|date:"M d, H:i" }}</time>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="ap-empty">No contact messages yet.</p>
+    {% endif %}
+  </section>
+
+  <section class="ap-panel">
+    <div class="ap-panel-head">
+      <h2>Latest blogs</h2>
+      <a href="{% url 'adminpanel_list' 'blogs' %}" class="ap-link">View all</a>
+    </div>
+    {% if recent_blogs %}
+    <ul class="ap-feed">
+      {% for b in recent_blogs %}
+      <li>
+        <a href="{% url 'adminpanel_change' 'blogs' b.pk %}">
+          <div class="ap-feed-main">
+            <strong>{{ b.title }}</strong>
+            <span>{% if b.author %}{{ b.author }}{% else %}Untitled author{% endif %}{% if b.category %} · {{ b.category }}{% endif %}</span>
+          </div>
+          <div class="ap-feed-meta">
+            {% if b.is_featured %}<em class="ap-pill">Featured</em>{% endif %}
+            <time>{{ b.published_at|default:b.created_at|date:"M d" }}</time>
+          </div>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="ap-empty">No blog posts yet.</p>
+    {% endif %}
+  </section>
+</div>
+
+<div class="ap-grid-2 ap-grid-gap">
+  <section class="ap-panel">
+    <div class="ap-panel-head">
+      <h2>Drafts &amp; scheduled</h2>
+      <a href="{% url 'adminpanel_list' 'pages' %}?draft_of__isnull=False" class="ap-link">All drafts</a>
+    </div>
+    {% if drafts or scheduled_items %}
+    <ul class="ap-feed">
+      {% for d in drafts %}
+      <li><a href="{% url 'adminpanel_change' 'pages' d.pk %}">
+        <div class="ap-feed-main"><strong>{{ d.draft_of.title }}</strong><span>Page draft</span></div>
+        <div class="ap-feed-meta">{% if d.publish_at %}<em class="ap-pill ap-pill-warn">Goes live</em><time>{{ d.publish_at|date:"M d, H:i" }}</time>{% else %}<em class="ap-pill">Draft</em>{% endif %}</div>
+      </a></li>
+      {% endfor %}
+      {% for x in scheduled_items %}
+      <li><a href="{% if x.content %}{% url 'adminpanel_change' 'blogs' x.pk %}{% else %}{% url 'adminpanel_change' 'success-stories' x.pk %}{% endif %}">
+        <div class="ap-feed-main"><strong>{{ x.title }}</strong><span>{% if x.content %}Blog post{% else %}Success story{% endif %}</span></div>
+        <div class="ap-feed-meta"><em class="ap-pill ap-pill-warn">Goes live</em><time>{{ x.publish_at|date:"M d, H:i" }}</time></div>
+      </a></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="ap-empty">No drafts or scheduled items. Open a page and choose “Create draft” to prepare changes privately.</p>
+    {% endif %}
+  </section>
+
+  <section class="ap-panel">
+    <div class="ap-panel-head"><h2>Recent changes</h2></div>
+    {% if recent_changes %}
+    <ul class="ap-feed">
+      {% for r in recent_changes %}
+      <li><div class="ap-feed-row">
+        <div class="ap-feed-main"><strong>{{ r.object_repr }}</strong><span>{{ r.reason }}</span></div>
+        <div class="ap-feed-meta">{% if r.user %}<em class="ap-pill">{{ r.user.username }}</em>{% endif %}<time>{{ r.created_at|date:"M d, H:i" }}</time></div>
+      </div></li>
+      {% endfor %}
+    </ul>
+    {% else %}
+    <p class="ap-empty">No changes yet. Every save keeps the previous version here.</p>
+    {% endif %}
+  </section>
+</div>
+
+<section class="ap-panel ap-quick">
+  <div class="ap-panel-head">
+    <h2>Quick actions</h2>
+  </div>
+  <div class="ap-quick-row">
+    <a class="ap-btn ap-btn-primary" href="{% url 'adminpanel_add' 'blogs' %}">+ Blog post</a>
+    <a class="ap-btn" href="{% url 'adminpanel_add' 'success-stories' %}">+ Success story</a>
+    <a class="ap-btn" href="{% url 'adminpanel_add' 'team' %}">+ Team member</a>
+    <a class="ap-btn" href="{% url 'adminpanel_add' 'pages' %}">+ Page</a>
+    <a class="ap-btn" href="{{ settings_url }}">Site settings</a>
+  </div>
+</section>
+{% endblock %}

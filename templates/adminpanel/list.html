@@ -1,0 +1,103 @@
+{% extends "adminpanel/base.html" %}
+
+{% block topbar_meta %}
+<p class="ap-topbar-sub">{{ total_count }} record{{ total_count|pluralize }}</p>
+{% endblock %}
+
+{% block content %}
+<div class="ap-toolbar">
+  <form method="get" class="ap-search-form" role="search">
+    <input class="ap-input" type="search" name="q" value="{{ q }}" placeholder="Search {{ meta.label|lower }}…">
+    {% for key, val in active_filters.items %}
+    <input type="hidden" name="{{ key }}" value="{{ val }}">
+    {% endfor %}
+    <button type="submit" class="ap-btn">Search</button>
+  </form>
+
+  <div class="ap-toolbar-actions">
+    {% for f in filters %}
+    <form method="get" class="ap-filter-form">
+      {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+      {% for k, v in active_filters.items %}
+        {% if k != f.name %}<input type="hidden" name="{{ k }}" value="{{ v }}">{% endif %}
+      {% endfor %}
+      <label>
+        <span class="ap-sr">{{ f.label }}</span>
+        <select class="ap-input ap-select" name="{{ f.name }}" onchange="this.form.submit()">
+          <option value="">{{ f.label }}: All</option>
+          {% for opt in f.options %}
+          <option value="{{ opt.value }}"{% if opt.selected %} selected{% endif %}>{{ opt.text }}</option>
+          {% endfor %}
+        </select>
+      </label>
+    </form>
+    {% endfor %}
+    {% if can_add %}<a class="ap-btn ap-btn-primary" href="{% url 'adminpanel_add' resource %}{% if active_filters.page %}?page={{ active_filters.page }}{% endif %}">Add {{ meta.singular }}</a>{% endif %}
+  </div>
+</div>
+
+<div class="ap-panel ap-table-wrap">
+  {% if rows %}
+  <table class="ap-table">
+    <thead>
+      <tr>
+        {% for name, label in meta.list_fields %}
+        <th>{{ label }}</th>
+        {% endfor %}
+        <th class="ap-th-actions">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for row in rows %}
+      <tr{% if resource == 'messages' and not row.obj.is_read %} class="ap-row-unread"{% endif %}>
+        {% for cell in row.cells %}
+        <td>
+          {% if cell.type == 'bool' %}
+            {% if cell.value %}
+            <span class="ap-badge ap-badge-yes">Yes</span>
+            {% else %}
+            <span class="ap-badge ap-badge-no">No</span>
+            {% endif %}
+          {% elif forloop.first %}
+            <a class="ap-cell-link" href="{% url 'adminpanel_change' resource row.obj.pk %}">{{ cell.value }}</a>
+          {% else %}
+            {{ cell.value }}
+          {% endif %}
+        </td>
+        {% endfor %}
+        <td class="ap-actions">
+          <a class="ap-action" href="{% url 'adminpanel_change' resource row.obj.pk %}">Edit</a>
+          {% if resource == 'messages' %}
+          <form method="post" action="{% url 'adminpanel_contact_toggle_read' row.obj.pk %}" class="ap-inline-form">
+            {% csrf_token %}
+            <button type="submit" class="ap-action">
+              {% if row.obj.is_read %}Unread{% else %}Read{% endif %}
+            </button>
+          </form>
+          {% endif %}
+          <a class="ap-action ap-action-danger" href="{% url 'adminpanel_delete' resource row.obj.pk %}">Delete</a>
+        </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  {% else %}
+  <div class="ap-empty-state">
+    <p>No {{ meta.label|lower }} found.</p>
+    {% if can_add %}<a class="ap-btn ap-btn-primary" href="{% url 'adminpanel_add' resource %}">Add {{ meta.singular }}</a>{% endif %}
+  </div>
+  {% endif %}
+</div>
+
+{% if page_obj.has_other_pages %}
+<nav class="ap-pagination" aria-label="Pagination">
+  {% if page_obj.has_previous %}
+  <a class="ap-btn" href="?p={{ page_obj.previous_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% for k,v in active_filters.items %}&{{ k }}={{ v|urlencode }}{% endfor %}">Previous</a>
+  {% endif %}
+  <span class="ap-page-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+  {% if page_obj.has_next %}
+  <a class="ap-btn" href="?p={{ page_obj.next_page_number }}{% if q %}&q={{ q|urlencode }}{% endif %}{% for k,v in active_filters.items %}&{{ k }}={{ v|urlencode }}{% endfor %}">Next</a>
+  {% endif %}
+</nav>
+{% endif %}
+{% endblock %}
