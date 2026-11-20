@@ -2,7 +2,7 @@
   {% wave "wv-hero" 320 "wv-hero-art wv-hero-art--soft" %}<div class="ph-bg" aria-hidden="true"><i class="ph-grid"></i></div>{% motif "inner-hero" %}
 {% include "partials/nav.html" %}
   <div class="container hero-body">
-    <div class="reveal">
+    <div class="rhythm reveal">
       {% with c=s.crumb_list %}{% if c %}<nav class="crumbs" aria-label="Breadcrumb">{% for label, url in c %}{% if forloop.last %}<b>{{ label }}</b>{% else %}<a href="{{ url }}">{{ label }}</a><i class="fa-solid fa-chevron-right"></i>{% endif %}{% endfor %}</nav>{% endif %}{% endwith %}
       {% if s.eyebrow %}<div class="eyebrow">{{ s.eyebrow }}</div>{% endif %}
       <h1>{{ s.title|hl:s.highlight }}</h1>

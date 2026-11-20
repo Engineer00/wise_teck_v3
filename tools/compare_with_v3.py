@@ -1,6 +1,10 @@
 """Compare each Django-rendered page with the v3 static page, tag by tag.
 
-    py -3.13 tools/compare_with_v3.py [-v 60]      (needs ../wise-teck-v3, the static v3 site)
+    py -3.13 tools/compare_with_v3.py [-v 60] [--head]   (needs ../wise-teck-v3, the static v3 design)
+
+Optional check: the Django site is now the design source of truth (it adds the spacing system, equal
+sections and heroes, and the phone top-bar rule). By default it compares with the v3 working files;
+--head compares with v3's last commit instead.
 
 Also imported by core/tests/test_site.py. What is ignored on purpose: asset paths (assets/… vs /static/…),
 .html vs /slug/ links, local vs remote copies of the same photo, the SEO tags in <head>, and the inside of the
@@ -117,7 +121,7 @@ def compare(client, verbose=0):
     """Returns the total number of differing tokens across all pages (0 = identical)."""
     total = 0
     for f, url in MAP.items():
-        a = tokens(read_v3(f))
+        a = tokens(read_v3(f) if "--head" in sys.argv else (V3 / f).read_text(encoding="utf-8"))
         r = client.get(url)
         b = tokens(r.content.decode())
         diff = [l for l in difflib.unified_diff(a, b, "v3", "django", n=1, lineterm="") if not l.startswith(("---", "+++"))]

@@ -5,7 +5,7 @@
    order so every rule resolves exactly as before; type = the one typography system on top.
    All sizes / line heights / weights / spacing come from the tokens below.
    ===================================================================== */
-@layer vendor, site, type, layout;
+@layer vendor, site, type, layout, system;
 /* icon library in the lowest layer, so site styles always win over it */
 @import url("https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css") layer(vendor);
 /* ===== COLOUR PALETTE (design tokens) =====
@@ -201,7 +201,6 @@
   --container-wide:1440px;
   --gutter:clamp(16px,4vw,24px);
   --sec-pad:clamp(48px,6vw,80px);
-  --band-pad:clamp(40px,4.5vw,64px);
   --sec-min:560px;
   --band-min:360px;
   --head-gap:clamp(24px,2.2vw,32px);
@@ -213,7 +212,7 @@
   --stack-gap:var(--sp-16);
   --topbar-h:54px;
   --hero-min:clamp(640px,calc(100svh - var(--topbar-h)),860px);
-  --page-hero-min:640px;
+  --page-hero-min:720px;          /* every inner hero: one height on desktop (content-driven below 1024px) */
   --tap:44px;
   --measure:68ch;
   --p-gap:12px;
@@ -328,7 +327,25 @@
   --z-nav:20;
   --z-top:1000;
   /* radius, type, spacing and layering steps used across the site */
+  /* global spacing system: gaps between text elements (used by .rhythm) */
+  --gap-eyebrow:var(--sp-12);
+  --gap-eyebrow-sm:var(--sp-8);
+  --gap-h1:var(--sp-20);
+  --gap-h2:var(--sp-16);
+  --gap-h3:var(--sp-12);
+  --gap-link:var(--sp-16);
+  --gap-actions:var(--sp-24);
+  --gap-media:var(--sp-16);
+  /* one padding + radius scale for every card */
+  --pad-card:var(--sp-32);
+  --pad-card-sm:var(--sp-24);
+  --pad-panel:var(--sp-40);
+  --r-card:var(--r-lg);
+  --r-card-sm:var(--r-md);
+}@media (max-width:639px){
+  :root{--pad-card:var(--sp-24);--pad-card-sm:var(--sp-20);--pad-panel:var(--sp-24)}
 }
+
 @layer site{
   /* ---------- base design system ---------- */
   /* =========================================================
@@ -1354,7 +1371,7 @@
   body.v3 h4{font-size:var(--fs-h4);font-weight:var(--fw-bold);line-height:var(--lh-h4);letter-spacing:0}
   body.v3 h5{font-size:var(--fs-h5);font-weight:var(--fw-bold);line-height:var(--lh-h5)}
   /* tag line / kicker / eyebrow */
-  body.v3 .kicker,body.v3 .eyebrow,body.v3 .tag,body.v3 .step small{font-size:var(--fs-kicker);font-weight:var(--fw-bold);line-height:1.2;letter-spacing:var(--ls-kicker);text-transform:uppercase}
+  body.v3 .kicker,body.v3 .eyebrow,body.v3 .tag,body.v3 .step small{font-size:var(--fs-kicker);font-weight:var(--fw-bold);line-height:var(--lh-heading);letter-spacing:var(--ls-kicker);text-transform:uppercase}
   /* paragraphs */
   body.v3 p{font-size:var(--fs-body);font-weight:var(--fw-regular);line-height:var(--lh-body);margin:0 0 var(--p-gap)}
   body.v3 p:last-child{margin-bottom:0}
@@ -1370,7 +1387,7 @@
   body.v3 .fact,body.v3 .chip,body.v3 .orbit-tag__t,body.v3 .eorbit__t,body.v3 .svc,body.v3 .sk span,body.v3 .wk-feats div,
   body.v3 .crumbs,body.v3 .node,body.v3 .form label,body.v3 .more{font-size:var(--fs-label);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
   /* buttons */
-  body.v3 .btn{font-size:var(--fs-button);font-weight:var(--fw-bold);line-height:1.2;letter-spacing:0}
+  body.v3 .btn{font-size:var(--fs-button);font-weight:var(--fw-bold);line-height:var(--lh-heading);letter-spacing:0}
   /* navigation */
   body.v3 .menu,body.v3 .menu > a,body.v3 .menu .dd > button{font-size:var(--fs-nav);font-weight:var(--fw-semibold)}
   body.v3 .dd-panel a{font-size:var(--fs-nav-sub);font-weight:var(--fw-medium)}
@@ -1378,7 +1395,7 @@
   body.v3 .logo small{font-size:var(--fs-xs);font-weight:var(--fw-semibold)}
   /* quotes */
   body.v3 .story blockquote{font-size:var(--fs-quote);font-weight:var(--fw-medium);line-height:var(--lh-small)}
-  body.v3 .quote-card blockquote{font-size:var(--fs-quote-lg);font-weight:var(--fw-bold);line-height:1.4}
+  body.v3 .quote-card blockquote{font-size:var(--fs-quote-lg);font-weight:var(--fw-bold);line-height:var(--lh-h5)}
   /* footer, top bar, fine print */
   body.v3 .ft-col h4{font-size:var(--fs-h4);font-weight:var(--fw-bold)}
   body.v3 .ft-col a,body.v3 .ft-contact div{font-size:var(--fs-nav-sub);font-weight:var(--fw-regular)}
@@ -1388,7 +1405,7 @@
   body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 132px,var(--p-navy-900) 132px,var(--p-navy-900) 100%)}
   body.v3 .ft-logo{align-items:center}
   body.v3 .ft-logo small{display:block;margin-top:var(--sp-2)}
-  body.v3 .ft-tag{margin:var(--sp-20) 0 var(--sp-20);line-height:1.6}
+  body.v3 .ft-tag{margin:var(--sp-20) 0 var(--sp-20);line-height:var(--lh-small)}
   body.v3 .hero__visual--six .orbit-tag__t{font-size:var(--fs-fine);white-space:nowrap;padding:var(--sp-4) var(--sp-12)}
   body.v3 .ft-col a:not(.logo){margin-bottom:var(--sp-8)}
   body.v3 .ft-col h4{margin-bottom:var(--sp-16)}
@@ -1470,7 +1487,6 @@
   .v3 .page-feature{box-sizing:border-box;max-width:var(--container);padding-inline:var(--gutter)}
   /* ---- sections: every main section shares one rhythm ---- */
   .sec,main > section{padding-block:var(--sec-pad)}
-  main > .weekend,main > .stories,main > .blk.tight{padding-block:var(--band-pad)}
   /* heading -> content */
   .sec-head,.blk .sec-head{margin-bottom:var(--head-gap)}
   /* collaborators block (inside the corporate section): centred sub-heading, one section gap above */
@@ -1555,9 +1571,8 @@
     .sk-grid{grid-template-columns:minmax(0,1fr)}
     /* skill cards: one per line on phones */
     .sk{aspect-ratio:16/9}
-    /* top bar: one slim line (phone + email); the org line repeats the logo's "A Project of WISE" */
-    .topbar .topbar-org{display:none}
-    .topbar,.topbar > .container{min-height:40px}
+    /* top bar hidden on phones: its phone / email / address are in the footer and on the contact page */
+    .topbar{display:none}
     .sk span{font-size:var(--fs-body);left:var(--sp-16);right:var(--sp-16);bottom:var(--sp-16)}
     /* footer: even 32px rhythm between stacked columns */
     .ft-grid{row-gap:var(--sp-32)}
@@ -1595,3 +1610,50 @@
 }
 /* ---- Django site additions (contact form states, article pages, feeds, staff preview bar).
    Tokens only, like the rest of this file; nothing is styled inline in the templates. ---- */
+
+/* ---- SYSTEM: the global spacing rules (last layer, so it always wins). ----
+   Text rhythm: add class="rhythm" to any block of text; its children are spaced by the tokens above:
+   kicker -> h1/h2 12 · kicker -> h3/h4 8 · h1 -> next 20 · h2 -> next 16 · h3-h5 -> next 12 ·
+   text -> text 12 · text -> link 16 · text -> buttons 24 · icon / badge -> title 16.
+   Surfaces: every card uses --pad-card (32), compact cards --pad-card-sm (24), panels --pad-panel (40);
+   phones 24 / 20 / 24. Don't add margins to headings or paragraphs inside components. */
+@layer system{
+  .t-h1{font-size:var(--fs-h1);font-weight:var(--fw-extrabold);line-height:var(--lh-display);letter-spacing:var(--ls-h1)}
+  .t-h2{font-size:var(--fs-h2);font-weight:var(--fw-extrabold);line-height:var(--lh-heading);letter-spacing:var(--ls-h2)}
+  .t-h3{font-size:var(--fs-h3);font-weight:var(--fw-bold);line-height:var(--lh-snug);letter-spacing:var(--ls-h3)}
+  .t-h4{font-size:var(--fs-h4);font-weight:var(--fw-bold);line-height:var(--lh-h4);letter-spacing:0}
+  .t-lead{font-size:var(--fs-lead);line-height:var(--lh-lead)}
+  .t-body{font-size:var(--fs-body);line-height:var(--lh-body)}
+  .t-small{font-size:var(--fs-small);line-height:var(--lh-small)}
+  .t-label{font-size:var(--fs-label);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
+  .t-kicker{font-size:var(--fs-kicker);font-weight:var(--fw-bold);line-height:var(--lh-heading);letter-spacing:var(--ls-kicker);text-transform:uppercase}
+
+  .rhythm > :is(h1,h2,h3,h4,h5,p,ul,ol,blockquote,.kicker,.eyebrow,.tag,.crumbs,.lead,.hero-facts,.ctas,.acts,.more,.btn,.sig,small){margin-block:0}
+  .rhythm > :is(.kicker,.eyebrow,.tag,.t-kicker,small) + *{margin-top:var(--gap-eyebrow)}
+  .rhythm > :is(.kicker,.eyebrow,.tag,.t-kicker,small) + :is(h3,h4,h5,.t-h3,.t-h4){margin-top:var(--gap-eyebrow-sm)}
+  .rhythm > .crumbs + *{margin-top:var(--gap-h2)}
+  .rhythm > :is(h1,.t-h1) + *{margin-top:var(--gap-h1)}
+  .rhythm > :is(h2,.t-h2) + *{margin-top:var(--gap-h2)}
+  .rhythm > :is(h3,h4,h5,.t-h3,.t-h4) + *{margin-top:var(--gap-h3)}
+  .rhythm > :is(p,ul,ol,blockquote,.q) + *{margin-top:var(--p-gap)}
+  .rhythm > * + .more{margin-top:var(--gap-link)}
+  .rhythm > * + :is(.ctas,.acts,.btn,.sig,.hero-facts){margin-top:var(--gap-actions)}
+  .rhythm > :is(.ic,.badge,.pic,.dot){margin-bottom:var(--gap-media)}
+  .pc{gap:0}
+  .checks + .more{margin-top:var(--gap-link)}
+
+  .surface{padding:var(--pad-card);border-radius:var(--r-card);background:var(--p-white);box-shadow:var(--shadow-card)}
+  .surface--sm{padding:var(--pad-card-sm)}
+  .surface--lg{padding:var(--pad-panel)}
+  .card{padding:var(--pad-card);border-radius:var(--r-card)}
+  .pc,.ci,.placeholder{padding:var(--pad-card-sm);border-radius:var(--r-card)}
+  .story{padding:var(--pad-card-sm) var(--pad-card);border-radius:var(--r-card)}
+  .note{padding:var(--pad-card-sm) var(--pad-card)}
+  .panel,.eco-card,.quote-card{padding:var(--pad-panel)}
+  .glass,.blockc{border-radius:var(--r-card)}
+  .blockc .bd{padding:var(--pad-card-sm)}
+  .prog .bd{padding:0 var(--pad-card-sm) var(--pad-card-sm)}
+  .svc,.sk,.prog{border-radius:var(--r-card-sm)}
+  .tgrid{gap:var(--grid-gap)}
+  .ci,.placeholder,.pcard{gap:var(--sp-16)}
+}

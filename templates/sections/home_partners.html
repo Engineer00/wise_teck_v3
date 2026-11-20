@@ -1,6 +1,6 @@
 {% load wt %}<section class="section corp wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
   {% motif s.motif %}<div class="container corp-grid">
-    <div class="reveal"><h2>{{ s.title|hl:s.highlight }}</h2>{% if s.subtitle %}<p>{{ s.subtitle|rich }}</p>{% endif %}{% include "partials/buttons.html" %}</div>
+    <div class="rhythm reveal"><h2>{{ s.title|hl:s.highlight }}</h2>{% if s.subtitle %}<p>{{ s.subtitle|rich }}</p>{% endif %}{% include "partials/buttons.html" %}</div>
     {% if s.img %}<div class="ph reveal d2"><img src="{{ s.img }}" alt="{{ s.image_alt }}"/></div>{% endif %}
   </div>
   {% with partners=s.main_items %}{% if partners %}<div class="container collab-block">

@@ -1,6 +1,6 @@
 {% load wt %}<section class="section about wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
   {% motif s.motif %}<div class="container about-grid">
-    <div class="reveal">
+    <div class="rhythm reveal">
       {% if s.eyebrow %}<span class="kicker left">{{ s.eyebrow }}</span>{% endif %}
       <h2>{{ s.title|hl:s.highlight }}</h2>
       {{ s.body|paras }}

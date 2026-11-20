@@ -30,10 +30,14 @@ class UniversalCssTest(SimpleTestCase):
     def test_tokens_live_only_in_root(self):
         css = _css()
         roots = re.findall(r":root\s*\{", css)
-        self.assertLessEqual(len(roots), 2)
+        self.assertLessEqual(len(roots), 3)
         for m in re.finditer(r":root\s*\{", css):
-            depth = css[: m.start()].count("{") - css[: m.start()].count("}")
-            self.assertEqual(depth, 0, "a :root token block is nested inside a layer or media query")
+            before = css[: m.start()]
+            depth = before.count("{") - before.count("}")
+            # allowed: top level, or directly inside an @media block (responsive token values) - never inside a layer
+            opener = before[: before.rfind("{")].rsplit("}", 1)[-1].strip() if depth else ""
+            self.assertTrue(depth == 0 or (depth == 1 and opener.startswith("@media")),
+                            "a :root token block is nested inside a layer")
 
     def test_no_hard_coded_design_values(self):
         problems = []
