@@ -1,0 +1,22 @@
+{
+  "permissions": {
+    "deny": [
+      "Read(./.env)",
+      "Read(./.env.*)",
+      "Read(./db.sqlite3)"
+    ]
+  },
+  "hooks": {
+    "PreToolUse": [
+      {
+        "matcher": "Bash|PowerShell",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "py -3.13 \"$CLAUDE_PROJECT_DIR/.claude/hooks/no_ai_attribution.py\""
+          }
+        ]
+      }
+    ]
+  }
+}

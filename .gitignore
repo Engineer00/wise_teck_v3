@@ -13,3 +13,7 @@ db.sqlite3-journal
 
 # secrets
 .env
+
+# personal Claude Code files
+.claude/settings.local.json
+CLAUDE.local.md

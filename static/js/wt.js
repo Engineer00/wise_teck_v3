@@ -25,7 +25,7 @@
     });
     /* mobile menu: submenus are an accordion (one open at a time), so the list stays short
        and the Apply Now button at the bottom stays in reach */
-    var mobile = window.matchMedia('(max-width: 1100px)');
+    var mobile = window.matchMedia('(max-width: 1023px)');
     [].forEach.call(menu.querySelectorAll('.dd > button'), function (b) {
       b.setAttribute('aria-expanded', 'false');
       b.addEventListener('click', function () {
