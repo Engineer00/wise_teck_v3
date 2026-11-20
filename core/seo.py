@@ -38,11 +38,11 @@ def _title(site, title):
 
 
 def _default_image(site):
-    return site.share_image.url if site.share_image else static("img/wise-teck-logo.png")
+    return site.share_image.url if site.share_image else static("img/wise-teck-logo-512.png")
 
 
 def organization(site, base):
-    logo = absolute(base, site.logo.url if site.logo else static("img/wise-teck-logo.png"))
+    logo = absolute(base, site.logo.url if site.logo else static("img/wise-teck-logo-512.png"))
     org = {"@type": "EducationalOrganization", "@id": base + "/#organization", "name": site.seo_name or site.site_name,
            "url": base + "/", "logo": logo}
     if site.phone:
@@ -128,7 +128,7 @@ def detail_seo(request, kind, obj, title, description, image, parent=None, paren
     art = {"@type": "BlogPosting" if kind == "blog" else "Article", "@id": canonical + "#article", "headline": title[:110],
            "description": description, "image": [img], "url": canonical, "mainEntityOfPage": canonical,
            "publisher": {"@type": "Organization", "name": site.seo_name or site.site_name,
-                         "logo": {"@type": "ImageObject", "url": absolute(base, static("img/wise-teck-logo.png"))}},
+                         "logo": {"@type": "ImageObject", "url": absolute(base, static("img/wise-teck-logo-512.png"))}},
            "inLanguage": "en"}
     published = getattr(obj, "published_at", None) or getattr(obj, "publish_at", None) or getattr(obj, "created_at", None)
     if published:

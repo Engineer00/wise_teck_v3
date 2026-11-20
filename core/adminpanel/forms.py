@@ -6,7 +6,7 @@ fields appear in the panel automatically.
 from django import forms
 from django.forms import inlineformset_factory, modelform_factory
 
-from .models import (BlogPost, ContactMessage, FooterColumn, FooterLink, Item, NavItem, Page, Program, Redirect,
+from ..models import (BlogPost, ContactMessage, FooterColumn, FooterLink, Item, NavItem, Page, Program, Redirect,
                      Section, Service, SiteSettings, SuccessStory, TeamMember)
 
 try:

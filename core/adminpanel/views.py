@@ -17,10 +17,10 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
-from . import adminpanel_forms as F
-from . import versioning
-from .layouts import ALWAYS, GUIDE
-from .models import (BlogPost, ContactMessage, FooterColumn, NavItem, Page, Program, Redirect, Revision, Section,
+from . import forms as F
+from .. import versioning
+from ..layouts import ALWAYS, GUIDE
+from ..models import (BlogPost, ContactMessage, FooterColumn, NavItem, Page, Program, Redirect, Revision, Section,
                      Service, SiteSettings, SuccessStory, TeamMember)
 
 

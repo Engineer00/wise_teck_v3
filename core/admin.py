@@ -1,4 +1,4 @@
-"""Django's built-in admin (/django-admin/), kept as a fallback. The main panel is /admin/ (adminpanel_views)."""
+"""Django's built-in admin (/django-admin/), kept as a fallback. The main panel is /admin/ (core/adminpanel/)."""
 from django.contrib import admin
 
 from .models import (BlogPost, ContactMessage, FooterColumn, FooterLink, Item, NavItem, Page, Program, Redirect,

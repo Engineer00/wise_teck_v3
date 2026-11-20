@@ -1,110 +1,133 @@
-# Wise-Teck v3 (Django)
+# Wise-Teck (Django)
 
-The Wise-Teck v3 website, fully editable. The look is the v3 static site's (same HTML, CSS and JavaScript); every word, link, photo, menu item and section is stored in the database and editable in the admin panel.
+The Wise-Teck website: a dynamic Django site where every page, section, word, link, photo, menu item and
+setting lives in the database and is edited in the admin panel. The design is the approved Wise-Teck v3
+design, now driven by one universal, token-based stylesheet with a global spacing system.
 
-- **Site:** `/` and `/<page>/` (for example `/about/`, `/contact/`)
-- **Admin panel:** `/admin/` (login required)
-- **Django's built-in admin (fallback):** `/django-admin/`
+- **Live:** <https://wiseteck.dev> — admin at <https://wiseteck.dev/admin/>
+- **Repository:** <https://github.com/Engineer00/wise_teck_v3> (`main` is what the server runs)
+- **Server:** Namecheap VPS (Ubuntu 24.04), next to `dehleze.store` — see [DEPLOY.md](DEPLOY.md)
 
 ## Run it locally (Windows)
 
 ```powershell
-py -m venv .venv
-.venv\Scripts\pip install -r requirements.txt
-.venv\Scripts\python manage.py migrate
-.venv\Scripts\python manage.py seed_content        # loads all v3 content and downloads its photos
-.venv\Scripts\python manage.py copy_original_admins --db "D:/wise teck site/wise_teck ORIGINAL/db.sqlite3"
-                                                   # the same admin login as the original site (or: createsuperuser)
-.venv\Scripts\python manage.py runserver 127.0.0.1:8010
+py -3.13 -m pip install -r requirements.txt
+py -3.13 manage.py migrate
+py -3.13 manage.py seed_content           # loads all the content and downloads its photos
+py -3.13 manage.py createsuperuser        # or: copy_original_admins --db "<original site db.sqlite3>"
+py -3.13 manage.py runserver 127.0.0.1:8010
 ```
 
-Open http://127.0.0.1:8010/ (site) and http://127.0.0.1:8010/admin/ (admin panel).
+Open <http://127.0.0.1:8010/> (site) and <http://127.0.0.1:8010/admin/> (admin panel).
+Use `py -3.13` explicitly: a `.venv` left active from another folder can make plain `py` pick a Python without Django.
+Locally the database is SQLite; on the server it is PostgreSQL (set by environment variables).
 
-Locally the database is SQLite (`db.sqlite3`). On the server it is PostgreSQL, set through environment variables (see [DEPLOY.md](DEPLOY.md)).
+## Check your work
 
-## How content is organised
+```powershell
+py -3.13 manage.py test core                      # 42 tests: pages, editing, contact form, admin, drafts,
+                                                  # history, scheduling, SEO, redirects, images, universal CSS
+py -3.13 manage.py test core.tests.test_css       # one file
+```
+
+Optional: `py -3.13 tools/compare_with_v3.py` compares the markup with the v3 design files in `../wise-teck-v3`.
+
+## Project structure
+
+```text
+config/                  settings (SQLite locally, PostgreSQL + production security via env vars), URLs, WSGI
+core/
+  models.py              all content tables: Page → Section → Item, SiteSettings, NavItem, Footer*, Program,
+                         SuccessStory, BlogPost, TeamMember, Service, ContactMessage, Redirect, Revision
+  views.py               pages, blog / story detail pages, contact form, previews, robots.txt, sitemap.xml, 404
+  layouts.py             what each section layout uses (drives the admin form)
+  versioning.py          drafts, scheduled publishing, version history
+  seo.py                 titles, descriptions, canonical, Open Graph / X cards, JSON-LD structured data
+  images.py              shrinks and compresses uploaded photos
+  signals.py             automatic 301 redirect when a page / post / story address changes
+  middleware.py          serves the redirects from Admin → Redirects
+  adminpanel/            the admin panel at /admin/ (the original site's panel, extended): views, forms, urls
+  management/commands/   seed_content, copy_original_admins, publish_scheduled
+  templatetags/          template helpers (title highlight, line breaks, wave art, background motifs)
+  motifs.py              the background drawings
+  seed/                  seed data (photo list, original site content)
+  tests/                 the test suite
+templates/
+  base.html, page.html, detail.html, 404.html
+  sections/<layout>.html one template per section type (21 layouts)
+  partials/              menu, logo, buttons, 3D coin orbit, story card, SEO tags, wave sprite
+  adminpanel/            admin panel screens
+static/
+  css/wise-teck.css      THE site stylesheet (universal, token-based)
+  css/adminpanel.css     admin panel stylesheet (its own --ap-* tokens)
+  js/                    site behaviour, waves, 3D coin, admin helpers
+  img/                   logo (svg + 512px png), favicon, wordmark
+media/seed/              photos used by seed_content
+tools/compare_with_v3.py optional markup comparison with the v3 design files
+CLAUDE.md                commands and conventions for Claude Code sessions
+.claude/                 project hook (no AI attribution in commits) and skills (deploy, new-section-layout)
+DEPLOY.md                server setup and updates
+```
+
+## Editing content (admin panel)
 
 | In the admin panel | What it controls |
 |---|---|
-| **Website → Pages** | Each page: web address, browser title, SEO description, published or not. Open a page to see and edit its sections. |
-| **Website → Sections** | The blocks of a page, top to bottom (`order`). Each has a **layout** (hero, cards, steps, quote, call-to-action …), its text, buttons, photos and **cards** (the repeated items: cards, steps, tags, stats). The form shows only the fields the chosen layout uses. |
-| **Website → Menu** | Top menu and drop-downs. |
-| **Website → Programs** | The three-program strip shown on many pages. Edit once, every page updates. |
-| **Website → Footer** | Footer link columns. |
-| **Website → Site Settings** | Logo, top bar, phone / email / address (top bar, footer and links), header button, footer tagline, social links, contact-form alert email, SEO default, 3D coin colours. |
-| **Content → Success Stories** | Learner stories: home slider and the Success Stories page. A story with a "full story" gets its own page. |
-| **Content → Blogs / Team / Services** | Posts (with their own pages at `/blog/<slug>/`), team members and services. Show them on any page by adding a section with the Blog / Team / Services layout. |
-| **Inbox → Messages** | Contact-form messages (mark read / unread). |
+| **Website → Pages** | Each page: address, title and SEO description, link-preview fields, published or not. Open a page to see its sections, create a **draft**, and see its **version history**. |
+| **Website → Sections** | The blocks of a page in order: layout (21 types), text, buttons, photos and cards. The form shows only the fields the chosen layout uses. |
+| **Website → Menu / Footer / Programs** | Top menu and drop-downs, footer link columns, the three-program strip shown on many pages. |
+| **Website → Redirects** | Old addresses → new ones (301). Added automatically when an address changes. |
+| **Website → Site Settings** | Logo, contact details, social links, footer text, contact-form alert email, SEO defaults, main web address. |
+| **Content → Success Stories / Blogs / Team / Services** | Lists shown by the matching section layouts; stories and posts have their own pages. |
+| **Inbox → Messages** | Contact-form messages. |
 
-### Text conventions
+**Text conventions:** coloured words in a title → type them in *Words in the title to colour*; a line break in a short
+label → `|`; paragraphs → blank line; bold → `**like this**`; icons → Font Awesome names such as `fa-users`.
 
-- **Coloured words in a title:** type the words in *Words in the title to colour*.
-- **Line break in a short label** (tags, feature icons): type `|`, e.g. `Skills|Development`.
-- **Paragraphs:** leave a blank line. **Bold:** `**like this**`.
-- **Icons:** Font Awesome names, e.g. `fa-users`, `fa-graduation-cap` (fontawesome.com/icons, free solid set).
+**Drafts, scheduling, history:** *Create draft* copies a page privately → edit → *Preview draft* → *Publish now*, or set
+*Go live at* to publish automatically. Every save keeps the previous version: *Preview*, *Open as draft* or *Restore*.
+Blog posts and stories have their own *Go live at*.
 
-### Section layouts
+## Design system (universal CSS)
 
-Page tops: *Home hero* (3D coin), *Inner page hero* (breadcrumb, facts, photo with badge or stats, or 3D coin).
-Home blocks: About, Ecosystem circle, Program cards, Services + skill tiles, Weekend banner, Stories slider, Corporate + collaborators.
-General: Text + quote / photo / checklist, Icon cards, Numbered steps, Programs strip, Photo cards (earning blocks), Stories grid, Placeholder notice, Call-to-action band, Contact details + form, Blog / Team / Services lists.
+All styles are in `static/css/wise-teck.css`. Every colour, radius, font size, spacing value and z-index comes from a
+token in the `:root` blocks at the top (transparent colours use channel tokens: `rgb(var(--p-white-rgb) / .5)`).
+Cascade layers, later wins: `vendor → site → type → layout → system`.
 
-The full field-by-field guide per layout is in `core/layouts.py` (also shown in the admin form).
+| Rule | Value |
+|---|---|
+| Content width / gutters | 1200px, centred; 24px gutters on tablet, 16px on phone — symmetric everywhere |
+| Section padding | the same for every section: 80px desktop, scaling to 48px |
+| Home hero | fills the first screen on desktop (capped at 860px) |
+| Inner heroes | the same height on every inner page: 720px desktop; content height below 1024px |
+| Text spacing | `class="rhythm"` on a text block spaces its children: eyebrow → heading 12, h1 → next 20, h2 → next 16, h3 → next 12, text → text 12, text → link 16, text → buttons 24 |
+| Cards | one padding scale: 32 / 24 / 40px (phones 24 / 20 / 24), radius 24px |
+| Breakpoints | 1024px (tablet) and 640px (phone) only |
+| Phones | the top bar is hidden; menu, headline and main button are in the first screen |
+
+Rules enforced by `core/tests/test_css.py`: no hard-coded colours / radii / font sizes / z-index outside the tokens,
+tokens only in `:root`, only the standard breakpoints, no inline styles in templates.
+A new section type: see the `new-section-layout` skill (`.claude/skills/`).
+
+## SEO
+
+Per page: title and description (best 50–60 / 120–160 characters), canonical link, robots (drafts, previews, 404 and
+"hide from search engines" are `noindex`), Open Graph / X cards with a sharing image, JSON-LD (EducationalOrganization +
+WebSite on the home page, WebPage + BreadcrumbList on every page, BlogPosting / Article on posts and stories).
+`/sitemap.xml` and `/robots.txt` are generated; uploads are resized and compressed; changed addresses redirect (301).
+After launch: Site Settings → Main web address = `https://wiseteck.dev`, add the site to Google Search Console and submit
+`sitemap.xml`.
 
 ## Commands
 
 | Command | Does |
 |---|---|
-| `manage.py seed_content` | Load the v3 content into an empty database. |
-| `manage.py seed_content --reset` | Wipe website content and load it again. **Admin edits are lost.** |
-| `manage.py copy_original_admins --db <original db.sqlite3>` | Copy the original site's admin login(s), same username and password. |
-| `manage.py seed_content --no-download` | Keep photo links instead of downloading the photos. |
-| `python tools/compare_with_v3.py` | Check every page against the v3 static site, tag by tag (needs `../wise-teck-v3`). Expect `TOTAL DIFF LINES 0` right after seeding. |
+| `manage.py seed_content` | Load the content into an empty database (`--reset` wipes admin edits — never on the live server; `--no-download` keeps photo links). |
+| `manage.py copy_original_admins --db <file>` | Copy the original site's admin login(s). |
+| `manage.py publish_scheduled` | Publish drafts whose *Go live at* has passed (the server runs it every minute). |
+| `manage.py test core` | Run the tests. |
 
-## Project layout
+## Commit rules
 
-```
-config/            settings (SQLite locally, PostgreSQL via env vars), URLs
-core/models.py     all content tables
-core/layouts.py    what each section layout uses (drives the admin form)
-core/views.py      pages, blog / story detail, contact form
-core/adminpanel_*  the admin panel (from the original site, extended)
-core/management/commands/seed_content.py   the v3 content
-core/motifs.py     background drawings (from v3 tools/motifs.py)
-templates/         base.html, page.html, sections/<layout>.html, partials/, adminpanel/
-static/            v3 CSS / JS / images (unchanged) + site-extras.css + admin panel files
-```
-
-## Drafts, scheduled publishing and version history
-
-**Version history.** Every save or delete in the admin panel keeps the version from before it: for a page, a copy of the whole page with all its sections and cards; for menu items, footer columns (with their links), programs, settings, stories, posts and so on, a copy of that item. Open a page (or any item) and scroll to **Version history**:
-- **Preview** shows an old page version exactly as it looked, without changing anything.
-- **Open as draft** copies an old version into a draft, so you can check or adjust it before it goes live.
-- **Restore** puts the old version back live at once. The version it replaces is kept too, so a restore can be undone.
-
-The newest 60 versions of each page or item are kept. The dashboard shows the latest changes and who made them.
-
-**Drafts.** On a page, **Create draft** makes a private copy of the page with all its sections and cards. Edit the draft's sections as usual: visitors keep seeing the live page. **Preview draft** shows it as visitors will see it. **Publish now** replaces the live page with the draft (the old live version goes into the history); **Discard draft** throws it away. The page address never changes.
-
-**Scheduled publishing.** On a draft, set **Go live at** and save: the draft replaces the live page at that time. Blog posts and success stories have their own **Go live at**: they stay hidden until then (they must also be marked Published). The dashboard lists everything scheduled. Scheduled drafts go live on the first visit after their time; on the server a one-minute timer makes it exact (see DEPLOY.md).
-
-## SEO
-
-Built to current search-engine best practice; everything is editable in the admin.
-
-| What | Where it comes from | Edit in |
-|---|---|---|
-| `<title>` and meta description | Each page's title and SEO description (aim for 50–60 and 120–160 characters) | Pages → Page |
-| Canonical link | The page's own address on the main web address (or an override) | Site Settings → Main web address; Pages → Canonical |
-| `robots` meta | `index, follow` for live pages; `noindex` for drafts, previews, 404 and pages marked “Hide from search engines” | Pages → Hide from search engines |
-| Link previews (Open Graph, X cards) | Sharing title / description / image, falling back to the page title, description and main photo, then the default sharing image | Pages → Link previews; Site Settings → Default sharing image |
-| Structured data (JSON-LD, schema.org) | Home: EducationalOrganization (name, logo, phone, email, address, social profiles) + WebSite. Every page: WebPage + BreadcrumbList from its breadcrumb. Blog posts: BlogPosting; stories: Article | Site Settings (organisation details); page hero breadcrumb |
-| `/sitemap.xml` | Every published, indexable page, blog post and full success story, with last-changed dates | automatic |
-| `/robots.txt` | Blocks the admin and previews, points to the sitemap; extra rules optional | Site Settings → Extra robots.txt rules |
-| Redirects (301) | Old addresses → new ones. Changing a page, blog post or story address adds one automatically (no chains) | Website → Redirects |
-| Addresses (slugs) | Short, lowercase, hyphenated; system addresses (admin, static, media, preview …) are refused | Pages → Address |
-| Images | New uploads are rotated correctly, resized to max 2000 px, compressed and stripped of camera data; every image has editable alt text | automatic; “Photo description” fields |
-| Page structure | One `<h1>` per page, sections use `<h2>`/`<h3>`, `lang="en"`, mobile-first responsive layout | templates |
-| Google Search Console | Verification tag | Site Settings → Google Search Console code |
-
-After going live: set **Site Settings → Main web address** (e.g. `https://wise-teck.dev`), add the site in Google Search Console, and submit `https://<domain>/sitemap.xml`.
+Author `Engineer00 <salman.k.786000@gmail.com>`, no AI attribution (a project hook blocks it). Work on a feature branch,
+push it, then fast-forward `main`.

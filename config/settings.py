@@ -5,8 +5,8 @@ systemd unit or a .env file loaded by it):
 
     DJANGO_SECRET_KEY=...            (required when DJANGO_DEBUG=0)
     DJANGO_DEBUG=0
-    DJANGO_ALLOWED_HOSTS=wise-teck.dev,www.wise-teck.dev
-    DJANGO_CSRF_TRUSTED_ORIGINS=https://wise-teck.dev,https://www.wise-teck.dev
+    DJANGO_ALLOWED_HOSTS=wiseteck.dev,www.wiseteck.dev
+    DJANGO_CSRF_TRUSTED_ORIGINS=https://wiseteck.dev,https://www.wiseteck.dev
     POSTGRES_DB=wiseteck  POSTGRES_USER=wiseteck  POSTGRES_PASSWORD=...  [POSTGRES_HOST=localhost  POSTGRES_PORT=5432]
     EMAIL_HOST=...  EMAIL_PORT=587  EMAIL_HOST_USER=...  EMAIL_HOST_PASSWORD=...  DEFAULT_FROM_EMAIL=...
 """

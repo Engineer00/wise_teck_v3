@@ -11,7 +11,7 @@ admin.site.site_title = "Wise-Teck Admin"
 admin.site.index_title = "Edit website content"
 
 urlpatterns = [
-    path("admin/", include("core.adminpanel_urls")),            # Wise-Teck admin panel (the original site's panel)
+    path("admin/", include("core.adminpanel.urls")),            # Wise-Teck admin panel (the original site's panel)
     re_path(r"^adminpanel/(?P<rest>.*)$", RedirectView.as_view(url="/admin/%(rest)s", query_string=True, permanent=False)),  # the original site's address
     path("django-admin/", admin.site.urls),                     # Django's built-in admin, kept as a fallback
     path("robots.txt", views.robots_txt, name="robots_txt"),

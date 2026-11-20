@@ -4,7 +4,7 @@ Server: Ubuntu 24.04, `159.198.43.141`, logged in as `root` (PuTTY). Nginx is al
 `dehleze.store`. **Do not edit or remove anything belonging to dehleze** (`/etc/nginx/sites-available/dehleze`,
 its folders or its database). Everything below only adds new files.
 
-Replace `wise-teck.dev` with the real domain everywhere.
+Replace `wiseteck.dev` with the real domain everywhere.
 
 ## 1. Packages
 
@@ -35,8 +35,8 @@ venv/bin/pip install -r app/requirements.txt
 cat > /srv/wiseteck/.env <<'EOF'
 DJANGO_DEBUG=0
 DJANGO_SECRET_KEY=PASTE-A-LONG-RANDOM-STRING
-DJANGO_ALLOWED_HOSTS=wise-teck.dev,www.wise-teck.dev
-DJANGO_CSRF_TRUSTED_ORIGINS=https://wise-teck.dev,https://www.wise-teck.dev
+DJANGO_ALLOWED_HOSTS=wiseteck.dev,www.wiseteck.dev
+DJANGO_CSRF_TRUSTED_ORIGINS=https://wiseteck.dev,https://www.wiseteck.dev
 POSTGRES_DB=wiseteck
 POSTGRES_USER=wiseteck
 POSTGRES_PASSWORD=CHOOSE-A-STRONG-PASSWORD
@@ -83,7 +83,7 @@ User=www-data
 Group=www-data
 WorkingDirectory=/srv/wiseteck/app
 EnvironmentFile=/srv/wiseteck/.env
-ExecStart=/srv/wiseteck/venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8100 --workers 3
+ExecStart=/srv/wiseteck/venv/bin/gunicorn config.wsgi:application --bind 127.0.0.1:8100 --workers 2
 Restart=always
 
 [Install]
@@ -132,7 +132,7 @@ systemctl enable --now wiseteck-publish.timer
 cat > /etc/nginx/sites-available/wiseteck <<'EOF'
 server {
     listen 80;
-    server_name wise-teck.dev www.wise-teck.dev;
+    server_name wiseteck.dev www.wiseteck.dev;
     client_max_body_size 20M;
 
     gzip on;
@@ -159,20 +159,20 @@ nginx -t && systemctl reload nginx
 ## 8. Domain and HTTPS
 
 DNS (at the domain's registrar): A record `@` → `159.198.43.141`, A record `www` → `159.198.43.141`.
-When `getent hosts wise-teck.dev` shows the IP:
+When `getent hosts wiseteck.dev` shows the IP:
 
 ```
 apt install -y certbot python3-certbot-nginx
-certbot --nginx -d wise-teck.dev -d www.wise-teck.dev
+certbot --nginx -d wiseteck.dev -d www.wiseteck.dev
 ```
 
-Then check https://wise-teck.dev, https://wise-teck.dev/admin/ and that https://dehleze.store still works.
+Then check https://wiseteck.dev, https://wiseteck.dev/admin/ and that https://dehleze.store still works.
 
 ## 9. Search engines (after HTTPS works)
 
-1. Admin → Site Settings → **Main web address**: `https://wise-teck.dev` (canonical links, sitemap and link previews use it).
-2. Check https://wise-teck.dev/robots.txt and https://wise-teck.dev/sitemap.xml open.
-3. Google Search Console → add the property `https://wise-teck.dev` → verify (paste the code into Site Settings →
+1. Admin → Site Settings → **Main web address**: `https://wiseteck.dev` (canonical links, sitemap and link previews use it).
+2. Check https://wiseteck.dev/robots.txt and https://wiseteck.dev/sitemap.xml open.
+3. Google Search Console → add the property `https://wiseteck.dev` → verify (paste the code into Site Settings →
    Google Search Console code) → Sitemaps → submit `sitemap.xml`.
 4. Optional checks: https://search.google.com/test/rich-results (structured data) and https://pagespeed.web.dev (speed).
 

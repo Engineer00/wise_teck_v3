@@ -20,7 +20,7 @@ class SeededTestCase(TestCase):
 
 def section_post(section, **changes):
     """Everything the admin section form would submit for this section (and its cards), with some fields changed."""
-    from core.adminpanel_forms import ItemFormSet, SectionForm
+    from core.adminpanel.forms import ItemFormSet, SectionForm
 
     form, formset = SectionForm(instance=section), ItemFormSet(instance=section)
     data = {}
