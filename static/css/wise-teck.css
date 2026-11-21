@@ -348,6 +348,7 @@
   --eorbit-shift:70px;                 /* home ecosystem circle: pulled left into the gutter (desktop) */
   --eorbit-lift:calc(24.65px - 30.5%); /* ... and up beside the heading (desktop) */
   --motif-cap-lift:26px;               /* graduation-cap drawing: book tucked under the cap */
+  --hero-visual-sm:300px;              /* phones: largest size of the 3D coin diagram */
   --frame-width:1240px;
   --z-1:1;
   --z-2:2;
@@ -1537,7 +1538,7 @@
     .svc-grid,.sk-grid{grid-template-columns:repeat(3,minmax(0,1fr))}
     .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
     .steps::before{display:none}
-    .v3 .hero .hero__visual{width:min(430px,100%);height:auto;aspect-ratio:1;margin-inline:auto}
+    .v3 .hero .hero__visual{width:min(430px,100%);height:auto;aspect-ratio:1;margin-inline:auto;margin-top:var(--sp-8)}   /* 40px under the buttons, label included */
     .v3 .prog-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)}
     .form{grid-template-columns:repeat(2,minmax(0,1fr))}
     .prog-arrow{display:none}
@@ -1594,7 +1595,10 @@
     .form{grid-template-columns:minmax(0,1fr)}
     .form > *{grid-column:1 / -1;min-width:0}
     /* hero orbit visuals (home + inner pages): narrower, so the side labels stay on screen */
-    .v3 .hero .hero__visual,.v3 .page-feature .hero__visual{width:min(300px,100% - 64px);height:auto;aspect-ratio:1;margin-inline:auto}
+    .v3 .hero .hero__visual,.v3 .page-feature .hero__visual{width:min(var(--hero-visual-sm),100% - var(--sp-64));height:auto;aspect-ratio:1;margin-inline:auto}
+    /* keep 40px between the buttons and the diagram's top label: the label sits above the diagram by 40px at
+       full size and by 15% of the lost size more when the diagram shrinks on narrow phones */
+    .v3 .hero .hero__visual{margin-top:calc(var(--sp-40) + (var(--hero-visual-sm) - min(var(--hero-visual-sm),100% - var(--sp-64))) * .15)}
     .orbit-tag__t{font-size:var(--fs-xs);max-width:8.5rem;white-space:normal}
     .v3 .pf-stats,.v3 .pf-stats--text{position:static;transform:none;width:100%;grid-template-columns:minmax(0,1fr);margin-top:var(--sp-24)}
     .sec-head h2.lined::before,.sec-head h2.lined::after{display:none}
