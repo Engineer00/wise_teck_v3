@@ -542,8 +542,12 @@
     s.onload = s.onerror = initHeroThree;
     document.head.appendChild(s);
   }
-  if (document.readyState === "complete") boot();
-  else window.addEventListener("load", boot, { once: true });
+  // The coin is decoration: start it once the page has loaded and the browser is idle, so reading,
+  // scrolling and tapping are never held up by the 3D library.
+  const idle = window.requestIdleCallback || ((cb) => setTimeout(cb, 300));
+  const start = () => idle(boot, { timeout: 2500 });
+  if (document.readyState === "complete") start();
+  else window.addEventListener("load", start, { once: true });
 
   window.HeroThree = HeroThree;
   window.initHeroThree = initHeroThree;

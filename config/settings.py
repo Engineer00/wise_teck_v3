@@ -112,13 +112,13 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "adminpanel_login"
 
-# Security headers (every response). The CSP lists the only places the site loads things from:
-# itself, Google Fonts and the Font Awesome CDN; photos may also be https links typed in the admin.
+# Security headers (every response). The CSP lists the only places the site loads things from: itself
+# (fonts and icons are served from the site too); photos may also be https links typed in the admin.
 SECURE_CSP = {
     "default-src": [CSP.SELF],
     "script-src": [CSP.SELF],
-    "style-src": [CSP.SELF, CSP.UNSAFE_INLINE, "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
-    "font-src": [CSP.SELF, "data:", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+    "style-src": [CSP.SELF, CSP.UNSAFE_INLINE],
+    "font-src": [CSP.SELF, "data:"],
     "img-src": [CSP.SELF, "data:", "https:"],
     "connect-src": [CSP.SELF],
     "frame-ancestors": [CSP.NONE],

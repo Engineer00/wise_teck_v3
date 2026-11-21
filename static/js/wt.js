@@ -7,6 +7,12 @@
   var els = [].slice.call(document.querySelectorAll('.reveal'));
   if (/[?&]static/.test(location.search)) { html.classList.add('static'); els.forEach(function (el) { el.classList.add('in'); }); }
   else if ('IntersectionObserver' in window) {
+    // Whatever is already on the first screen shows at once (no flash, no late Largest Contentful Paint);
+    // only content further down fades in as it scrolls into view.
+    els = els.filter(function (el) {
+      if (el.getBoundingClientRect().top < window.innerHeight) { el.classList.add('in'); return false; }
+      return true;
+    });
     var io = new IntersectionObserver(function (es) {
       es.forEach(function (e) { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.08 });
