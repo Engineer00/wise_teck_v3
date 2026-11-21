@@ -216,11 +216,9 @@
   --container-wide:1440px;
   --gutter:clamp(16px,4vw,24px);
   --sec-pad:clamp(48px,36.11px + 3.048vw,80px);
-  --sec-min:560px;
-  --band-min:360px;
   --head-gap:clamp(24px,21.03px + 0.762vw,32px);
   --wave-h:clamp(56px,7.6vw,110px);
-  --wave-overlap:calc(var(--wave-h) * -.36);
+  --wave-overlap:calc(var(--wave-h) * -.5);
   --grid-gap:clamp(16px,13.03px + 0.762vw,24px);
   --split-gap:clamp(32px,20.11px + 3.048vw,64px);
   --stack-gap:var(--sp-16);
@@ -349,6 +347,18 @@
   --eorbit-lift:calc(24.65px - 30.5%); /* ... and up beside the heading (desktop) */
   --motif-cap-lift:26px;               /* graduation-cap drawing: book tucked under the cap */
   --hero-visual-sm:300px;              /* phones: largest size of the 3D coin diagram */
+  --hero-wave-sm:150px;                /* phones + tablets: height of the home hero wave */
+  --btn-h:52px;                        /* phones + tablets: every button is this tall */
+  --btn-w:244px;                       /* phones + tablets: and at least this wide (the Explore Partnerships size) */
+  /* inner-page hero wave (drawn by wt-waves.js): how far it reaches up from the hero's bottom edge, and how far it
+     hangs below it. The hero content is centred between the header and the wave; the photo starts below the wave. */
+  --pf-frame:18px;                     /* gold / navy frame around the inner-hero photo pair */
+  --story-photo:176px;                 /* success-story portrait: desktop */
+  --story-photo-sm:112px;              /* ... phones and tablets */
+  --page-wave-reach-sm:106px;
+  --page-wave-drop-sm:46px;
+  --page-wave-reach-md:212px;
+  --page-wave-drop-md:92px;
   --frame-width:1240px;
   --z-1:1;
   --z-2:2;
@@ -574,8 +584,10 @@
   .st-track{overflow:hidden}
   .st-slides{display:flex;transition:transform .5s ease}
   .st-slide{flex:0 0 100%;display:grid;gap:var(--sp-32)}
-  .story{display:grid;grid-template-columns:120px 1fr;gap:var(--sp-24);align-items:center;background:var(--p-white);border-radius:var(--r-22);box-shadow:var(--shadow-card);padding:var(--sp-24) var(--sp-32)}
-  .story img{width:110px;height:110px;border-radius:var(--r-round);object-fit:cover;box-shadow:0 0 0 6px var(--p-violet-50)}
+  .story{display:grid;grid-template-columns:var(--story-photo) minmax(0,1fr);gap:var(--sp-32);align-items:center;background:var(--p-white);border-radius:var(--r-22);box-shadow:var(--shadow-card);padding:var(--sp-24) var(--sp-32)}
+  .story img{width:var(--story-photo);height:var(--story-photo);border-radius:var(--r-lg);object-fit:cover;object-position:50% 20%;
+    border:4px solid transparent;background:linear-gradient(var(--p-white),var(--p-white)) padding-box,linear-gradient(135deg,var(--p-gold-300),var(--p-violet-600)) border-box;
+    box-shadow:0 18px 32px -16px rgb(var(--p-violet-600-rgb) / .55)}
   .story .q{font-size:var(--fs-38);line-height:.6;color:var(--purple);font-weight:800}
   .story blockquote{margin:var(--sp-8) 0 var(--sp-12);font-size:var(--fs-body);font-weight:500;color:var(--ink);line-height:1.55}
   .story b{display:block;color:var(--ink)}
@@ -718,7 +730,6 @@
   /* (old traced-curve footer rules removed: footer styling is in the SECTION STRUCTURE block) */
   /* ---------- desktop: lock section heights to the reference ---------- */
   @media (min-width:1024px){
-    .wt-sec[style*="--h"]{height:var(--h)}
     .wt-sec.center{display:flex;flex-direction:column;justify-content:center}
   }
   /* ---------- hero ---------- */
@@ -857,7 +868,7 @@
   .blockc h3{font-size:var(--fs-lead);font-weight:800;margin-bottom:var(--sp-8)}
   .blockc p{font-size:var(--fs-small)}
   /* ---------- compact premium collaborator cards (home) ---------- */
-  .collab-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:var(--sp-24);max-width:1040px;margin:0 auto}
+  .collab-row{display:grid;grid-template-columns:1fr 1fr 1fr;grid-auto-rows:1fr;gap:var(--sp-24);max-width:1040px;margin:0 auto}
   .pcard{display:flex;align-items:center;gap:var(--sp-20);padding:var(--sp-16) var(--sp-20);border-radius:var(--r-20);text-align:left;background:linear-gradient(var(--p-white),var(--p-white)) padding-box,linear-gradient(160deg,var(--p-violet-200),var(--p-white) 45%,var(--p-gold-100)) border-box;border:1.5px solid transparent;box-shadow:0 16px 34px -20px rgb(var(--p-violet-525-rgb) / 0.35);transition:.3s}
   .pcard:hover{transform:translateY(-5px);box-shadow:var(--shadow-lift)}
   .pcard .lg{flex:none;width:120px;height:64px;border-radius:var(--r-14);display:grid;place-items:center;background:radial-gradient(120% 120% at 50% 0%,var(--p-violet-50),var(--p-lav-100));box-shadow:inset 0 0 0 1px var(--p-violet-100)}
@@ -1273,11 +1284,9 @@
   .v3 .page-feature .hero-photo::after{transform:none}
   .v3 .page-feature .hero-photo .frame{position:relative}
   .v3 .page-feature .badge-float{z-index:var(--z-3)}
-  body.inner{background:var(--p-lav-50)}
   body.inner .wave-div{display:none}
-  body.v3 section.blk{padding:var(--sp-96) 0;background:var(--p-lav-50)}
+  body.v3 section.blk{padding:var(--sp-96) 0}
   body.v3 section.blk.tight{padding:var(--sp-80) 0}
-  body.v3 section.blk:nth-of-type(even){background:var(--p-white);box-shadow:inset 0 1px 0 rgb(var(--p-violet-350-rgb) / 0.1),inset 0 -1px 0 rgb(var(--p-violet-350-rgb) / 0.1)}
   body.v3 section.blk:nth-of-type(even)::before{content:"";position:absolute;inset:0;z-index:var(--z-below);pointer-events:none;background-image:linear-gradient(rgb(var(--p-violet-450-rgb) / 0.06) 1px,transparent 1px),linear-gradient(90deg,rgb(var(--p-violet-450-rgb) / 0.06) 1px,transparent 1px);background-size:44px 44px;-webkit-mask:radial-gradient(40% 70% at 100% 0,var(--p-black),transparent 75%);mask:radial-gradient(40% 70% at 100% 0,var(--p-black),transparent 75%)}
   body.v3 section.blk:nth-of-type(even)::after{content:"";position:absolute;inset:0;z-index:var(--z-below);pointer-events:none;background:radial-gradient(30% 60% at 0 100%,rgb(var(--p-violet-500-rgb) / 0.07),transparent 70%)}
   body.v3 section.blk .motif{opacity:.35}
@@ -1316,17 +1325,18 @@
   .v3 .page-feature .hero-photo .frame{border:5px solid var(--p-white);border-radius:var(--r-36);aspect-ratio:16/6.6;box-shadow:0 30px 60px -32px rgb(var(--p-violet-775-2-rgb) / 0.5)}
   .v3 .page-feature .hero-photo .frame img{transform:skewX(6deg) scale(1.08)}
   .v3 .page-feature .pf-stats{bottom:-40px}
+  .v3 .page-feature:has(.pf-pair) .pf-stats{left:calc(50% + var(--sp-6))}
   .v3 .pf-stats--text{width:min(900px,88%)}
   .v3 .page-feature .badge-float{right:auto;top:-10px;bottom:auto;transform:translate(-50%,-50%) skewX(6deg);white-space:nowrap;width:max-content;max-width:none;left:calc(50% - 26px)}
-  .v3 .page-feature .pf-pair{position:relative;transform:skewX(-6deg);padding:var(--sp-16) var(--sp-24) var(--sp-24) var(--sp-12)}
+  .v3 .page-feature .pf-pair{position:relative;transform:skewX(-6deg);padding:var(--pf-frame) var(--pf-frame) var(--pf-frame) var(--sp-12)}
   .v3 .page-feature .pf-pair .hero-photo{position:static;transform:none;padding:0;width:100%;margin:0}
   .v3 .page-feature .pf-pair .hero-photo::before,.v3 .page-feature .pf-pair .hero-photo::after{content:none}
   /* gold + navy corner bands around the whole pair (same as the home About photo) */
-  .v3 .page-feature .pf-pair::before{content:"";position:absolute;z-index:var(--z-base);right:0;top:0;width:24%;height:52%;border-radius:0 var(--r-46) 0 0;border:18px solid var(--p-gold-400);border-left-color:transparent;border-bottom-color:transparent}
-  .v3 .page-feature .pf-pair::after{content:"";position:absolute;z-index:var(--z-base);right:0;bottom:0;width:40%;height:56%;border-radius:0 0 var(--r-46) 0;border:18px solid var(--p-navy-700);border-left-color:transparent;border-top-color:transparent}
+  .v3 .page-feature .pf-pair::before{content:"";position:absolute;z-index:var(--z-base);right:0;top:0;width:24%;height:52%;border-radius:0 var(--r-46) 0 0;border:var(--pf-frame) solid var(--p-gold-400);border-left-color:transparent;border-bottom-color:transparent}
+  .v3 .page-feature .pf-pair::after{content:"";position:absolute;z-index:var(--z-base);right:0;bottom:0;width:40%;height:56%;border-radius:0 0 var(--r-46) 0;border:var(--pf-frame) solid var(--p-navy-700);border-left-color:transparent;border-top-color:transparent}
   .v3 .page-feature .pf-pair .badge-float{left:calc(50% - 26px)}
   .v3 .page-feature.has-stats{max-width:1400px;padding:0 var(--sp-40)}
-  .v3 .page-feature .pf-pair{display:grid;gap:var(--sp-8);width:calc(100% - 30px);grid-template-columns:minmax(0,1.9fr) minmax(0,1fr)}
+  .v3 .page-feature .pf-pair{display:grid;gap:var(--sp-4);width:calc(100% - 30px);grid-template-columns:minmax(0,1.9fr) minmax(0,1fr)}
   .v3 .page-feature .pf-pair .frame{aspect-ratio:auto;height:460px}
   .v3 .page-feature .pf-pair > .hero-photo:first-child .frame{border-right-width:3px;border-radius:var(--r-36) var(--r-14) var(--r-14) var(--r-36)}
   .v3 .page-feature .pf-pair .pf-small .frame{border-left-width:3px;border-radius:var(--r-14) var(--r-36) var(--r-36) var(--r-14)}
@@ -1481,6 +1491,7 @@
   .sec,main > section{padding-block:var(--sec-pad)}
   /* heading -> content */
   .sec-head,.blk .sec-head,.st-head{margin-bottom:var(--head-gap)}
+  .sec-head > :first-child,.st-head > :first-child{margin-top:0}   /* a heading block never adds space above itself */
   /* collaborators block (inside the corporate section): centred sub-heading, one section gap above */
   .corp-grid h2{margin-bottom:var(--sp-12)}
   .collab-block{text-align:center;margin-top:var(--sec-pad)}
@@ -1489,7 +1500,20 @@
   .menu-apply{display:none}
   @media (max-width:1199px){
     /* same point where the nav collapses to the hamburger */
-    .menu.open .menu-apply{display:flex;justify-content:center;margin-top:var(--sp-12);min-height:var(--tap);color:var(--p-ink-900)}
+    .menu.open .menu-apply{display:flex;justify-content:center;align-self:center;margin-top:var(--sp-12);min-height:var(--btn-h);min-width:min(var(--btn-w),100%);color:var(--p-ink-900)}
+    /* open menu: the page behind is dimmed and softly blurred so the menu stands out (tap it or press Esc to close) */
+    .nav-wrap:has(.menu.open)::before{content:"";position:fixed;inset:0;z-index:var(--z-below);
+      background:linear-gradient(180deg,rgb(var(--p-navy-900-rgb) / .5),rgb(var(--p-violet-900-rgb) / .42));
+      backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);animation:wt-scrim .2s ease-out}
+    /* menu panel in light brand colours; items get a light brand highlight on hover / tap and when current */
+    .menu.open{background:linear-gradient(180deg,var(--p-white) 0%,var(--p-lav-50) 100%);box-shadow:var(--shadow-lift),inset 0 0 0 1px rgb(var(--p-violet-800-rgb) / .06)}
+    .menu.open > a:not(.btn),.menu.open .dd > button,.menu.open .dd-panel a{border-radius:var(--r-12);transition:background .2s,color .2s}
+    .menu.open > a:not(.btn):hover,.menu.open > a:not(.btn):focus-visible,.menu.open .dd > button:hover,.menu.open .dd > button:focus-visible,
+    .menu.open .dd.open > button,.menu.open .dd-panel a:hover,.menu.open .dd-panel a:focus-visible,
+    .menu.open > a.active:not(.btn),.menu.open .dd.active > button{background:linear-gradient(90deg,rgb(var(--p-violet-600-rgb) / .16),rgb(var(--p-violet-600-rgb) / .06));
+      color:var(--p-violet-700);box-shadow:inset 3px 0 0 var(--p-violet-600)}
+    .menu.open .dd.open > button i,.menu.open .dd > button:hover i{color:var(--p-violet-600)}
+    @keyframes wt-scrim{from{opacity:0}}
     .menu.open .menu-apply::after{display:block}
     /* accordion submenus */
     .menu.open .dd-panel{display:none}
@@ -1505,6 +1529,18 @@
   /* readable line length for intro paragraphs */
   .sec-head p,.hero p.lead{max-width:var(--measure)}
   .sec-head p{margin-inline:auto}
+  @media (min-width:1024px){
+    .v3 .hero:not(.page-hero) .hero-body{padding-bottom:calc(var(--hero-wave-room) + var(--sp-40))}   /* lowest label 24px above the wave */
+  }
+  /* collaborator cards: the logo fills the left half (full height, flush with the rounded edge), the name the right half */
+  .pcard:not(.cta){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);align-items:stretch;gap:0;padding:0;overflow:hidden}
+  .pcard:not(.cta) .lg{width:auto;height:auto;border-radius:0;box-shadow:none;padding:var(--sp-12)}
+  .pcard:not(.cta) > div{display:flex;flex-direction:column;justify-content:center;padding:var(--sp-16) var(--sp-20)}
+  /* weekend-course features (tablet + desktop): one row of equal columns, icon above its label, thin dividers */
+  .wk-feats,.v3 .weekend .wk-feats{display:grid;grid-auto-flow:column;grid-auto-columns:minmax(0,1fr);gap:0;margin:var(--sp-24) 0 var(--sp-8)}
+  .wk-feats div,.v3 .weekend .wk-feats div{flex-direction:column;justify-content:flex-start;align-items:center;text-align:center;gap:var(--sp-8);
+    width:auto;padding:var(--sp-4) var(--sp-12);border-right:1px solid var(--p-lav-200)}
+  .wk-feats div:last-child,.v3 .weekend .wk-feats div:last-child{border-right:0}
   /* sub-heading inside a section (one step below the section title) */
   .sub-head{font-size:var(--fs-fluid-22-28);line-height:var(--lh-heading);margin-block:var(--sp-48) var(--sp-24);text-align:center}   /* centred like the section titles */
   /* testimonial carousel: two equal cards that never spill past the slide */
@@ -1518,11 +1554,8 @@
   /* ---- layout primitives for new markup ---- */
   .grid{display:grid;gap:var(--grid-gap);grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))}
   .stack{display:flex;flex-direction:column;gap:var(--stack-gap)}
-  /* ---- desktop: equal section heights + full-screen hero ---- */
+  /* ---- desktop: full-screen home hero (sections keep their natural height: same padding everywhere) ---- */
   @media (min-width:1024px){
-    main > section{min-height:var(--sec-min);display:grid;align-content:center}
-    main > .weekend,main > .stories,main > .blk.tight{min-height:var(--band-min)}
-    main > section > .container{width:100%}
     .home-hero{min-height:var(--hero-min);display:flex;flex-direction:column}
     .home-hero > .hero-body{flex:1;align-content:center}
     .page-hero--center > .hero-body{grid-template-columns:minmax(0,1fr);max-width:var(--container-narrow)}
@@ -1539,6 +1572,24 @@
     .steps{grid-template-columns:repeat(2,minmax(0,1fr))}
     .steps::before{display:none}
     .v3 .hero .hero__visual{width:min(430px,100%);height:auto;aspect-ratio:1;margin-inline:auto;margin-top:var(--sp-8)}   /* 40px under the buttons, label included */
+    .v3 .hero:not(.page-hero) .wv-hero-art{height:var(--hero-wave-sm)}
+    .btn{min-width:min(var(--btn-w),100%);min-height:var(--btn-h);justify-content:center}
+    /* success-story cards: portrait with the name and role beside it, then the quote */
+    .story{grid-template-columns:var(--story-photo-sm) minmax(0,1fr);grid-template-areas:"photo name" "photo role" "q q" "quote quote" "more more";
+      column-gap:var(--sp-20);row-gap:0;align-items:center;text-align:left}
+    .story > .rhythm{display:contents}
+    .story > img{grid-area:photo;width:var(--story-photo-sm);height:var(--story-photo-sm)}
+    .story > .rhythm > b{grid-area:name;align-self:end;margin:0;font-size:var(--fs-lead)}
+    .story > .rhythm > small{grid-area:role;align-self:start;margin:var(--sp-4) 0 0}
+    .story > .rhythm > .q{grid-area:q;margin-top:var(--sp-20)}
+    .story > .rhythm > blockquote{grid-area:quote;margin:var(--sp-8) 0 0}
+    .story > .rhythm > .more{grid-area:more;margin-top:var(--sp-16)}
+    /* button groups: every button as wide as the widest one in its group (never under --btn-w) */
+    .ctas,.band .acts,.v3 .band .acts,.hero .acts{display:grid;width:max-content;max-width:100%;grid-auto-flow:column;
+      grid-auto-columns:minmax(var(--btn-w),1fr);gap:var(--sp-12)}
+    .page-hero .ctas{margin-inline:auto}
+    .v3 .page-hero--center .hero-body{padding-bottom:calc(var(--sp-24) + var(--page-wave-reach-md))}
+    .v3 .page-feature,.v3 .page-feature:has(.hero__visual){margin-top:calc(var(--page-wave-drop-md) + var(--sp-24))}
     .v3 .prog-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)}
     .form{grid-template-columns:repeat(2,minmax(0,1fr))}
     .prog-arrow{display:none}
@@ -1555,13 +1606,18 @@
     .panel h2{max-width:var(--measure-article-head)}
     /* top bar on one line: the address is in the footer and on the contact page */
     .topbar .hide-sm{display:none}
-    .btn{min-height:var(--tap)}
+    .btn{min-height:var(--btn-h)}
   }
   /* ---- phone + tablet background: the desktop glows are too far apart on a narrow, tall page,
      so phones get a repeating rhythm of soft violet / champagne glows over a faint dot texture ---- */
   @media (max-width:1023px){
-    body.v3{background:radial-gradient(circle at 0% 18%,rgb(var(--p-violet-400-rgb) / 0.22),rgb(var(--p-violet-400-rgb) / 0) 55%) 0 0/100% 1100px repeat-y,
-      radial-gradient(circle at 100% 62%,rgb(var(--p-gold-200-2-rgb) / 0.28),rgb(var(--p-gold-200-2-rgb) / 0) 50%) 0 0/100% 1100px repeat-y,
+    body.v3{background:
+      radial-gradient(520px 420px at 0% 6%,rgb(var(--p-violet-400-rgb) / 0.2),rgb(var(--p-violet-400-rgb) / 0) 70%),
+      radial-gradient(520px 420px at 100% 21%,rgb(var(--p-gold-200-2-rgb) / 0.26),rgb(var(--p-gold-200-2-rgb) / 0) 70%),
+      radial-gradient(520px 420px at 0% 37%,rgb(var(--p-violet-400-rgb) / 0.18),rgb(var(--p-violet-400-rgb) / 0) 70%),
+      radial-gradient(520px 420px at 100% 53%,rgb(var(--p-gold-200-2-rgb) / 0.24),rgb(var(--p-gold-200-2-rgb) / 0) 70%),
+      radial-gradient(520px 420px at 0% 69%,rgb(var(--p-violet-400-rgb) / 0.18),rgb(var(--p-violet-400-rgb) / 0) 70%),
+      radial-gradient(520px 420px at 100% 85%,rgb(var(--p-gold-200-2-rgb) / 0.24),rgb(var(--p-gold-200-2-rgb) / 0) 70%),
       radial-gradient(rgb(var(--p-violet-600-rgb) / 0.07) 1px,transparent 1.6px) 0 0/20px 20px,
       linear-gradient(180deg,var(--p-lav-50),var(--p-lav-100))}
   }
@@ -1573,9 +1629,10 @@
     .sk-grid{grid-template-columns:minmax(0,1fr)}
     /* stories slider: one story per slide on phones (each slide also holds the next story for wider screens) */
     .st-slide > .story + .story{display:none}
+    .about-grid > .about-media,.corp-grid > .ph,.split > .media,.split > .quote-card,.split > .panel{order:-1}
     /* weekend-course features: two per row with even gaps, 24px under the button */
-    .wk-feats,.v3 .weekend .wk-feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-16);margin:var(--sp-24) 0 0}
-    .wk-feats div,.v3 .weekend .wk-feats div{width:auto;padding:0;border-right:0}
+    .wk-feats,.v3 .weekend .wk-feats{display:grid;grid-auto-flow:row;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-16);margin:var(--sp-24) 0 0}
+    .wk-feats div,.v3 .weekend .wk-feats div{flex-direction:row;align-items:center;text-align:left;width:auto;padding:0;border-right:0}
     .wk-feats i{flex:none;width:var(--sp-32);text-align:center}
     /* skill cards: one per line on phones */
     .sk{aspect-ratio:16/9}
@@ -1590,32 +1647,43 @@
     /* hero feature photo: stat cards drop below the photo as a full-width stack */
     .v3 .page-feature{flex-direction:column;align-items:stretch}
     .v3 .page-feature .pf-pair{width:calc(100% - var(--sp-24));margin-inline:auto}
+    .v3 .page-feature .pf-pair{grid-template-columns:minmax(0,1fr);gap:var(--sp-4)}
+    .v3 .page-feature .pf-pair .frame{height:auto;border-width:5px;border-radius:var(--r-36)}
+    .v3 .page-feature .pf-pair > .hero-photo:first-child .frame{aspect-ratio:4/3;border-right-width:5px;border-radius:var(--r-36)}
+    .v3 .page-feature .pf-pair .pf-small .frame{aspect-ratio:16/9;border-left-width:5px;border-radius:var(--r-36)}
+
     /* slanted frame stays inside the screen */
     /* contact form: one column; every field full width */
     .form{grid-template-columns:minmax(0,1fr)}
     .form > *{grid-column:1 / -1;min-width:0}
     /* hero orbit visuals (home + inner pages): narrower, so the side labels stay on screen */
     .v3 .hero .hero__visual,.v3 .page-feature .hero__visual{width:min(var(--hero-visual-sm),100% - var(--sp-64));height:auto;aspect-ratio:1;margin-inline:auto}
-    /* keep 40px between the buttons and the diagram's top label: the label sits above the diagram by 40px at
-       full size and by 15% of the lost size more when the diagram shrinks on narrow phones */
-    .v3 .hero .hero__visual{margin-top:calc(var(--sp-40) + (var(--hero-visual-sm) - min(var(--hero-visual-sm),100% - var(--sp-64))) * .15)}
+    /* keep 40px between the buttons and the diagram's top label: the label sits 52px above the diagram's box */
+    .v3 .hero .hero__visual{margin-top:calc(var(--sp-48) + var(--sp-4))}
     .orbit-tag__t{font-size:var(--fs-xs);max-width:8.5rem;white-space:normal}
+    .v3 .hero .hero__visual{container-type:inline-size;--rr:41%}
+    .v3 .hero .orbit-tag{--ic:clamp(44px,20cqw,72px);--half:calc(var(--ic) / 2)}
+    .v3 .hero .orbit-tag__ic{width:var(--ic);height:var(--ic)}
+    .v3 .hero .orbit-tag--2,.v3 .hero .orbit-tag--3{grid-template-rows:auto auto;--shift:calc(-100% + var(--half))}
+    .v3 .hero .orbit-tag--2 .orbit-tag__t,.v3 .hero .orbit-tag--3 .orbit-tag__t{order:-1}
     .v3 .pf-stats,.v3 .pf-stats--text{position:static;transform:none;width:100%;grid-template-columns:minmax(0,1fr);margin-top:var(--sp-24)}
     .sec-head h2.lined::before,.sec-head h2.lined::after{display:none}
     /* hero: smaller wave art, visual fits the screen with breathing room */
-    .v3 .wv-hero-art{height:150px}
-    .v3 .hero .hero-body{padding-bottom:var(--sp-120)}
+    .v3 .wv-hero-art{height:var(--hero-wave-sm)}
+    .v3 .hero:not(.page-hero) .hero-body{padding-bottom:calc(var(--sp-120) + var(--sp-48) + var(--sp-14))}   /* lowest label 24px above the wave */
+    /* inner heroes: same space above the content (from the header) as below it (to the wave) */
+    .v3 .page-hero--center .hero-body{padding-bottom:calc(var(--sp-24) + var(--page-wave-reach-sm))}
+    .v3 .page-feature,.v3 .page-feature:has(.hero__visual){margin-top:calc(var(--page-wave-drop-sm) + var(--sp-24))}
     /* orbit: compact nodes and labels */
     .v3 .eorbit--in{width:min(100% - 24px,22rem);margin:var(--sp-48) auto var(--sp-40)}
     .v3 .eorbit--in .eorbit__badge{width:4rem;height:4rem;font-size:var(--fs-1_1rem)}
     .v3 .eorbit--in .eorbit__t{font-size:var(--fs-fine);padding:var(--sp-8) var(--sp-12);max-width:8.5rem}
     .v3 .eorbit--in .eorbit__node .eorbit__t{top:3rem}
     .v3 .eorbit--in .eorbit__node:first-child .eorbit__t,.v3 .eorbit--in .eorbit__node:nth-child(2) .eorbit__t{top:-3rem}
-    .band .acts,.hero .acts{flex-direction:column;align-items:stretch}
-    /* hero buttons: stacked, equal full width; secondary becomes an outlined button of the same size */
-    .ctas{flex-direction:column;align-items:stretch;gap:var(--sp-12)}
-    .ctas .btn{width:100%;justify-content:center;min-height:52px}
-    .ctas .btn-ghost{background:rgb(var(--p-white-rgb) / 0.7);box-shadow:inset 0 0 0 1.5px var(--p-ink-900)}
+    /* buttons: natural width, one size (the Read More size); they wrap onto a new line when they do not fit */
+    .ctas,.band .acts,.v3 .band .acts,.hero .acts{grid-auto-flow:row}
+    .ctas{margin-inline:auto}
+    .ctas .btn-ghost{background:rgb(var(--p-white-rgb) / 0.7);box-shadow:inset 0 0 0 1.5px var(--p-ink-900);padding-block:var(--sp-12)}
     .ctas .btn-ghost .play{width:28px;height:28px;font-size:var(--fs-9)}
   }
 }

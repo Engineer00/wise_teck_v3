@@ -6,7 +6,7 @@
   {% with partners=s.main_items %}{% if partners %}<div class="container collab-block">
     {% if s.sub_title %}<h3 class="sub-head reveal">{{ s.sub_title }}</h3>{% endif %}
     <div class="collab-row">
-      {% for p in partners %}{% if p.link_url %}<a class="pcard cta reveal{% if not forloop.first %} d{{ forloop.counter0|mod:4 }}{% endif %}" href="{{ p.link_url }}">{% else %}<div class="pcard reveal{% if not forloop.first %} d{{ forloop.counter0|mod:4 }}{% endif %}">{% endif %}<span class="lg">{% if p.logo_html %}{{ p.logo_html|safe }}{% elif p.img %}<img src="{{ p.img }}"{% srcset p.img "logo2" %} alt="" loading="lazy"/>{% else %}<i class="fa-solid {{ p.icon|default:'fa-handshake' }}"></i>{% endif %}</span><div><b>{{ p.title }}</b><small>{{ p.subtitle }}</small></div>{% if p.link_url %}</a>{% else %}</div>{% endif %}
+      {% for p in partners %}{% if p.link_url %}<a class="pcard cta reveal{% if not forloop.first %} d{{ forloop.counter0|mod:4 }}{% endif %}" href="{{ p.link_url }}">{% else %}<div class="pcard reveal{% if not forloop.first %} d{{ forloop.counter0|mod:4 }}{% endif %}">{% endif %}<span class="lg">{% if p.logo_html %}{{ p.logo_html|safe }}{% elif p.img %}<img src="{{ p.img }}"{% srcset p.img "logo2" %} alt="" loading="lazy"/>{% else %}<i class="fa-solid {{ p.icon|default:'fa-handshake' }}"></i>{% endif %}</span><div><b>{{ p.title }}</b>{% if p.subtitle %}<small>{{ p.subtitle }}</small>{% endif %}</div>{% if p.link_url %}</a>{% else %}</div>{% endif %}
       {% endfor %}
     </div>
   </div>{% endif %}{% endwith %}

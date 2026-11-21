@@ -466,13 +466,11 @@ def home():
                 it(
                     "",
                     "Punjab Skills Development Fund",
-                    subtitle="Industry Collaborator",
                     logo_html='<span class="psdf"><span class="box">PSDF</span><small>PUNJAB SKILLS<br/>DEVELOPMENT<br/>FUND</small></span>',
                 ),
                 it(
                     "",
                     "National Incubation Center Lahore",
-                    subtitle="Industry Collaborator",
                     logo_html='<span class="nic"><span class="n">Ni</span><span class="c">C</span><span class="l">Lahore</span></span>',
                 ),
                 it("fa-handshake", "Partner With Wise-Teck", subtitle="Become a partner →", link_url=P["contact"]),
@@ -550,7 +548,6 @@ def about():
             ("Wise Eco System", "#ecosystem", "fa-diagram-project"),
             photo=(img("02", 0) or img("01", 0), "Wise-Teck Earning Centre"),
             badge=("fa-certificate", "Registered with Registrar Firms, Lahore"),
-            facts=[("fa-building-columns", "A project of Wise Education Society")],
         ),
         split(
             "Who We Are",
@@ -1544,13 +1541,13 @@ STORIES = [
         "Aima Asif",
         "Web Development",
         "The hands-on training and project work helped me gain real experience and start my freelancing journey during my studies.",
-        img("01", 12),
+        "seed/stories/aima-asif.jpg",
     ),
     (
         "Noshaba",
         "Digital Marketing",
         "The practical skills and guidance at Wise-Teck gave me the confidence to work on real projects and earn independently.",
-        img("01", 13),
+        "seed/stories/noshaba.jpg",
     ),
 ]
 
@@ -1608,7 +1605,7 @@ class Command(BaseCommand):
         return rel
 
     def set_photo(self, obj, field, url_field, url):
-        rel = self.photo(url)
+        rel = url if url.startswith("seed/") else self.photo(url)  # local seed photo or a link to download
         if rel:
             setattr(obj, field, rel)
             setattr(obj, url_field, "")

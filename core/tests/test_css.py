@@ -71,6 +71,18 @@ class UniversalCssTest(SimpleTestCase):
                 problems.append(f"{prop}: {value.strip()[:60]}")
         self.assertEqual(problems, [], "use a spacing token from the :root block instead of a number")
 
+    def test_every_token_used_is_defined(self):
+        """A misspelt or missing token makes a property silently fall back (e.g. square corners): catch it."""
+        sources = [CSS.read_text(encoding="utf-8")]
+        for folder, pattern in (("templates", "**/*.html"), ("static/js", "*.js")):
+            sources += [f.read_text(encoding="utf-8") for f in (ROOT / folder).glob(pattern)]
+        defined = set()
+        for text in sources:
+            defined |= set(re.findall(r"(--[\w-]+)\s*:", text))
+            defined |= set(re.findall(r"setProperty\(\s*['\"](--[\w-]+)", text))
+        used = set(re.findall(r"var\(\s*(--[\w-]+)\s*\)", _css()))  # var(--x, fallback) is allowed to be undefined
+        self.assertEqual(sorted(used - defined), [], "these tokens are used but never defined")
+
     def test_only_the_standard_breakpoints(self):
         queries = {re.sub(r"\s+", "", q) for q in re.findall(r"@media\s*([^{]+)\{", _css())}
         allowed = {

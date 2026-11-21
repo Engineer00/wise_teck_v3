@@ -215,10 +215,11 @@ height, space, radius and z-index is a token in the `:root` blocks at the top. C
 | --- | --- |
 | Content width / side gaps | 1200px, centred; 16px phone, 24px tablet; the header lines up with the content |
 | Fluid sizes | font sizes and spacing grow in a straight line from phone (390px) to desktop (1440px) |
-| Section padding | the same for every section at a given width: 48px phone → 80px desktop |
+| Section padding | the same for every section at a given width: 48px phone → 80px desktop; sections are as tall as their content (equal spacing, not forced equal heights), so the gap between any two sections is the same: 96px phone, 119px tablet, 160px desktop |
 | Heroes | home fills the first screen; every inner hero has one height per screen: 720px desktop and tablet, 830px phone |
 | Typography | Inter only; one style per role: h1 30/32 → 48/52, h2 26 → 36, sub-heading 22 → 28, h3 20, intro 18, text 16 / 1.7, labels 14, tag lines 13 caps; form fields 16 (no zoom on phones) |
-| Phones | one card per row; sliders show one card; small icon tiles two per row |
+| Phones | one card per row; sliders show one card; small icon tiles two per row; photo first, text below in photo + text sections |
+| Buttons (phones + tablets) | 52px tall; every button in a group as wide as the widest one, never under 244px; hero button pairs centred |
 | Text spacing | `class="rhythm"` spaces a text block's children (tag line → heading 12, h1 → next 20, h2 → 16, text → buttons 24) |
 | Cards | one padding scale (32 / 24 / 40px; phones 24 / 20 / 24), radius 24px |
 | Breakpoints | 1200px (menu → menu button), 1024px (tablet), 640px (phone) |

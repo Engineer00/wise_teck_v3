@@ -23,10 +23,17 @@
   var burger = document.querySelector('.burger'), menu = document.getElementById('menu');
   if (burger && menu) {
     burger.setAttribute('aria-controls', 'menu'); burger.setAttribute('aria-expanded', 'false');
-    burger.addEventListener('click', function () {
-      var open = menu.classList.toggle('open');
+    var setOpen = function (open) {
+      menu.classList.toggle('open', open);
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    };
+    burger.addEventListener('click', function () { setOpen(!menu.classList.contains('open')); });
+    document.addEventListener('click', function (e) {          // a tap on the dimmed page closes the menu
+      if (menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', function (e) {
+      if (e.key === 'Escape' && menu.classList.contains('open')) { setOpen(false); burger.focus(); }
     });
     /* mobile menu: submenus are an accordion (one open at a time), so the list stays short
        and the Apply Now button at the bottom stays in reach */
