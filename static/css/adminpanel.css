@@ -95,14 +95,14 @@ body.ap-body {
 .ap-brand-name { display: block; font-family: var(--ap-display); font-size: 1.05rem; letter-spacing: -0.02em; }
 .ap-brand-sub { display: block; font-size: 0.75rem; color: color-mix(in srgb, var(--ap-on-dark-soft) 55%, transparent); margin-top: 0.1rem; }
 
-.ap-nav { display: flex; flex-direction: column; gap: 0.25rem; flex: 1; overflow-y: auto; }
+.ap-nav { display: flex; flex-direction: column; gap: 2px; flex: 1; min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: color-mix(in srgb, var(--ap-on-dark) 25%, transparent) transparent; }
 .ap-nav-link {
   display: flex;
   align-items: center;
   gap: 0.7rem;
-  padding: 0.7rem 0.8rem;
-  border-radius: 12px;
-  color: color-mix(in srgb, var(--ap-on-dark-soft) 78%, transparent);
+  padding: 0.55rem 0.8rem;
+  border-radius: 10px;
+  color: color-mix(in srgb, var(--ap-on-dark-soft) 82%, transparent);
   text-decoration: none;
   transition: background 0.2s ease, color 0.2s ease;
 }
@@ -773,3 +773,41 @@ body.ap-body {
 @media (max-width: 560px) {
   .ap-kpis { grid-template-columns: 1fr 1fr; }
 }
+
+/* Dashboard polish */
+.ap-stats { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+.ap-panel-head { flex-wrap: wrap; }
+.ap-chart-empty { margin: 0 0 1.1rem; padding: 2rem 1rem; border: 1px dashed var(--ap-canvas-3); border-radius: var(--ap-radius-sm); text-align: center; color: var(--ap-muted); font-size: 0.9rem; }
+.ap-copy { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem; padding: 0 0.9rem 0.2rem; font-size: 0.78rem; color: var(--ap-muted); }
+.ap-copy code { flex: 1 1 200px; min-width: 0; overflow-wrap: anywhere; }
+.ap-btn-sm { padding: 0.3rem 0.75rem; font-size: 0.78rem; }
+.ap-tools li { border: 1px solid var(--ap-line); border-radius: var(--ap-radius-sm); }
+.ap-tools li > a { border: 0; }
+.ap-tools li:has(.ap-copy) > a { padding-bottom: 0.2rem; }
+.ap-tools li:hover { border-color: color-mix(in srgb, var(--ap-accent) 40%, transparent); }
+@media (max-width: 1100px) {
+  .ap-stats { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .ap-stats { grid-template-columns: 1fr 1fr; gap: 0.6rem; }
+  .ap-stat { padding: 0.8rem; gap: 0.6rem; }
+  .ap-stat-icon { display: none; }
+  .ap-kpis { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+  .ap-kpi { grid-column: span 3; }
+  .ap-kpi-small { grid-column: span 2; padding: 0.7rem; }
+}
+
+/* File inputs in the admin's own style */
+.ap-field input[type="file"] { max-width: 100%; font: inherit; font-size: 0.85rem; color: var(--ap-muted); }
+.ap-field input[type="file"]::file-selector-button {
+  margin-right: 0.75rem; padding: 0.5rem 1rem; border: 1px solid color-mix(in srgb, var(--ap-accent) 25%, transparent);
+  border-radius: 999px; background: var(--ap-accent-soft); color: var(--ap-accent-deep); font: inherit; font-weight: 600;
+  cursor: pointer; transition: background 0.2s ease;
+}
+.ap-field input[type="file"]::file-selector-button:hover { background: color-mix(in srgb, var(--ap-accent) 18%, transparent); }
+/* Colour schemes: six presets in a 3 x 2 grid, custom colours as a full-width option below */
+.ap-scheme-custom { grid-column: 1 / -1; flex-direction: row; align-items: center; }
+.ap-scheme-custom .ap-scheme-swatches { flex: none; }
+.ap-scheme-name small { display: block; margin-top: 2px; font-weight: 400; font-size: 0.78rem; color: var(--ap-muted); }
+.ap-schemes { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 560px) { .ap-schemes { grid-template-columns: 1fr 1fr; } }

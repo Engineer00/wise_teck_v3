@@ -65,3 +65,14 @@
   inputs.forEach(function (input) { if (input) input.addEventListener('input', update); });
   update();
 })();
+
+/* Copy buttons (dashboard: sitemap address). */
+document.addEventListener('click', function (e) {
+  var btn = e.target.closest('[data-copy]');
+  if (!btn || !navigator.clipboard) return;
+  navigator.clipboard.writeText(btn.getAttribute('data-copy')).then(function () {
+    var label = btn.textContent;
+    btn.textContent = 'Copied';
+    setTimeout(function () { btn.textContent = label; }, 1500);
+  });
+});

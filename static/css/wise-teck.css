@@ -613,7 +613,7 @@
   .ft-grid{display:grid;grid-template-columns:1.3fr .75fr 1.3fr 1.05fr 1.45fr;gap:0;padding-bottom:var(--sp-48)}
   .ft-col{padding:0 var(--sp-24);border-left:1px solid rgb(var(--p-white-rgb) / 0.14)}
   .ft-col:first-child{border-left:0;padding-left:0}
-  .ft-col h4{color:var(--p-white);font-size:var(--fs-small);margin-bottom:var(--sp-16)}
+  .ft-col .ft-title{color:var(--p-white);font-size:var(--fs-small);margin-bottom:var(--sp-16)}
   .ft-col a{display:block;font-size:var(--fs-label);margin-bottom:var(--sp-12);color:var(--p-lav-300)}
   .ft-col a:hover{color:var(--gold-2)}
   .ft-col a.logo{display:flex;margin:0}
@@ -833,7 +833,7 @@
   .form h3{grid-column:1/-1;font-size:var(--fs-quote-lg);font-weight:800}
   .form label{display:grid;gap:var(--sp-8);font-size:var(--fs-fine);font-weight:700;color:var(--ink)}
   .form .full{grid-column:1/-1}
-  .form input,.form select,.form textarea{font:inherit;font-size:var(--fs-small);padding:var(--sp-12) var(--sp-16);border-radius:var(--r-12);border:1.5px solid var(--p-lav-200);background:var(--p-lav-25);color:var(--ink);transition:.2s}
+  .form input,.form select,.form textarea{font:inherit;font-size:var(--fs-body);padding:var(--sp-12) var(--sp-16);border-radius:var(--r-12);border:1.5px solid var(--p-lav-200);background:var(--p-lav-25);color:var(--ink);transition:.2s}
   .form input:focus,.form select:focus,.form textarea:focus{outline:none;border-color:var(--purple);box-shadow:0 0 0 4px rgb(var(--p-violet-500-2-rgb) / 0.12)}
   .form textarea{min-height:120px;resize:vertical}
   .form .btn{justify-self:start}
@@ -1420,7 +1420,7 @@
   body.v3 .story blockquote{font-size:var(--fs-quote);font-weight:var(--fw-medium);line-height:var(--lh-small)}
   body.v3 .quote-card blockquote{font-size:var(--fs-quote-lg);font-weight:var(--fw-bold);line-height:var(--lh-h5)}
   /* footer, top bar, fine print */
-  body.v3 .ft-col h4{font-size:var(--fs-h4);font-weight:var(--fw-bold)}
+  body.v3 .ft-col .ft-title{font-size:var(--fs-h4);font-weight:var(--fw-bold);line-height:var(--lh-h4);letter-spacing:0}
   body.v3 .ft-col a,body.v3 .ft-contact div{font-size:var(--fs-small);font-weight:var(--fw-regular);line-height:var(--lh-small)}
   body.v3 .ft-tag{font-size:var(--fs-small)}
   body.v3 .topbar{font-size:var(--fs-fine);font-weight:var(--fw-medium)}
@@ -1430,7 +1430,7 @@
   body.v3 .ft-tag{margin:var(--sp-20) 0 var(--sp-20);line-height:var(--lh-small)}
   body.v3 .hero__visual--six .orbit-tag__t{font-size:var(--fs-fine);white-space:nowrap;padding:var(--sp-4) var(--sp-12)}
   body.v3 .ft-col a:not(.logo){margin-bottom:var(--sp-4)}
-  body.v3 .ft-col h4{margin-bottom:var(--sp-16)}
+  body.v3 .ft-col .ft-title{margin-bottom:var(--sp-16)}
   body.v3 .ft-col a:not(.logo){line-height:var(--lh-small);transition:color .2s ease}
   body.v3 .page-hero--center h1{font-size:var(--fs-fluid-30-48)}
   body.v3 .page-hero--center p.lead{margin:var(--sp-16) auto var(--sp-24)}
@@ -1504,7 +1504,7 @@
   .sec-head p,.hero p.lead{max-width:var(--measure)}
   .sec-head p{margin-inline:auto}
   /* sub-heading inside a section (one step below the section title) */
-  .sub-head{font-size:var(--fs-fluid-22-28);line-height:var(--lh-heading);margin-block:var(--sp-48) var(--sp-24)}
+  .sub-head{font-size:var(--fs-fluid-22-28);line-height:var(--lh-heading);margin-block:var(--sp-48) var(--sp-24);text-align:center}   /* centred like the section titles */
   /* testimonial carousel: two equal cards that never spill past the slide */
   .st-slide{grid-template-columns:repeat(2,minmax(0,1fr))}
   /* wave dividers between sections */
@@ -1569,6 +1569,12 @@
     .cards,.cards.c4,.cards.c2,.blocks,.pstrip,.v3 .pstrip,.collab-row,.partners,.steps,.tgrid{grid-template-columns:minmax(0,1fr)}
     .svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .sk-grid{grid-template-columns:minmax(0,1fr)}
+    /* stories slider: one story per slide on phones (each slide also holds the next story for wider screens) */
+    .st-slide > .story + .story{display:none}
+    /* weekend-course features: one per line, so an odd count never leaves a lone item */
+    .wk-feats{flex-direction:column;gap:var(--sp-8)}
+    .wk-feats div,.v3 .weekend .wk-feats div{width:auto;padding:0;border-right:0}
+    .wk-feats i{flex:none;width:var(--sp-32);text-align:center}
     /* skill cards: one per line on phones */
     .sk{aspect-ratio:16/9}
     /* top bar hidden on phones: its phone / email / address are in the footer and on the contact page */

@@ -48,8 +48,8 @@
         {% if site.footer_text %}<p class="ft-tag">{{ site.footer_text }}</p>{% endif %}
         <div class="social">{% for name, url, label, icon in site.socials %}<a href="{{ url }}" aria-label="{{ label }}" target="_blank" rel="noopener"><i class="fa-brands {{ icon }}"></i></a>{% endfor %}</div>
       </div>
-      {% for col in footer_columns %}<div class="ft-col"><h4>{{ col.title }}</h4>{% for l in col.links.all %}<a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</div>
-      {% endfor %}<div class="ft-col">{% if site.footer_contact_title %}<h4>{{ site.footer_contact_title }}</h4>{% endif %}<div class="ft-contact">
+      {% for col in footer_columns %}<div class="ft-col"><h2 class="ft-title">{{ col.title }}</h2>{% for l in col.links.all %}<a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</div>
+      {% endfor %}<div class="ft-col">{% if site.footer_contact_title %}<h2 class="ft-title">{{ site.footer_contact_title }}</h2>{% endif %}<div class="ft-contact">
         {% if site.phone %}<div><i class="fa-solid fa-phone"></i>{{ site.phone }}</div>{% endif %}
         {% if site.email %}<div><i class="fa-regular fa-envelope"></i>{{ site.email }}</div>{% endif %}
         {% if site.address %}<div><i class="fa-solid fa-location-dot"></i>{{ site.address }}</div>{% endif %}

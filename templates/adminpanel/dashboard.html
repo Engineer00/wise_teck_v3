@@ -33,18 +33,20 @@
     <span class="ap-help">Counted by the website itself: no cookies; bots and admins are left out.</span>
   </div>
   <div class="ap-kpis">
-    <div class="ap-kpi"><span>Page views</span><strong>{{ v.views }}</strong>{% include "adminpanel/_change.html" with change=v.views_change %}</div>
-    <div class="ap-kpi"><span>Visitors</span><strong>{{ v.visitors }}</strong>{% include "adminpanel/_change.html" with change=v.visitors_change %}</div>
+    <div class="ap-kpi"><span>Page views</span><strong>{{ v.views }}</strong>{% include "adminpanel/_change.html" with change=v.views_change days=v.days %}</div>
+    <div class="ap-kpi"><span>Visitors</span><strong>{{ v.visitors }}</strong>{% include "adminpanel/_change.html" with change=v.visitors_change days=v.days %}</div>
     {% for d in v.devices %}<div class="ap-kpi ap-kpi-small"><span>{{ d.name }}</span><strong>{{ d.share }}%</strong></div>{% endfor %}
   </div>
-  {% with c=v.chart %}
+  {% with c=v.chart %}{% if not v.views %}
+  <p class="ap-chart-empty">The chart fills in as people visit the website. Visits by admins are not counted.</p>
+  {% else %}
   <figure class="ap-chart">
     <svg viewBox="0 0 {{ c.width }} {{ c.height }}" preserveAspectRatio="none" role="img" aria-label="Page views per day; highest {{ c.max }}">
       <polygon class="ap-chart-area" points="{{ c.area }}"/><polyline class="ap-chart-line" points="{{ c.line }}"/>
     </svg>
     <figcaption><span>{{ v.first_day|date:"M d" }}</span><span>Page views per day (highest {{ c.max }})</span><span>Today</span></figcaption>
   </figure>
-  {% endwith %}
+  {% endif %}{% endwith %}
   <div class="ap-grid-2">
     <div>
       <h3 class="ap-subhead">Most viewed pages</h3>
@@ -77,7 +79,8 @@
   <section class="ap-panel ap-google">
     <div class="ap-panel-head"><h2>Google tools</h2></div>
     <ul class="ap-tools">
-      <li><a href="{{ google.search_console }}" target="_blank" rel="noopener"><b>Search Console</b><span>Searches that show the site, clicks and indexing. Submit the sitemap: <code>{{ google.sitemap }}</code></span></a></li>
+      <li><a href="{{ google.search_console }}" target="_blank" rel="noopener"><b>Search Console</b><span>Searches that show the site, clicks and indexing.</span></a>
+        <div class="ap-copy"><span>Sitemap to submit</span><code>{{ google.sitemap }}</code><button type="button" class="ap-btn ap-btn-sm" data-copy="{{ google.sitemap }}">Copy</button></div></li>
       {% if google.analytics %}<li><a href="{{ google.analytics }}" target="_blank" rel="noopener"><b>Google Analytics</b><span>Detailed visitor reports (ID {{ ga_id }}).</span></a></li>{% endif %}
       {% if google.trends %}<li><a href="{{ google.trends }}" target="_blank" rel="noopener"><b>Google Trends</b><span>Interest in your keywords over the last 12 months.</span></a></li>{% endif %}
       <li><a href="{{ google.pagespeed }}" target="_blank" rel="noopener"><b>PageSpeed Insights</b><span>Speed and Core Web Vitals of the home page, measured by Google.</span></a></li>

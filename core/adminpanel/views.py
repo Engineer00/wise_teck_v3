@@ -441,6 +441,17 @@ def admin_logout(request):
 # ---------------------------------------------------------------------------
 
 
+# Summary cards on the dashboard: what an editor acts on. Everything else has its count in the sidebar.
+DASHBOARD_CARDS = {
+    "messages": "Messages",
+    "pages": "Pages",
+    "blogs": "Blogs",
+    "success-stories": "Stories",
+    "team": "Team",
+    "services": "Services",
+}
+
+
 def _google_tools(site, base):
     """Links to the Google tools that matter for this site, filled in with its address and keywords."""
     keywords = [k.strip() for k in site.trend_keywords.split(",") if k.strip()][:5]
@@ -467,9 +478,8 @@ def _google_tools(site, base):
 def dashboard(request):
     site = SiteSettings.load()
     cards = []
-    for slug, meta in RESOURCES.items():
-        if meta.get("singleton"):
-            continue
+    for slug in DASHBOARD_CARDS:
+        meta = RESOURCES[slug]
         model = meta["model"]
         extra = {}
         if slug == "messages":
@@ -479,7 +489,7 @@ def dashboard(request):
         cards.append(
             {
                 "slug": slug,
-                "label": meta["label"],
+                "label": DASHBOARD_CARDS[slug],
                 "icon": meta["icon"],
                 "total": model.objects.count(),
                 "extra": extra,
