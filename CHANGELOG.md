@@ -1,0 +1,141 @@
+# Changelog
+
+The record of work on the Wise-Teck website: what changed, why, and where things stand. Newest first.
+How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEPLOY.md).
+
+## Current status (21 November 2026)
+
+| | |
+| --- | --- |
+| **GitHub** | `main` and `fix/audit-and-responsive` hold the latest version; CI (lint, migrations, production checklist, 82 tests on Python 3.12 + PostgreSQL) passes |
+| **Live site** | https://wiseteck.dev still runs the 20 November version (`c119ede`). Nothing newer has been deployed yet |
+| **To go live** | DEPLOY.md, *Update the live site* (git pull or `wise-teck-site.zip`), then *Server security* once |
+| **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
+| **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
+
+## 2026-11-21: responsive polish, owner features, security, performance
+
+### Design system and spacing
+- One universal stylesheet (`static/css/wise-teck.css`), every value from a token. Spacing is 100% tokens: every
+  margin, padding and gap (378 rules), enforced by `test_spacing_comes_from_tokens`. A second test fails if any
+  `var(--token)` is used but never defined.
+- Sections keep their natural height and every section has the same padding, so the gap between any two sections is
+  the same: **160px desktop, 119px tablet, 96px phone** (forced 560px desktop section heights removed: they made the
+  gaps uneven). Wave dividers add no extra space; a heading block never adds space above itself.
+- 14 dead spacing rules removed after checking every rule on every page at six widths; verified that no element moved.
+- One seamless background on every page (soft violet and champagne glows, faint dot texture); the repeating tile that
+  drew hard lines across the page on phones is gone, and inner pages no longer use flat colour bands.
+- Inter is the only font, on the site and in the admin, served from the site itself.
+
+### Phones and tablets
+- Home hero: 40px between the buttons and the 3D coin diagram at every width; the diagram's lowest label 24px above
+  the wave; on phones the diagram's icons scale with it and the side labels sit above their icons, so no label touches
+  an icon down to 320px.
+- Inner heroes: equal space above the content and below it (to the wave). On phones at least 700px tall with at least
+  40px of space each side (11 of 15 pages are exactly 700px; the four content-heavy pages grow just enough). The hero
+  photo starts 24px below the wave.
+- Inner photo pair: stacked and tilted on phones, 4px apart, the gold/navy frame hugging the photos; stat cards centred
+  under the framed photos.
+- One card per row; the stories slider shows one story; photo first, text below in photo / quote / checklist sections;
+  form fields 16px (no zoom on iPhone); heading levels in order; centred sub-headings.
+
+### Buttons
+- Phones and tablets: every button 52px tall and 244px wide (the *Explore Partnerships* size); in a group every button
+  is as wide as the widest; hero button pairs centred. Checked: all 35 buttons on every page are 244 x 52px.
+- Six long labels shortened so they fit (migration 0015): Visit Earning Centre, Share Your Idea, Incubation Centre,
+  Call Us Now, Student Loans.
+
+### Menu (phones and tablets)
+- Brand navy-violet blurred backdrop, light brand panel, brand-violet highlight with an accent bar for hover, open
+  submenu and the current page; closes on a tap outside or Esc. The Apply Now button keeps the standard pill size.
+- Menu button: glossy violet tile with a thin gold rim, stepped lines that turn into an X.
+
+### Sections and cards
+- Success stories: large ringed portraits (176px desktop, 112px phones); the two collage photos replaced by clean
+  square portraits (migration 0012).
+- Collaborators: logo fills the left half of the capsule, name the right half, all three equal size; the "Industry
+  Collaborator" line removed (migration 0013).
+- Weekend courses: five equal columns on tablet and desktop, two per row on phones.
+- About hero: the "A project of Wise Education Society" chip hidden (migration 0014; can be switched back on).
+
+### Photos and images
+- The 32 seed photos that were 512px wide replaced by their full-size originals (1408 x 768), same file names.
+- Every uploaded photo is served as WebP copies at 480 / 800 / 1200 / 1600px (srcset); `make_image_variants` makes them
+  ahead of time. Default 1200 x 630 sharing card.
+- The admin shows the best upload size next to every photo field (badge with tooltip); the table is in README.md.
+
+### Owner features (admin)
+- Dashboard: cookie-free visitor statistics (views, visitors, trend, top pages, sources, devices), SEO health score
+  with fix-it links, Google tools (Search Console with sitemap copy button, Analytics, Trends for the keywords,
+  PageSpeed, Rich Results, Business Profile).
+- Site Settings: colour scheme (six presets + custom, readability check, preview), announcement bar, 404 page texts,
+  contact-form messages, Google Analytics ID, keywords to watch.
+- Admin look: calm neutral workspace, midnight-violet sidebar, one violet accent; summary cards, empty states, styled
+  file inputs, 3 x 2 colour-scheme picker. The logo keeps its colours in every scheme.
+
+### SEO
+- Titles at most 60 characters (brand suffix dropped when it would not fit), descriptions at most 160, canonical and
+  prev / next links, sitemap, robots.txt, structured data, 301 redirects on address changes, noindex on drafts and 404.
+- Content fixes (migrations 0007, 0010): page titles and blog summaries brought within the limits.
+- SEO health in the dashboard: 99/100 on the seed content.
+
+### Performance (simulated mid-range phone, slow 4G)
+
+| Page | Largest content shown: live site | This version |
+| --- | --- | --- |
+| Home | 12.2 s | 1.8 s |
+| About | 8.1 s | 1.7 s |
+| Blog | 11.1 s | 1.4 s |
+| Blog post | 7.4 s | 1.7 s |
+
+How: self-hosted fonts and icons, WebP photos in the right size, lazy loading, the 3D coin started when the browser is
+idle, first-screen content shown at once, home page HTML from 278KB to 86KB.
+
+### Security
+- Content-Security-Policy (scripts, styles and fonts from the site only), HSTS, X-Frame-Options, Referrer-Policy,
+  Permissions-Policy; `check --deploy` clean.
+- Sign-in limited to 5 wrong passwords per address per 15 minutes (only the proxy-added address is trusted); contact
+  form limited to 5 messages per 10 minutes; admin sessions end after 8 hours; SVG uploads with scripts refused.
+- Read-only server check (21 Nov): about 9,000 password guesses a day against `root` over SSH, no firewall, no
+  fail2ban, no backups; no sign of a break-in. Root and admin passwords changed to strong ones the same day. The
+  remaining steps (fail2ban, firewall, SSH keys, reboot, daily backups) are in DEPLOY.md, *Server security*.
+
+### Engineering
+- Exact dependency pins (Django 6.1.3, the version tested), Ruff lint and format, GitHub Actions CI, Dependabot,
+  `.editorconfig`, `.gitattributes`, self-contained 500 page, unused Django admin removed. 82 tests.
+
+## 2026-11-20: universal CSS, test suite, global spacing (the version that is live)
+- Universal token stylesheet, cascade layers, fluid sizes; permanent test suite; global spacing system; equal inner
+  heroes; phone top bar removed. Commits `c119ede`, `afb262a`, `1fd40fd`.
+
+## 2026-11-19: rebuilt on Django
+- The static v3 design rebuilt as a dynamic Django site: every page, section, word, link, photo and setting editable in
+  the admin panel (pages, sections, menu, footer, programs, stories, blogs, team, services, redirects, messages),
+  drafts, scheduled publishing, version history. Commit `f4a36d1`. Live at https://wiseteck.dev since 20 Nov.
+
+## Before 2026-11-19: static v3 design
+- Design iterations of the static site: colour palette (violet, metallic gold, navy), footer, inner banners, feature
+  photos, ecosystem orbit, universal layout system and mobile pass.
+
+## Decisions (and why)
+
+| Decision | Why |
+| --- | --- |
+| Equal spacing, not equal section heights | Forced equal heights leave short sections with extra space, which makes the gaps unequal; equal padding is the industry standard |
+| Home hero fills the first screen; inner heroes share one height (phones: at least 700px) | Standard for home and inner pages; phones keep at least 40px around the content |
+| Buttons 244 x 52px on phones and tablets, groups equal width | One button size everywhere; long labels shortened instead of making buttons wider |
+| Hero text first on phones, photos first in content sections | The headline and buttons must be visible without scrolling; content sections read like cards |
+| Inter only, one family | Consistent, premium, light to load |
+| The logo keeps its colours in every colour scheme | A brand mark never recolours automatically; upload a new logo to change it |
+| The admin has its own calm palette | Like Shopify or Stripe admin: the tool stays the same whatever the website's scheme |
+| Fixed: type scale, spacing, layout, wave shapes | So nothing an editor changes can break the phone layout |
+
+## Open items
+- **Deploy** this version (DEPLOY.md) and do the **server security** steps once.
+- **Owner accounts:** verify Google Search Console and submit the sitemap; create the Google Business Profile;
+  optionally add a Google Analytics ID.
+- **dehleze.store:** its HTTPS certificate expired on 12 Nov 2026; tell its owner (that site is not ours to change).
+- **Server tidy-up:** remove `/root/attack.sh`, `/root/attack-report.txt` (an analysis report) and the empty
+  `/var/www/wiseteck` folder.
+- **Later:** a CSS consolidation pass (fold the old v3 override rules into single definitions, replace one-off tokens
+  with a scale, add Stylelint); Search Console figures inside the admin (needs a Google Cloud service account).

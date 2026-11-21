@@ -7,6 +7,7 @@ setting lives in the database and is edited in a friendly admin panel. No code i
 - **Repository:** <https://github.com/Engineer00/wise_teck_v3> (`main` is the version to deploy; every push is tested by CI)
 - **Server:** Namecheap VPS (Ubuntu 24.04, Python 3.12, PostgreSQL), next to `dehleze.store`. See [DEPLOY.md](DEPLOY.md).
 - **Versions:** Django 6.1.3 and the other exact versions in `requirements.txt` (the versions the tests run on).
+- **History:** [CHANGELOG.md](CHANGELOG.md) records what changed, why, the decisions and the open items.
 
 ## What the admin can change
 
