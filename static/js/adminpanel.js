@@ -23,3 +23,15 @@
     if (e.key === 'Escape') close();
   });
 })();
+
+/* confirm before publishing / restoring, and filter drop-downs that apply at once
+   (kept here instead of inline onsubmit / onchange so the site can use a strict Content-Security-Policy) */
+(function () {
+  document.addEventListener('submit', function (e) {
+    var msg = e.target.getAttribute && e.target.getAttribute('data-confirm');
+    if (msg && !window.confirm(msg)) e.preventDefault();
+  });
+  document.addEventListener('change', function (e) {
+    if (e.target.hasAttribute && e.target.hasAttribute('data-autosubmit') && e.target.form) e.target.form.submit();
+  });
+})();

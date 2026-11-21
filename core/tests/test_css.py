@@ -56,6 +56,7 @@ class UniversalCssTest(SimpleTestCase):
     def test_only_the_standard_breakpoints(self):
         queries = {re.sub(r"\s+", "", q) for q in re.findall(r"@media\s*([^{]+)\{", _css())}
         allowed = {"(max-width:1023px)", "(min-width:1024px)", "(max-width:639px)", "(min-width:640px)",
+                   "(max-width:1199px)",          # menu breakpoint: the full menu needs ~1100px of header width
                    "(prefers-reduced-motion:reduce)"}
         self.assertEqual(queries - allowed, set())
 
@@ -73,4 +74,5 @@ class UniversalCssTest(SimpleTestCase):
 
     def test_mobile_menu_breakpoint_matches_css(self):
         js = (ROOT / "static" / "js" / "wt.js").read_text(encoding="utf-8")
-        self.assertIn("(max-width: 1023px)", js)
+        self.assertIn("(max-width: 1199px)", js)
+        self.assertIn("@media (max-width:1199px){.burger{display:grid}}", _css())

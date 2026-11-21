@@ -7,6 +7,7 @@
 {% block seo %}{% if seo %}{% include "partials/seo.html" %}{% else %}<meta name="description" content="{{ page.meta_description|default:site.meta_description }}"/>{% endif %}{% endblock %}
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="{% static 'css/wise-teck.css' %}?v={{ asset_v }}"/>
 <link rel="icon" href="{% if site.favicon_src %}{{ site.favicon_src }}{% else %}{% static 'img/favicon.png' %}{% endif %}"/>
@@ -20,7 +21,6 @@
     <symbol id="wmark" viewBox="0 0 60 48"><path d="M2 6 L13 6 L22 34 L30 12 L38 34 L46 6 L58 6 L44 44 L34 44 L30 30 L26 44 L16 44 Z"/></symbol>
   </defs>
 </svg>
-{% include "partials/wt-curves.svg" %}
 <div class="topbar">
   <div class="container">
     <div class="group topbar-org"><span><i class="fa-solid fa-building-columns"></i>{{ site.topbar_text }}</span></div>
@@ -42,7 +42,7 @@
       <div class="ft-col">
         {% include "partials/logo.html" with cls="logo ft-logo" %}
         {% if site.footer_text %}<p class="ft-tag">{{ site.footer_text }}</p>{% endif %}
-        <div class="social">{% for name, url, label, icon in site.socials %}<a href="{{ url }}" aria-label="{{ label }}"{% if url != "#" %} target="_blank" rel="noopener"{% endif %}><i class="fa-brands {{ icon }}"></i></a>{% endfor %}</div>
+        <div class="social">{% for name, url, label, icon in site.socials %}<a href="{{ url }}" aria-label="{{ label }}" target="_blank" rel="noopener"><i class="fa-brands {{ icon }}"></i></a>{% endfor %}</div>
       </div>
       {% for col in footer_columns %}<div class="ft-col"><h4>{{ col.title }}</h4>{% for l in col.links.all %}<a href="{{ l.url }}">{{ l.label }}</a>{% endfor %}</div>
       {% endfor %}<div class="ft-col">{% if site.footer_contact_title %}<h4>{{ site.footer_contact_title }}</h4>{% endif %}<div class="ft-contact">
@@ -54,8 +54,7 @@
     {% if site.copyright %}<p class="ft-copy">{{ site.copyright }}</p>{% endif %}
   </div>
 </footer>
-{% if uses_three %}<script src="{% static 'js/vendor/three.min.js' %}?v={{ asset_v }}" defer></script>
-<script src="{% static 'js/hero-three.js' %}?v={{ asset_v }}" defer></script>
+{% if uses_three %}<script src="{% static 'js/hero-three.js' %}?v={{ asset_v }}" defer></script>
 {% endif %}<script src="{% static 'js/wt-waves.js' %}?v={{ asset_v }}" defer></script>
 <script src="{% static 'js/wt.js' %}?v={{ asset_v }}"></script>
 </body>

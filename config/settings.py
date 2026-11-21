@@ -13,6 +13,8 @@ systemd unit or a .env file loaded by it):
 import os
 from pathlib import Path
 
+from django.utils.csp import CSP
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
@@ -45,6 +47,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "django.middleware.csp.ContentSecurityPolicyMiddleware",
+    "core.middleware.PermissionsPolicyMiddleware",
     "core.middleware.RedirectFallbackMiddleware",
 ]
 
@@ -78,6 +82,7 @@ if os.environ.get("POSTGRES_DB"):
             "HOST": os.environ.get("POSTGRES_HOST", "localhost"),
             "PORT": os.environ.get("POSTGRES_PORT", "5432"),
             "CONN_MAX_AGE": 60,
+            "CONN_HEALTH_CHECKS": True,
         }
     }
 else:
@@ -105,11 +110,33 @@ FILE_UPLOAD_MAX_MEMORY_SIZE = 10 * 1024 * 1024
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 LOGIN_URL = "adminpanel_login"
 
+# Security headers (every response). The CSP lists the only places the site loads things from:
+# itself, Google Fonts and the Font Awesome CDN; photos may also be https links typed in the admin.
+SECURE_CSP = {
+    "default-src": [CSP.SELF],
+    "script-src": [CSP.SELF],
+    "style-src": [CSP.SELF, CSP.UNSAFE_INLINE, "https://fonts.googleapis.com", "https://cdnjs.cloudflare.com"],
+    "font-src": [CSP.SELF, "data:", "https://fonts.gstatic.com", "https://cdnjs.cloudflare.com"],
+    "img-src": [CSP.SELF, "data:", "https:"],
+    "connect-src": [CSP.SELF],
+    "frame-ancestors": [CSP.NONE],
+    "form-action": [CSP.SELF],
+    "base-uri": [CSP.SELF],
+    "object-src": [CSP.NONE],
+}
+PERMISSIONS_POLICY = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), browsing-topics=()"
+SECURE_REFERRER_POLICY = "strict-origin-when-cross-origin"
+X_FRAME_OPTIONS = "DENY"                       # the site is never shown inside a frame
+
 if not DEBUG:                                  # behind Nginx with HTTPS
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SESSION_COOKIE_SECURE = CSRF_COOKIE_SECURE = True
     SECURE_CONTENT_TYPE_NOSNIFF = True
-    X_FRAME_OPTIONS = "SAMEORIGIN"
+    SECURE_HSTS_SECONDS = 31536000             # browsers always use https for a year
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True      # .dev domains are https-only in every browser anyway
+    SECURE_HSTS_PRELOAD = True
+    # Nginx redirects http -> https before Django sees the request (see DEPLOY.md), so Django doesn't redirect too.
+    SILENCED_SYSTEM_CHECKS = ["security.W008"]
 
 # Email (contact form alerts). Without EMAIL_HOST the emails are printed in the terminal.
 if os.environ.get("EMAIL_HOST"):

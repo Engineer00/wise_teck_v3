@@ -81,7 +81,7 @@
     </div>
     <div class="ap-side-actions">
       <a class="ap-btn ap-btn-block" href="{{ view_url }}" target="_blank" rel="noopener">Preview draft</a>
-      <form method="post" action="{% url 'adminpanel_publish_draft' object.pk %}" onsubmit="return confirm('Publish this draft now? It replaces the live page; the current live version is kept in the history.');">{% csrf_token %}
+      <form method="post" action="{% url 'adminpanel_publish_draft' object.pk %}" data-confirm="Publish this draft now? It replaces the live page; the current live version is kept in the history.">{% csrf_token %}
         <button type="submit" class="ap-btn ap-btn-primary ap-btn-block">Publish now</button></form>
       <a class="ap-btn ap-btn-block" href="{% url 'adminpanel_change' 'pages' object.draft_of_id %}">Open the live page</a>
       <a class="ap-btn ap-btn-danger ap-btn-block" href="{% url 'adminpanel_delete' 'pages' object.pk %}">Discard draft</a>
@@ -162,7 +162,7 @@
           <td class="ap-actions">
             {% if history_is_page %}<a class="ap-action" href="{% url 'preview_revision' r.pk %}" target="_blank" rel="noopener">Preview</a>
             <form method="post" action="{% url 'adminpanel_version_draft' r.pk %}">{% csrf_token %}<button class="ap-action" type="submit" title="Open this version as a draft to check it before it goes live">Open as draft</button></form>{% endif %}
-            <form method="post" action="{% url 'adminpanel_restore' r.pk %}" onsubmit="return confirm('Restore this version now? It goes live straight away; the current version is kept in the history.');">{% csrf_token %}<input type="hidden" name="back" value="{{ request.path }}#history"/><button class="ap-action" type="submit">Restore</button></form>
+            <form method="post" action="{% url 'adminpanel_restore' r.pk %}" data-confirm="Restore this version now? It goes live straight away; the current version is kept in the history.">{% csrf_token %}<input type="hidden" name="back" value="{{ request.path }}#history"/><button class="ap-action" type="submit">Restore</button></form>
           </td>
         </tr>
         {% endfor %}

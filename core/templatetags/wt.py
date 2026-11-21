@@ -85,8 +85,8 @@ def motif(kind):
 
 @register.simple_tag
 def wave(sym, h, cls):
-    return mark_safe(f'<svg class="{cls}" viewBox="0 0 1440 {h}" preserveAspectRatio="none" aria-hidden="true">'
-                     f'<use href="#{sym}"/></svg>')
+    return mark_safe(f'<svg class="{cls}" viewBox="0 0 1440 {h}" preserveAspectRatio="none" aria-hidden="true" '
+                     f'data-wave="{sym}"></svg>')
 
 
 def _page_of(url):

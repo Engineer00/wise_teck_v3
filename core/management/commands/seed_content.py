@@ -137,7 +137,8 @@ def strip(title="Programs Working Under Wise-Teck", *, div="b", eyebrow="", hl="
 
 
 def placeholder(title, text):
-    return {"layout": "placeholder", "title": f"[Placeholder] {title}", "body": text, "spacing": "tight"}
+    return {"layout": "placeholder", "title": f"[Placeholder] {title}", "body": text, "spacing": "tight",
+            "is_active": False}                       # hidden until Wise-Teck supplies the real content
 
 
 def cta(tag, title, text, primary, secondary=None):
@@ -256,7 +257,7 @@ def about():
             ("Apply Now", P["contact"]), ("Explore Programs", "/#programs")),
     ]
     return ("about", "About Wise-Teck | Bridging Education, Industry & Self-Earning",
-            "About Wise-Teck — vision, core objectives and the Wise eco system.", sections)
+            "About Wise-Teck, a project of WISE Education Society: our vision, core objectives and the Wise eco system linking education, industry and self-earning.", sections)
 
 
 def program_page(key, title, hl, eyebrow, lead, facts, photo, badge, ov_title, ov_hl, overview, cards_title, cards_hl, card_items,
@@ -289,7 +290,7 @@ def hub():
     s.append(cta("Wise Support Hub", "Help Build a Financially Independent Future", "Fully funded education and skills training for orphaned and underprivileged girls.",
                  ("Contact Admissions", P["contact"]), ("Earning Centre", P["centre"])))
     return ("wise-support-hub", "Wise Support Hub | Wise-Teck",
-            "Fully funded intermediate (ICS) education and skills training for orphaned and underprivileged girls.", s)
+            "Wise Support Hub: fully funded intermediate (ICS) education and free professional skills training for orphaned and underprivileged girls.", s)
 
 
 def college():
@@ -313,7 +314,7 @@ def college():
         ("a", "b", "a"), extra=why)
     s.append(cta("Wise College", "Earn a Degree, Build Real Skills", "ADP and BS programs in AI, E-Commerce, Software Engineering and Data Science.",
                  ("Apply Now", P["contact"]), ("Earning Centre", P["centre"])))
-    return ("wise-college", "Wise College Degree Programs | Wise-Teck", "ADP and BS degree programs affiliated with the University of the Punjab.", s)
+    return ("wise-college", "Wise College Degree Programs | Wise-Teck", "Wise College offers ADP and BS degree programs affiliated with the University of the Punjab, combined with professional skills training.", s)
 
 
 def courses():
@@ -334,7 +335,7 @@ def courses():
     s.append(cta("Professional Paid Courses", "Upgrade Your Skills This Weekend", "Industry-relevant weekend classes, open for all.",
                  ("Enquire Now", P["contact"]), ("Earning Centre", P["centre"])))
     return ("professional-paid-courses", "Professional Paid Courses | Wise-Teck",
-            "Weekend professional training programs for students, graduates and working professionals.", s)
+            "Weekend professional training programs at Wise-Teck for students, graduates and working professionals: practical skills that lead to earning.", s)
 
 
 def centre():
@@ -362,7 +363,7 @@ def centre():
          cta("Earning Blocks", "Different Skills. Different Opportunities.", "One Goal: Self-Earning. Explore the earning blocks at the Wise-Teck Earning Centre.",
              ("Our Earning Blocks", P["blocks"]), ("Apply Now", P["contact"]))]
     return ("earning-centre", "Wise-Teck Earning Centre | From Skills to Self-Earning",
-            "Wise-Teck Earning Centre — practical projects, guidance and earning opportunities.", s)
+            "The Wise-Teck Earning Centre turns professional skills into income through practical projects, mentorship, guidance and earning opportunities.", s)
 
 
 def blocks():
@@ -387,7 +388,7 @@ def blocks():
                note="Students join an earning block according to their **skills and interests**."),
          cta("Wise-Teck Earning Centre", "Ready to Start Earning?", "Pick the earning block that matches your skills and interests.",
              ("Apply Now", P["contact"]), ("About the Earning Centre", P["centre"]))]
-    return ("earning-blocks", "Our Earning Blocks | Wise-Teck", "Six earning blocks at the Wise-Teck Earning Centre.", s)
+    return ("earning-blocks", "Our Earning Blocks | Wise-Teck", "Explore the six earning blocks at the Wise-Teck Earning Centre and choose the skills, projects and mentorship that lead you to self-earning.", s)
 
 
 def service_page(slug, key, crumb, eyebrow, title, hl, lead, visual, body):
@@ -399,7 +400,7 @@ def service_page(slug, key, crumb, eyebrow, title, hl, lead, visual, body):
 def corporate():
     return service_page("corporate-services", "corporate", "Corporate Technology Services", "CORPORATE TECHNOLOGY SERVICES",
                         "Technology Services, Delivered", "Delivered",
-                        "IT, software development, digital marketing, and other technology services for companies and businesses.",
+                        "Wise-Teck provides IT support, software development, digital marketing and other technology services for companies and businesses of every size.",
                         {"tags": [("fa-server", "IT|Services"), ("fa-code", "Software|Development"), ("fa-bullhorn", "Digital|Marketing"), ("fa-handshake", "Industry|Partnerships")]},
                         [split("Corporate Services", "Technology Services for Businesses", "Businesses", [
                             "Wise-Teck provides IT, software development, digital marketing, and other technology services to companies and businesses.",
@@ -418,7 +419,7 @@ def corporate():
 def incubation():
     return service_page("business-incubation", "incubation", "Business Incubation Centre", "BUSINESS INCUBATION CENTRE",
                         "Turning Business Ideas into Real Businesses", "Real Businesses",
-                        "Wise-Teck helps students turn their business ideas into real businesses through guidance and support.",
+                        "The Wise-Teck Business Incubation Centre helps students turn their business ideas into real businesses through mentorship, guidance and support.",
                         {"tags": [("fa-lightbulb", "Business|Ideas"), ("fa-user-tie", "Startup|Mentorship"), ("fa-handshake", "Industry|Networking"), ("fa-coins", "Student Loan|Support")]},
                         [split("About the Centre", "Supporting Emerging Entrepreneurs", "Entrepreneurs", [
                             "Wise-Teck, a project of Wise Education Society, is a professional skills development, business incubation, and earning platform dedicated to transforming knowledge and skills into practical economic opportunities.",
@@ -444,7 +445,7 @@ def incubation():
 def loan():
     photo_src = img("10", 0) or img("04", 6)
     return service_page("student-loan-scheme", "loan", "Student Loan Scheme", "STUDENT LOAN SCHEME", "Student Loan Support", "Support",
-                        "Helping eligible students get loans to start their own businesses.",
+                        "The Wise-Teck Student Loan Scheme helps eligible students get loans to start their own businesses, with guidance from the idea to launch.",
                         {"photo": (photo_src, "Young entrepreneurs"), "badge": ("fa-coins", "For eligible students")},
                         [split("Student Loan Support", "Funding to Start Your Own Business", "Your Own Business", [
                             "Wise-Teck helps eligible students get loans to start their own businesses.",
@@ -462,7 +463,7 @@ def loan():
 
 def placement():
     s = [hero("placement", [HOME, ("Placement", "")], "JOB PLACEMENT", "Jobs, Internships & Earning Opportunities", "Earning Opportunities",
-              "Helping students and graduates find jobs, internships, and earning opportunities.",
+              "Wise-Teck job placement and career services help students and graduates find jobs, internships and earning opportunities with industry partners.",
               ("Get Career Support", P["contact"]), ("Learn More", "#details", "fa-arrow-down"),
               photo=(img("08", 1) or img("01", 14), "Graduate at work"), badge=("fa-briefcase", "Job and career support")),
          split("Placement Department", "From Skills to Careers", "Careers", [
@@ -489,7 +490,7 @@ def stories():
          placeholder("More Success Stories", "Add more learner stories (name, program, earning result, photo) — to be supplied by Wise-Teck."),
          cta("Your Turn", "Write Your Own Success Story", "Learn professional skills and start earning through the Wise-Teck Earning Centre.",
              ("Apply Now", P["contact"]), ("Explore Programs", "/#programs"))]
-    return ("success-stories", "Success Stories | Wise-Teck", "Success stories from Wise-Teck learners.", s)
+    return ("success-stories", "Success Stories | Wise-Teck", "Read success stories from Wise-Teck learners who turned professional skills into jobs, earning and businesses of their own.", s)
 
 
 def contact():
@@ -506,7 +507,7 @@ def contact():
                     it("fa-envelope", "Email", "info@wise-teck.org", link_url="mailto:info@wise-teck.org"),
                     it("fa-location-dot", "Address", "48-Main Gulberg, Lahore"),
                     it("fa-building-columns", "Wise-Teck", "A project of Wise Education Society · Registered with Registrar Firms, Lahore")]}]
-    return ("contact", "Contact & Admissions | Wise-Teck", "Contact Wise-Teck — phone, email and address.", s)
+    return ("contact", "Contact & Admissions | Wise-Teck", "Contact Wise-Teck for admissions, programs and partnerships: call +92 300 8410868, email info@wise-teck.org or visit 48-Main Gulberg, Lahore.", s)
 
 
 def blog():
@@ -516,7 +517,7 @@ def blog():
           "item_label": "Read More"},
          cta("Join Wise-Teck", "Start Your Journey to Self-Earning", "Learn professional skills, work on real projects and explore earning opportunities.",
              ("Apply Now", P["contact"]), ("Explore Programs", "/#programs"))]
-    return ("blog", "Blog | Wise-Teck", "News, stories and articles from Wise-Teck.", s)
+    return ("blog", "Blog: IT Skills, AI & Self-Earning | Wise-Teck", "Articles from Wise-Teck on IT skills, AI, cybersecurity and self-earning: practical guides for students, graduates and working professionals.", s)
 
 
 PAGES = [home, about, hub, college, courses, centre, blocks, corporate, incubation, loan, placement, stories, contact, blog]
@@ -604,7 +605,7 @@ class Command(BaseCommand):
 
     def settings(self):
         s = SiteSettings.load()
-        s.site_name, s.site_subtitle = "WISE-TECK", "A Project of WISE"
+        s.site_name = "WISE-TECK"
         s.topbar_text = "A Project of WISE Education Society"
         s.phone, s.email, s.address = "+92 300 8410868", "info@wise-teck.org", "48-Main Gulberg, Lahore"
         s.registration = "Registered with Registrar Firms, Lahore"

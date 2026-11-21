@@ -180,7 +180,7 @@
   }
   [].forEach.call(document.querySelectorAll("svg.wv-hero-art"), function (s) { add(s, 320, hero); });
   [].forEach.call(document.querySelectorAll("svg.wv-div-art"), function (s) {
-    var flip = (s.querySelector("use") || { getAttribute: function () { return ""; } }).getAttribute("href") === "#wv-div-b";
+    var flip = s.getAttribute("data-wave") === "wv-div-b";
     add(s, 130, function (svg) { return divider(svg, flip); });
   });
   [].forEach.call(document.querySelectorAll("svg.wv-foot-art"), function (s) { add(s, 170, footer); });

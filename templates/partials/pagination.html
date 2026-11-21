@@ -1,0 +1,5 @@
+{% if p and p.has_other_pages %}<nav class="pager" aria-label="Pages">
+  {% if p.has_previous %}<a class="pager-btn" href="{% if p.previous_page_number == 1 %}{{ request.path }}{% else %}?page={{ p.previous_page_number }}{% endif %}" rel="prev" aria-label="Previous page"><i class="fa-solid fa-arrow-left"></i></a>{% else %}<span class="pager-btn is-off" aria-hidden="true"><i class="fa-solid fa-arrow-left"></i></span>{% endif %}
+  {% for n in p.paginator.page_range %}{% if n == p.number %}<span class="pager-num is-on" aria-current="page">{{ n }}</span>{% else %}<a class="pager-num" href="{% if n == 1 %}{{ request.path }}{% else %}?page={{ n }}{% endif %}" aria-label="Page {{ n }}">{{ n }}</a>{% endif %}{% endfor %}
+  {% if p.has_next %}<a class="pager-btn" href="?page={{ p.next_page_number }}" rel="next" aria-label="Next page"><i class="fa-solid fa-arrow-right"></i></a>{% else %}<span class="pager-btn is-off" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>{% endif %}
+</nav>{% endif %}

@@ -21,11 +21,10 @@
       var open = menu.classList.toggle('open');
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
-      var ic = burger.querySelector('i'); if (ic) { ic.classList.toggle('fa-bars', !open); ic.classList.toggle('fa-xmark', open); }
     });
     /* mobile menu: submenus are an accordion (one open at a time), so the list stays short
        and the Apply Now button at the bottom stays in reach */
-    var mobile = window.matchMedia('(max-width: 1023px)');
+    var mobile = window.matchMedia('(max-width: 1199px)');
     [].forEach.call(menu.querySelectorAll('.dd > button'), function (b) {
       b.setAttribute('aria-expanded', 'false');
       b.addEventListener('click', function () {

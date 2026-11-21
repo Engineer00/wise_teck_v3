@@ -30,8 +30,8 @@ def image_src(file_field, url=""):
 
 # ---------------------------------------------------------------------------------------------- site-wide
 class SiteSettings(models.Model):
-    site_name = models.CharField("Logo name", max_length=80, default="WISE-TECK")
-    site_subtitle = models.CharField("Text under the logo", max_length=120, default="A Project of WISE")
+    site_name = models.CharField("Site name", max_length=80, default="WISE-TECK",
+                                 help_text="Read out for the logo by screen readers; also used by search engines.")
     logo = models.ImageField("Round logo", upload_to="site/", blank=True,
                              help_text="Optional. Leave empty to use the built-in round Wise-Teck logo.")
     favicon = models.ImageField("Browser tab icon", upload_to="site/", blank=True,
@@ -55,7 +55,7 @@ class SiteSettings(models.Model):
     meta_description = models.CharField("Default SEO description", max_length=300, blank=True)
     # search engines
     site_url = models.CharField("Main web address", max_length=200, blank=True,
-                                help_text="e.g. https://wise-teck.dev — used for canonical links, the sitemap and sharing. "
+                                help_text="e.g. https://wiseteck.dev — used for canonical links, the sitemap and sharing. "
                                           "Empty = the address the visitor used.")
     seo_name = models.CharField("Organisation name (search engines)", max_length=120, default="Wise-Teck")
     seo_suffix = models.CharField("Added after page titles", max_length=60, blank=True,
@@ -108,7 +108,7 @@ class SiteSettings(models.Model):
             ("facebook", self.facebook, "Facebook", "fa-facebook-f"),
             ("instagram", self.instagram, "Instagram", "fa-instagram"),
             ("linkedin", self.linkedin, "LinkedIn", "fa-linkedin-in"),
-            ("youtube", self.youtube, "YouTube", "fa-youtube")] if u]
+            ("youtube", self.youtube, "YouTube", "fa-youtube")] if u and u.strip() not in ("#", "")]
 
 
 class NavItem(models.Model):
@@ -316,7 +316,8 @@ class Section(models.Model):
     sub_title = models.CharField("Second heading", max_length=200, blank=True,
                                  help_text="Heading above the second list (e.g. skill tiles, collaborators).")
     feed_limit = models.PositiveIntegerField("How many to show", default=0,
-                                             help_text="Stories / Blog / Team / Services: 0 shows all.")
+                                             help_text="Team / Services / home stories: 0 shows all. Blog list and story grid: cards per page "
+                                                       "(0 = 9 posts / 8 stories per page).")
     # contact form
     form_title = models.CharField(max_length=120, blank=True)
     form_fields = models.TextField("Form labels", blank=True,
@@ -391,13 +392,30 @@ class Section(models.Model):
     def img2(self):
         return image_src(self.image2, self.image2_url)
 
+    PAGINATED = {"blog_list": 9, "story_grid": 8}   # list layouts with page numbers: default cards per page
+
     @property
-    def feed(self):
+    def paginated(self):
+        return self.layout in self.PAGINATED
+
+    @property
+    def per_page(self):
+        return self.feed_limit or self.PAGINATED.get(self.layout, 0)
+
+    def feed_queryset(self):
         model = {"home_stories": SuccessStory, "story_grid": SuccessStory, "blog_list": BlogPost,
                  "team": TeamMember, "services_feed": Service}.get(self.layout)
         if not model:
+            return None
+        return model.objects.live() if hasattr(model.objects, "live") else model.objects.filter(is_active=True)
+
+    @property
+    def feed(self):
+        if getattr(self, "page_obj", None) is not None:      # set by the page view for paginated lists
+            return list(self.page_obj.object_list)
+        qs = self.feed_queryset()
+        if qs is None:
             return []
-        qs = model.objects.live() if hasattr(model.objects, "live") else model.objects.filter(is_active=True)
         return list(qs[: self.feed_limit] if self.feed_limit else qs)
 
     @property

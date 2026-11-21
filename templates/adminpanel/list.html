@@ -23,7 +23,7 @@
       {% endfor %}
       <label>
         <span class="ap-sr">{{ f.label }}</span>
-        <select class="ap-input ap-select" name="{{ f.name }}" onchange="this.form.submit()">
+        <select class="ap-input ap-select" name="{{ f.name }}" data-autosubmit>
           <option value="">{{ f.label }}: All</option>
           {% for opt in f.options %}
           <option value="{{ opt.value }}"{% if opt.selected %} selected{% endif %}>{{ opt.text }}</option>

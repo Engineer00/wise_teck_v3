@@ -6,7 +6,7 @@
 (function () {
   "use strict";
 
-  const THREE = window.THREE;
+  let THREE = window.THREE;            // set when the library arrives (see boot below)
   const PURPLE = 0x5730b5;
   const LIGHT_PURPLE = 0x9a73ff;
   const DARK_PURPLE = 0x351477;
@@ -495,6 +495,7 @@
     if (!stage) return null;
 
     const fallback = stage.querySelector(".hero__three-fallback");
+    THREE = window.THREE;
 
     if (!THREE) {
       console.error("Three.js library not loaded.");
@@ -524,11 +525,19 @@
     }
   }
 
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initHeroThree);
-  } else {
-    initHeroThree();
+  // Three.js (650 KB) is decorative: fetch it only after the page and its photos have loaded,
+  // so it never competes with the first screen.
+  function boot() {
+    const stage = document.getElementById("heroThreeStage");
+    if (!stage) return;
+    if (window.THREE || !stage.dataset.three) { initHeroThree(); return; }
+    const s = document.createElement("script");
+    s.src = stage.dataset.three;
+    s.onload = s.onerror = initHeroThree;
+    document.head.appendChild(s);
   }
+  if (document.readyState === "complete") boot();
+  else window.addEventListener("load", boot, { once: true });
 
   window.HeroThree = HeroThree;
   window.initHeroThree = initHeroThree;

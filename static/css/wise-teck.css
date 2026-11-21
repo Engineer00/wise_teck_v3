@@ -52,6 +52,8 @@
   --p-ink-500:#646a8f;
   --p-ink-300:#b7b9d9;
   --p-white:#ffffff;
+  --p-wordmark-navy:#0d2035;
+  --p-wordmark-violet:#5525d8;
   --p-black:#000000;
   --p-ok-50:#ecfdf3;
   --p-ok-200:#bbf7d0;
@@ -150,8 +152,8 @@
 }
 :root{
   --font-sans:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
-  --fs-h1:clamp(36px,3.6vw,52px);
-  --fs-h2:clamp(28px,2.5vw,36px);
+  --fs-h1:clamp(32px,24.57px + 1.905vw,52px);
+  --fs-h2:clamp(26px,22.29px + 0.952vw,36px);
   --fs-h3:20px;
   --fs-h4:16px;
   --fs-h5:15px;
@@ -161,7 +163,7 @@
   --fs-label:14px;
   --fs-button:15px;
   --fs-nav:15px;
-  --fs-nav-sub:14.5px;
+  --fs-nav-sub:15px;
   --fs-kicker:13px;
   --fs-fine:13px;
   --fs-xs:12px;
@@ -200,20 +202,31 @@
   --container-narrow:880px;
   --container-wide:1440px;
   --gutter:clamp(16px,4vw,24px);
-  --sec-pad:clamp(48px,6vw,80px);
+  --sec-pad:clamp(48px,36.11px + 3.048vw,80px);
   --sec-min:560px;
   --band-min:360px;
-  --head-gap:clamp(24px,2.2vw,32px);
+  --head-gap:clamp(24px,21.03px + 0.762vw,32px);
   --wave-h:clamp(56px,7.6vw,110px);
   --wave-overlap:calc(var(--wave-h) * -.36);
-  --grid-gap:clamp(16px,1.7vw,24px);
-  --grid-gap-sm:clamp(12px,1.2vw,16px);
-  --split-gap:clamp(32px,4.5vw,64px);
+  --grid-gap:clamp(16px,13.03px + 0.762vw,24px);
+  --grid-gap-sm:clamp(12px,10.51px + 0.381vw,16px);
+  --split-gap:clamp(32px,20.11px + 3.048vw,64px);
   --stack-gap:var(--sp-16);
   --topbar-h:54px;
   --hero-min:clamp(640px,calc(100svh - var(--topbar-h)),860px);
-  --page-hero-min:720px;          /* every inner hero: one height on desktop (content-driven below 1024px) */
+  --page-hero-min:720px;          /* every inner hero: one height (desktop + tablet; phones: see the phone :root) */
   --tap:44px;
+  --logo-mark:clamp(40px,37.03px + 0.762vw,48px);      /* round logo: 40px phone -> 44px tablet -> 48px desktop */
+  --logo-word-h:clamp(44px,41.03px + 0.762vw,52px);  /* WISE / TECK wordmark height: 44px phone -> 52px desktop */
+  --nav-pad-x:max(var(--gutter),calc((100vw - var(--frame-width)) / 2));   /* logo + menu button line up with the content */
+  /* desktop text widths in each element's own font size: on tablets the same widths give the same line breaks */
+  --measure-hero-head:11em;       /* home hero title */
+  --measure-page-head:17.3em;     /* inner hero titles */
+  --measure-col-head:15em;        /* headings in a half-width column (split, about, band) */
+  --measure-col-text:33em;        /* paragraphs in a half-width column */
+  --measure-article-head:19em;    /* headings inside an article */
+  --nav-radius:var(--r-56);
+  --page-hero-min-sm:830px;       /* phones: every inner hero is this tall, content centred (fits 360px phones) */
   --measure:68ch;
   --p-gap:12px;
   --r-sm:1rem;
@@ -276,17 +289,17 @@
   --fs-230:230px;
   --fs-1_1rem:1.1rem;
   --fs-1_55rem:1.55rem;
-  --fs-fluid-22-28:clamp(22px,1vw + 14px,28px);
-  --fs-fluid-22-30:clamp(22px,2.4vw,30px);
-  --fs-fluid-24-32:clamp(24px,2.6vw,32px);
-  --fs-fluid-24-34:clamp(24px,2.6vw,34px);
-  --fs-fluid-26-36:clamp(26px,2.8vw,36px);
-  --fs-fluid-28-38:clamp(28px,2.8vw,38px);
-  --fs-fluid-28-40:clamp(28px,3vw,40px);
-  --fs-fluid-32-46:clamp(32px,3.3vw,46px);
-  --fs-fluid-34-48:clamp(34px,3.4vw,48px);
-  --fs-fluid-34-50:clamp(34px,3.6vw,50px);
-  --fs-fluid-34-54:clamp(34px,4.3vw,54px);
+  --fs-fluid-22-28:clamp(22px,19.77px + 0.571vw,28px);
+  --fs-fluid-22-30:clamp(22px,19.03px + 0.762vw,30px);
+  --fs-fluid-24-32:clamp(24px,21.03px + 0.762vw,32px);
+  --fs-fluid-24-34:clamp(24px,20.29px + 0.952vw,34px);
+  --fs-fluid-26-36:clamp(26px,22.29px + 0.952vw,36px);
+  --fs-fluid-28-38:clamp(28px,24.29px + 0.952vw,38px);
+  --fs-fluid-28-40:clamp(28px,23.54px + 1.143vw,40px);
+  --fs-fluid-32-46:clamp(32px,26.80px + 1.333vw,46px);
+  --fs-fluid-30-48:clamp(30px,23.31px + 1.714vw,48px);
+  --fs-fluid-34-50:clamp(34px,28.06px + 1.524vw,50px);
+  --fs-fluid-34-54:clamp(34px,26.57px + 1.905vw,54px);
   --r-2:2px;
   --r-3:3px;
   --r-5:5px;
@@ -343,7 +356,7 @@
   --r-card:var(--r-lg);
   --r-card-sm:var(--r-md);
 }@media (max-width:639px){
-  :root{--pad-card:var(--sp-24);--pad-card-sm:var(--sp-20);--pad-panel:var(--sp-24)}
+  :root{--pad-card:var(--sp-24);--pad-card-sm:var(--sp-20);--pad-panel:var(--sp-24);--page-hero-min:var(--page-hero-min-sm);--nav-radius:var(--r-xl)}
 }
 
 @layer site{
@@ -385,8 +398,6 @@
   .nav{background:var(--p-white);box-shadow:0 18px 40px -18px rgb(var(--p-violet-625-rgb) / 0.28);display:flex;align-items:center;justify-content:space-between;gap:var(--sp-20)}
   .logo{display:flex;align-items:center;gap:var(--sp-12)}
   .logo svg{width:46px;height:38px}
-  .logo b{display:block;font-size:var(--fs-h3);font-weight:800;color:var(--ink);letter-spacing:-.01em;line-height:1}
-  .logo small{display:block;font-size:var(--fs-xs);font-weight:600;color:var(--muted);margin-top:var(--sp-3)}
   .menu{display:flex;align-items:center;gap:var(--sp-4);font-weight:600;font-size:var(--fs-small);color:var(--ink)}
   .menu > a,.menu .dd > button{padding:var(--sp-12) var(--sp-12);position:relative;background:none;border:0;font:inherit;color:inherit;cursor:pointer;display:flex;align-items:center;gap:var(--sp-8)}
   .menu > a.active{color:var(--purple)}
@@ -590,8 +601,6 @@
   .ft-col a{display:block;font-size:var(--fs-label);margin-bottom:var(--sp-12);color:var(--p-lav-300)}
   .ft-col a:hover{color:var(--gold-2)}
   .ft-col a.logo{display:flex;margin:0}
-  .ft-logo b{color:var(--p-white)}
-  .ft-logo small{color:var(--p-lav-300)}
   .ft-tag{margin:var(--sp-20) 0 var(--sp-24);font-size:var(--fs-small);color:var(--p-lav-200)}
   .social{display:flex;gap:var(--sp-20);font-size:var(--fs-h3)}
   .social a:hover{color:var(--gold-2)}
@@ -601,12 +610,15 @@
   /* =========================================================
      RESPONSIVE
      ========================================================= */
-  @media (max-width:1023px){
+  /* menu breakpoint: below 1200px the full menu no longer fits, so the header uses the menu button */
+  @media (max-width:1199px){
     .menu{display:none}
     .burger{display:block}
     .menu.open{display:flex;position:absolute;top:100%;left:16px;right:16px;flex-direction:column;align-items:stretch;background:var(--p-white);border-radius:var(--r-20);box-shadow:var(--shadow-lift);padding:var(--sp-12);margin-top:var(--sp-12)}
     .menu.open .dd-panel{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;padding:0 0 0 var(--sp-16)}
     .nav .btn-gold{display:none}
+  }
+  @media (max-width:1023px){
     .svc-grid,.sk-grid{grid-template-columns:repeat(3,1fr)}
     .ft-grid{grid-template-columns:1fr 1fr 1fr;row-gap:var(--sp-32)}
     .ft-col:nth-child(4){border-left:0;padding-left:0}
@@ -648,7 +660,7 @@
      REFERENCE-MATCH PASS (side-by-side check vs Home-Page-UI-UX Design.jpeg)
      ========================================================= */
   /* Nav: full-width white bar with big rounded bottom corners */
-  .nav{max-width:none;margin:0;border-radius:0 0 var(--r-56) var(--r-56);padding:var(--sp-14) max(36px,calc((100vw - var(--frame-width))/2))}
+  .nav{max-width:none;margin:0;border-radius:0 0 var(--nav-radius) var(--nav-radius);padding:var(--sp-14) var(--nav-pad-x)}
   /* Hero: tighter bottom so About's top silk meets the hero crest */
   .hero-body{padding:var(--sp-64) 0 175px}
   .about{padding:var(--sp-64) 0 120px;margin-top:-1px}
@@ -1080,7 +1092,7 @@
      v1 .orbit* classes are renamed .eorbit* here (v3 already uses .orbit).
      ===================================================================== */
   /* header logo */
-  .brand__spin{position:relative;width:44px;height:44px;transform-style:preserve-3d}
+  .brand__spin{position:relative;width:var(--logo-mark);height:var(--logo-mark);transform-style:preserve-3d}
   .brand__face{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
   .brand__face--back{transform:rotateY(180deg)}
   @keyframes logoSpin{
@@ -1376,13 +1388,13 @@
   body.v3 p{font-size:var(--fs-body);font-weight:var(--fw-regular);line-height:var(--lh-body);margin:0 0 var(--p-gap)}
   body.v3 p:last-child{margin-bottom:0}
   body.v3 .hero p.lead,body.v3 .sec-head p,body.v3 .split h2 + p,body.v3 .band p{font-size:var(--fs-lead);line-height:var(--lh-lead)}
-  body.v3 .split h2 + p{font-weight:var(--fw-medium)}
   body.v3 .hero p.lead{margin:var(--sp-20) 0 var(--sp-32)}
   /* hero intro keeps its larger spacing above the buttons */
   body.v3 .sec-head p{margin:var(--sp-12) auto 0;max-width:760px}
   /* small text: cards, lists, steps */
   body.v3 .card p,body.v3 .prog ul,body.v3 .pc p,body.v3 .step p,body.v3 .blockc p,body.v3 .checks li,body.v3 .eco-card p,
-  body.v3 .wk p,body.v3 .pcard small,body.v3 .story small,body.v3 .placeholder,body.v3 .ci a,body.v3 .ci p{font-size:var(--fs-small);line-height:var(--lh-small)}
+  body.v3 .wk p,body.v3 .placeholder,body.v3 .ci a,body.v3 .ci p,body.v3 main li{font-size:var(--fs-body);line-height:var(--lh-body);font-weight:var(--fw-regular)}
+  body.v3 .pcard small,body.v3 .story small{font-size:var(--fs-small);line-height:var(--lh-small)}
   /* labels */
   body.v3 .fact,body.v3 .chip,body.v3 .orbit-tag__t,body.v3 .eorbit__t,body.v3 .svc,body.v3 .sk span,body.v3 .wk-feats div,
   body.v3 .crumbs,body.v3 .node,body.v3 .form label,body.v3 .more{font-size:var(--fs-label);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
@@ -1391,26 +1403,23 @@
   /* navigation */
   body.v3 .menu,body.v3 .menu > a,body.v3 .menu .dd > button{font-size:var(--fs-nav);font-weight:var(--fw-semibold)}
   body.v3 .dd-panel a{font-size:var(--fs-nav-sub);font-weight:var(--fw-medium)}
-  body.v3 .logo b{font-size:var(--fs-h3);font-weight:var(--fw-extrabold)}
-  body.v3 .logo small{font-size:var(--fs-xs);font-weight:var(--fw-semibold)}
   /* quotes */
   body.v3 .story blockquote{font-size:var(--fs-quote);font-weight:var(--fw-medium);line-height:var(--lh-small)}
   body.v3 .quote-card blockquote{font-size:var(--fs-quote-lg);font-weight:var(--fw-bold);line-height:var(--lh-h5)}
   /* footer, top bar, fine print */
   body.v3 .ft-col h4{font-size:var(--fs-h4);font-weight:var(--fw-bold)}
-  body.v3 .ft-col a,body.v3 .ft-contact div{font-size:var(--fs-nav-sub);font-weight:var(--fw-regular)}
+  body.v3 .ft-col a,body.v3 .ft-contact div{font-size:var(--fs-small);font-weight:var(--fw-regular);line-height:var(--lh-small)}
   body.v3 .ft-tag{font-size:var(--fs-small)}
   body.v3 .topbar{font-size:var(--fs-fine);font-weight:var(--fw-medium)}
   /* role exceptions (specific components) */
   body.v3 footer.footer{background:linear-gradient(180deg,transparent 0,transparent 132px,var(--p-navy-900) 132px,var(--p-navy-900) 100%)}
   body.v3 .ft-logo{align-items:center}
-  body.v3 .ft-logo small{display:block;margin-top:var(--sp-2)}
   body.v3 .ft-tag{margin:var(--sp-20) 0 var(--sp-20);line-height:var(--lh-small)}
   body.v3 .hero__visual--six .orbit-tag__t{font-size:var(--fs-fine);white-space:nowrap;padding:var(--sp-4) var(--sp-12)}
-  body.v3 .ft-col a:not(.logo){margin-bottom:var(--sp-8)}
+  body.v3 .ft-col a:not(.logo){margin-bottom:var(--sp-4)}
   body.v3 .ft-col h4{margin-bottom:var(--sp-16)}
-  body.v3 .ft-col a:not(.logo){line-height:1.45;transition:color .2s ease}
-  body.v3 .page-hero--center h1{font-size:var(--fs-fluid-34-48)}
+  body.v3 .ft-col a:not(.logo){line-height:var(--lh-small);transition:color .2s ease}
+  body.v3 .page-hero--center h1{font-size:var(--fs-fluid-30-48)}
   body.v3 .page-hero--center p.lead{margin:var(--sp-16) auto var(--sp-24)}
   body.v3 .pf-stat b{font-size:var(--fs-h3);font-weight:800;line-height:1.15;color:var(--heading);letter-spacing:-.01em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
   body.v3 .pf-stat small{font-size:var(--fs-fine);font-weight:600;line-height:1.3;color:var(--p-ink-500)}
@@ -1495,7 +1504,7 @@
   .collab-block > .sub-head{margin:0 0 var(--head-gap)}
   /* Apply Now inside the mobile menu: hidden on desktop (the nav shows its own button) */
   .menu-apply{display:none}
-  @media (max-width:1023px){
+  @media (max-width:1199px){
     /* same point where the nav collapses to the hamburger */
     .menu.open .menu-apply{display:flex;justify-content:center;margin-top:var(--sp-12);min-height:var(--tap);color:var(--p-ink-900)}
     .menu.open .menu-apply::after{display:block}
@@ -1506,6 +1515,8 @@
     .menu.open .dd > button i{transition:transform .2s}
     .menu.open .dd.open > button i{transform:rotate(180deg)}
     .menu.open > a.active::after{right:auto;width:28px}
+    .menu.open a{min-height:var(--tap);display:flex;align-items:center}
+    .menu.open{left:var(--nav-pad-x);right:var(--nav-pad-x)}
     /* short accent under the current page */
   }
   /* readable line length for intro paragraphs */
@@ -1531,10 +1542,11 @@
     main > section > .container{width:100%}
     .home-hero{min-height:var(--hero-min);display:flex;flex-direction:column}
     .home-hero > .hero-body{flex:1;align-content:center}
-    .page-hero{min-height:var(--page-hero-min);display:flex;flex-direction:column}
-    .page-hero > .hero-body{flex:1;display:grid;align-content:center}
     .page-hero--center > .hero-body{grid-template-columns:minmax(0,1fr);max-width:var(--container-narrow)}
   }
+  /* every inner hero has one height per screen size (desktop + tablet 720px, phones 800px), content centred */
+  .page-hero{min-height:var(--page-hero-min);display:flex;flex-direction:column}
+  .page-hero > .hero-body{flex:1;display:grid;align-content:center}
   /* ---- tablet ---- */
   @media (max-width:1023px){
     .grid{grid-template-columns:repeat(var(--cols-md,2),minmax(0,1fr))}
@@ -1552,7 +1564,14 @@
     /* footer world map: centred behind the stacked columns, large and faint (decorative) */
     .v3 .m-map{left:50%;top:55%;width:min(760px,115%);transform:translate(-50%,-50%);opacity:.2}
     .v3 .eco-grid{padding-top:0}
-    .menu.open a{min-height:var(--tap);display:flex;align-items:center}
+    /* same line breaks as desktop: stacked text keeps its desktop width (in its own font size) */
+    .home-hero h1{max-width:var(--measure-hero-head)}
+    .page-hero h1{max-width:var(--measure-page-head);margin-inline:auto}
+    :is(.split,.about-grid,.corp-grid,.band) :is(h2,h3):not(.sec-head *){max-width:var(--measure-col-head)}
+    :is(.split,.about-grid,.corp-grid,.band) .rhythm > :is(p,ul,ol){max-width:var(--measure-col-text)}
+    .panel h2{max-width:var(--measure-article-head)}
+    /* top bar on one line: the address is in the footer and on the contact page */
+    .topbar .hide-sm{display:none}
     .btn{min-height:var(--tap)}
   }
   /* ---- phone + tablet background: the desktop glows are too far apart on a narrow, tall page,
@@ -1566,7 +1585,7 @@
   /* ---- phone ---- */
   @media (max-width:639px){
     .grid{grid-template-columns:repeat(var(--cols-sm,1),minmax(0,1fr))}
-    .cards,.cards.c4,.cards.c2,.blocks,.pstrip,.v3 .pstrip,.collab-row,.partners,.steps{grid-template-columns:minmax(0,1fr)}
+    .cards,.cards.c4,.cards.c2,.blocks,.pstrip,.v3 .pstrip,.collab-row,.partners,.steps,.tgrid{grid-template-columns:minmax(0,1fr)}
     .svc-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
     .sk-grid{grid-template-columns:minmax(0,1fr)}
     /* skill cards: one per line on phones */
@@ -1656,4 +1675,62 @@
   .svc,.sk,.prog{border-radius:var(--r-card-sm)}
   .tgrid{gap:var(--grid-gap)}
   .ci,.placeholder,.pcard{gap:var(--sp-16)}
+
+  /* line breaks: headings split into even lines; paragraphs avoid a single word on the last line;
+     phone numbers, emails and the current breadcrumb never break in the middle */
+  :is(h1,h2,h3,h4,h5,.sec-head p,.hero p.lead){text-wrap:balance}
+  :is(p,li,blockquote,dd){text-wrap:pretty}
+  a[href^="tel:"],a[href^="mailto:"],.pf-stat b{white-space:nowrap}
+  .crumbs{max-width:100%;box-sizing:border-box}
+  .crumbs > *{flex:none;white-space:nowrap}
+  .crumbs > b:last-child{flex:0 1 auto;min-width:0;overflow:hidden;text-overflow:ellipsis}
+
+  /* tap targets: links that sit on their own line get a 44px tall touch area without moving anything */
+  .more,.crumbs a{position:relative}
+  .more::after,.crumbs a::after{content:"";position:absolute;inset:calc((var(--tap) - 100%) / -2) calc(var(--sp-4) * -1)}
+  /* slider dots: 10px dot, 32px touch area */
+  .dots{gap:var(--sp-4)}
+  .dots button{box-sizing:content-box;background-clip:content-box;padding:var(--sp-12) var(--sp-8)}
+
+  /* logo: round mark + the original WISE / TECK wordmark (header in brand colours, footer in light colours) */
+  .logo{gap:var(--sp-12)}
+  .wordmark{display:block;height:var(--logo-word-h);width:auto;flex:none}
+  .wordmark__wise{fill:var(--p-wordmark-navy)}
+  .wordmark__teck{fill:var(--p-wordmark-violet)}
+  .ft-logo .wordmark__wise{fill:var(--p-white)}
+  .ft-logo .wordmark__teck{fill:var(--p-violet-300)}
+
+  /* menu button (phones + tablets): brand-violet rounded square, three lines -> X when the menu is open */
+  .burger{place-items:center;width:var(--tap);height:var(--tap);padding:0;border:0;border-radius:var(--r-14);flex:none;cursor:pointer;
+    background:var(--grad-violet);box-shadow:0 10px 22px -10px rgb(var(--p-violet-600-rgb) / .7),inset 0 1px 0 rgb(var(--p-white-rgb) / .25);
+    transition:transform .2s var(--ease),box-shadow .2s}
+  .burger:hover{transform:translateY(-1px)}
+  .burger:active{transform:scale(.96)}
+  .burger:focus-visible{outline:2px solid var(--p-gold-300);outline-offset:3px}
+  .burger-lines{position:relative;display:block;width:var(--sp-20);height:14px}
+  .burger-lines i{position:absolute;right:0;height:2px;border-radius:var(--r-pill);background:var(--p-white);
+    transition:transform .3s var(--ease),opacity .2s,width .3s var(--ease),top .3s var(--ease)}
+  .burger-lines i:nth-child(1){top:0;width:100%}
+  .burger-lines i:nth-child(2){top:6px;width:70%}
+  .burger-lines i:nth-child(3){top:12px;width:100%}
+  .burger:hover .burger-lines i:nth-child(2){width:100%}
+  .burger[aria-expanded="true"] .burger-lines i:nth-child(1){top:6px;transform:rotate(45deg)}
+  .burger[aria-expanded="true"] .burger-lines i:nth-child(2){opacity:0;width:0}
+  .burger[aria-expanded="true"] .burger-lines i:nth-child(3){top:6px;transform:rotate(-45deg)}
+  @media (max-width:1199px){.burger{display:grid}}
+
+  /* page numbers under the blog list and the story grid (one tap size: --tap) */
+  .pager{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:var(--sp-8);margin-top:var(--head-gap)}
+  .pager-num,.pager-btn{display:inline-grid;place-items:center;min-width:var(--tap);height:var(--tap);padding-inline:var(--sp-12);box-sizing:border-box;
+    border-radius:var(--r-pill);background:var(--p-white);box-shadow:inset 0 0 0 1px var(--line);color:var(--heading);
+    font-size:var(--fs-label);font-weight:var(--fw-bold);line-height:1;text-decoration:none;transition:background .2s,color .2s,box-shadow .2s}
+  a.pager-num:hover,a.pager-btn:hover,a.pager-num:focus-visible,a.pager-btn:focus-visible{box-shadow:inset 0 0 0 1.5px var(--violet);color:var(--violet)}
+  .pager-num.is-on{background:var(--grad-violet);box-shadow:none;color:var(--p-white)}
+  .pager-btn.is-off{opacity:.4}
+
+  /* footer social links: round buttons, 40px tap area (WCAG 2.2 asks for at least 24px) */
+  .social{gap:var(--sp-12)}
+  .social a{display:grid;place-items:center;width:var(--sp-40);height:var(--sp-40);border-radius:var(--r-round);font-size:var(--fs-h4);
+    background:rgb(var(--p-white-rgb) / .08);box-shadow:inset 0 0 0 1px rgb(var(--p-white-rgb) / .16);transition:background .2s,color .2s}
+  .social a:hover,.social a:focus-visible{background:rgb(var(--p-white-rgb) / .16)}
 }

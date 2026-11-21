@@ -134,7 +134,7 @@ RESOURCES = {
         "icon": "settings",
         "singleton": True,
         "fieldsets": [
-            ("Logo", ["site_name", "site_subtitle", "logo", "favicon"]),
+            ("Logo", ["site_name", "logo", "favicon"]),
             ("Top bar and contact", ["topbar_text", "phone", "email", "address", "registration"]),
             ("Header button", ["apply_label", "apply_url"]),
             ("Footer", ["footer_text", "footer_contact_title", "copyright"]),

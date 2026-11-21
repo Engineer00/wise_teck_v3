@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db.models import F
 from django.http import HttpResponsePermanentRedirect, HttpResponseRedirect
 
@@ -24,3 +25,16 @@ class RedirectFallbackMiddleware:
         if request.META.get("QUERY_STRING") and "?" not in target:
             target += "?" + request.META["QUERY_STRING"]
         return (HttpResponsePermanentRedirect if r.permanent else HttpResponseRedirect)(target)
+
+
+class PermissionsPolicyMiddleware:
+    """Tell browsers the site never uses the camera, microphone, location, payments or USB (settings.PERMISSIONS_POLICY)."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if getattr(settings, "PERMISSIONS_POLICY", ""):
+            response.setdefault("Permissions-Policy", settings.PERMISSIONS_POLICY)
+        return response

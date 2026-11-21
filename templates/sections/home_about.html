@@ -6,6 +6,6 @@
       {{ s.body|paras }}
       {% include "partials/buttons.html" %}
     </div>
-    {% if s.img %}<div class="about-media reveal d2"><div class="frame"><img src="{{ s.img }}" alt="{{ s.image_alt }}"/></div></div>{% endif %}
+    {% if s.img %}<div class="about-media reveal d2"><div class="frame"><img src="{{ s.img }}" alt="{{ s.image_alt }}" loading="lazy"/></div></div>{% endif %}
   </div>
 </section>

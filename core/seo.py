@@ -37,6 +37,14 @@ def _title(site, title):
     return f"{title}{suffix}" if suffix and not title.endswith(suffix.strip()) else title
 
 
+def clip(text, limit=160):
+    """Search results show about 155-160 characters: cut longer descriptions at a word, with an ellipsis."""
+    text = " ".join((text or "").split())
+    if len(text) <= limit:
+        return text
+    return text[: limit - 1].rsplit(" ", 1)[0].rstrip(" ,.;:-") + "…"
+
+
 def _default_image(site):
     return site.share_image.url if site.share_image else static("img/wise-teck-logo-512.png")
 
@@ -83,7 +91,7 @@ def _pack(seo, graph):
     return seo
 
 
-def page_seo(request, page, sections, preview=False):
+def page_seo(request, page, sections, preview=False, paged=None):
     site = SiteSettings.load()
     base = base_url(request, site)
     live = page.draft_of or page
@@ -94,8 +102,21 @@ def page_seo(request, page, sections, preview=False):
     if not image:
         image = next((s.img for s in sections if s.img), "") or _default_image(site)
     description = page.meta_description or site.meta_description
+    title = page.title
+    prev_url = next_url = ""
+    if paged is not None and paged.paginator.num_pages > 1:
+        n, url = paged.number, canonical.split("?")[0]
+        if n > 1:
+            canonical, title = f"{url}?page={n}", f"{page.title} – Page {n}"
+            description = f"Page {n} of {paged.paginator.num_pages}. {description}"
+        if paged.has_previous():
+            prev_url = url if paged.previous_page_number() == 1 else f"{url}?page={paged.previous_page_number()}"
+        if paged.has_next():
+            next_url = f"{url}?page={paged.next_page_number()}"
+    description = clip(description)
     seo = {
-        "title": _title(site, page.title), "description": description, "canonical": canonical,
+        "title": _title(site, title), "description": description, "canonical": canonical,
+        "prev": prev_url, "next": next_url,
         "noindex": preview or page.noindex or page.is_draft or not page.is_active,
         "og_type": "website", "og_title": page.share_title or page.title,
         "og_description": page.share_description or description, "image": absolute(base, image),
@@ -118,7 +139,7 @@ def detail_seo(request, kind, obj, title, description, image, parent=None, paren
     canonical = absolute(base, obj.get_absolute_url())
     img = absolute(base, image or _default_image(site))
     seo = {"title": _title(site, f"{title} | {site.seo_name}" if site.seo_name and not site.seo_suffix else title),
-           "description": description or site.meta_description, "canonical": canonical, "noindex": False,
+           "description": clip(description or site.meta_description), "canonical": canonical, "noindex": False,
            "og_type": "article", "og_title": title, "og_description": description or site.meta_description,
            "image": img, "site_name": site.seo_name or site.site_name, "google": site.google_verification}
     crumbs = [("Home", "/")]

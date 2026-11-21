@@ -7,6 +7,8 @@ from django.db.models import Prefetch
 from django.contrib.admin.views.decorators import staff_member_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
+from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
+from django.http import Http404
 from django.utils import timezone
 
 from django.http import HttpResponse
@@ -37,6 +39,25 @@ def _sections(page):
     return [s for s in page.sections.all()]
 
 
+def _paginate(request, sections):
+    """Split the page's blog / story list into numbered pages (?page=2). Returns the page object or None."""
+    current = None
+    raw = request.GET.get("page")
+    for s in sections:
+        if not s.paginated:
+            continue
+        paginator = Paginator(s.feed_queryset(), s.per_page)
+        if raw is None:
+            s.page_obj = paginator.page(1)
+        else:
+            try:
+                s.page_obj = paginator.page(raw)
+            except (EmptyPage, PageNotAnInteger):
+                raise Http404("No such page")
+        current = current or s.page_obj
+    return current
+
+
 def _page_qs():
     sections_qs = Section.objects.filter(is_active=True).prefetch_related(
         Prefetch("items", queryset=Item.objects.order_by("order", "id")))
@@ -45,6 +66,7 @@ def _page_qs():
 
 def _render_page(request, obj, extra=None):
     sections = _sections(obj)
+    _paginate(request, sections)
     return render(request, "page.html", {
         "page": obj, "sections": sections, "form": None,
         "is_home": (obj.draft_of or obj).slug == "home",
@@ -57,6 +79,9 @@ def page(request, slug="home"):
     versioning.publish_due()                    # scheduled drafts go live on the first visit after their time
     obj = get_object_or_404(_page_qs().live(), slug=slug, is_active=True)
     sections = _sections(obj)
+    if request.GET.get("page") == "1":                 # page 1 has one address: the page itself
+        return redirect(obj.get_absolute_url(), permanent=True)
+    paged = _paginate(request, sections)
     form = None
     if any(s.layout == "contact" for s in sections):
         if request.method == "POST":
@@ -74,7 +99,7 @@ def page(request, slug="home"):
         "page": obj, "sections": sections, "form": form,
         "is_home": obj.slug == "home",
         "uses_three": any(s.uses_three for s in sections),
-        "seo": seo_data.page_seo(request, obj, sections),
+        "seo": seo_data.page_seo(request, obj, sections, paged=paged),
     })
 
 
@@ -147,7 +172,7 @@ def preview_revision(request, pk):
 # ------------------------------------------------------------------------------------------ search engines
 def robots_txt(request):
     site = SiteSettings.load()
-    lines = ["User-agent: *", "Disallow: /admin/", "Disallow: /adminpanel/", "Disallow: /django-admin/",
+    lines = ["User-agent: *", "Disallow: /admin/", "Disallow: /adminpanel/",
              "Disallow: /preview/", "Allow: /", ""]
     extra = site.robots_extra.strip()
     if extra:
