@@ -3,6 +3,7 @@ Open Graph / X cards and JSON-LD structured data (organisation, website, breadcr
 
 Views build a `seo` dict with these helpers; templates/partials/seo.html prints it in <head>.
 """
+
 import json
 
 from django.templatetags.static import static
@@ -32,9 +33,22 @@ def ld_json(data):
     return mark_safe(text.replace("<", "\\u003c").replace(">", "\\u003e").replace("&", "\\u0026"))
 
 
+TITLE_MAX = 60  # characters Google shows; the brand suffix is left off when it would not fit
+
+
 def _title(site, title):
     suffix = site.seo_suffix
-    return f"{title}{suffix}" if suffix and not title.endswith(suffix.strip()) else title
+    if suffix and not title.endswith(suffix.strip()) and len(title + suffix) <= TITLE_MAX:
+        return title + suffix
+    return title
+
+
+def detail_title(site, title):
+    """The <title> of a blog post or story page: '<title> | <organisation>' when that fits."""
+    if site.seo_name and not site.seo_suffix:
+        branded = f"{title} | {site.seo_name}"
+        return branded if len(branded) <= TITLE_MAX else title
+    return _title(site, title)
 
 
 def clip(text, limit=160):
@@ -46,13 +60,18 @@ def clip(text, limit=160):
 
 
 def _default_image(site):
-    return site.share_image.url if site.share_image else static("img/wise-teck-logo-512.png")
+    return site.share_image.url if site.share_image else static("img/share-default.jpg")  # 1200 x 630
 
 
 def organization(site, base):
     logo = absolute(base, site.logo.url if site.logo else static("img/wise-teck-logo-512.png"))
-    org = {"@type": "EducationalOrganization", "@id": base + "/#organization", "name": site.seo_name or site.site_name,
-           "url": base + "/", "logo": logo}
+    org = {
+        "@type": "EducationalOrganization",
+        "@id": base + "/#organization",
+        "name": site.seo_name or site.site_name,
+        "url": base + "/",
+        "logo": logo,
+    }
     if site.phone:
         org["telephone"] = site.phone
     if site.email:
@@ -73,16 +92,28 @@ def organization(site, base):
 
 
 def website(site, base):
-    return {"@type": "WebSite", "@id": base + "/#website", "name": site.seo_name or site.site_name, "url": base + "/",
-            "publisher": {"@id": base + "/#organization"}, "inLanguage": "en"}
+    return {
+        "@type": "WebSite",
+        "@id": base + "/#website",
+        "name": site.seo_name or site.site_name,
+        "url": base + "/",
+        "publisher": {"@id": base + "/#organization"},
+        "inLanguage": "en",
+    }
 
 
 def breadcrumbs(base, crumbs, canonical):
     """crumbs: [(label, url), ...]; the last one is the current page."""
     items = []
     for n, (label, url) in enumerate(crumbs, 1):
-        items.append({"@type": "ListItem", "position": n, "name": label,
-                      "item": canonical if n == len(crumbs) else absolute(base, url or "/")})
+        items.append(
+            {
+                "@type": "ListItem",
+                "position": n,
+                "name": label,
+                "item": canonical if n == len(crumbs) else absolute(base, url or "/"),
+            }
+        )
     return {"@type": "BreadcrumbList", "itemListElement": items}
 
 
@@ -115,12 +146,18 @@ def page_seo(request, page, sections, preview=False, paged=None):
             next_url = f"{url}?page={paged.next_page_number()}"
     description = clip(description)
     seo = {
-        "title": _title(site, title), "description": description, "canonical": canonical,
-        "prev": prev_url, "next": next_url,
+        "title": _title(site, title),
+        "description": description,
+        "canonical": canonical,
+        "prev": prev_url,
+        "next": next_url,
         "noindex": preview or page.noindex or page.is_draft or not page.is_active,
-        "og_type": "website", "og_title": page.share_title or page.title,
-        "og_description": page.share_description or description, "image": absolute(base, image),
-        "site_name": site.seo_name or site.site_name, "google": site.google_verification,
+        "og_type": "website",
+        "og_title": page.share_title or page.title,
+        "og_description": page.share_description or description,
+        "image": absolute(base, image),
+        "site_name": site.seo_name or site.site_name,
+        "google": site.google_verification,
     }
     graph = []
     if live.slug == "home":
@@ -128,8 +165,17 @@ def page_seo(request, page, sections, preview=False, paged=None):
     crumbs = hero.crumb_list if hero is not None and hero.layout == "page_hero" else []
     if len(crumbs) > 1:
         graph.append(breadcrumbs(base, crumbs, canonical))
-    graph.append({"@type": "WebPage", "@id": canonical, "url": canonical, "name": page.title, "description": description,
-                  "isPartOf": {"@id": base + "/#website"}, "inLanguage": "en"})
+    graph.append(
+        {
+            "@type": "WebPage",
+            "@id": canonical,
+            "url": canonical,
+            "name": page.title,
+            "description": description,
+            "isPartOf": {"@id": base + "/#website"},
+            "inLanguage": "en",
+        }
+    )
     return _pack(seo, graph)
 
 
@@ -138,33 +184,66 @@ def detail_seo(request, kind, obj, title, description, image, parent=None, paren
     base = base_url(request, site)
     canonical = absolute(base, obj.get_absolute_url())
     img = absolute(base, image or _default_image(site))
-    seo = {"title": _title(site, f"{title} | {site.seo_name}" if site.seo_name and not site.seo_suffix else title),
-           "description": clip(description or site.meta_description), "canonical": canonical, "noindex": False,
-           "og_type": "article", "og_title": title, "og_description": description or site.meta_description,
-           "image": img, "site_name": site.seo_name or site.site_name, "google": site.google_verification}
+    seo = {
+        "title": detail_title(site, title),
+        "description": clip(description or site.meta_description),
+        "canonical": canonical,
+        "noindex": False,
+        "og_type": "article",
+        "og_title": title,
+        "og_description": description or site.meta_description,
+        "image": img,
+        "site_name": site.seo_name or site.site_name,
+        "google": site.google_verification,
+    }
     crumbs = [("Home", "/")]
     if parent is not None:
         crumbs.append((parent_label or parent.title, parent.get_absolute_url()))
     crumbs.append((title, obj.get_absolute_url()))
-    art = {"@type": "BlogPosting" if kind == "blog" else "Article", "@id": canonical + "#article", "headline": title[:110],
-           "description": description, "image": [img], "url": canonical, "mainEntityOfPage": canonical,
-           "publisher": {"@type": "Organization", "name": site.seo_name or site.site_name,
-                         "logo": {"@type": "ImageObject", "url": absolute(base, static("img/wise-teck-logo-512.png"))}},
-           "inLanguage": "en"}
-    published = getattr(obj, "published_at", None) or getattr(obj, "publish_at", None) or getattr(obj, "created_at", None)
+    art = {
+        "@type": "BlogPosting" if kind == "blog" else "Article",
+        "@id": canonical + "#article",
+        "headline": title[:110],
+        "description": description,
+        "image": [img],
+        "url": canonical,
+        "mainEntityOfPage": canonical,
+        "publisher": {
+            "@type": "Organization",
+            "name": site.seo_name or site.site_name,
+            "logo": {"@type": "ImageObject", "url": absolute(base, static("img/wise-teck-logo-512.png"))},
+        },
+        "inLanguage": "en",
+    }
+    published = (
+        getattr(obj, "published_at", None) or getattr(obj, "publish_at", None) or getattr(obj, "created_at", None)
+    )
     if published:
         art["datePublished"] = published.isoformat()
     if getattr(obj, "updated_at", None):
         art["dateModified"] = obj.updated_at.isoformat()
     author = getattr(obj, "author", "") or ""
-    art["author"] = {"@type": "Person", "name": author} if author else {"@type": "Organization", "name": site.seo_name or site.site_name}
+    art["author"] = (
+        {"@type": "Person", "name": author}
+        if author
+        else {"@type": "Organization", "name": site.seo_name or site.site_name}
+    )
     return _pack(seo, [breadcrumbs(base, crumbs, canonical), art])
 
 
 def plain_seo(request, title, noindex=True):
     """Pages that are not content (404, errors)."""
     site = SiteSettings.load()
-    return {"title": _title(site, title), "description": site.meta_description, "canonical": "", "noindex": noindex,
-            "og_type": "website", "og_title": title, "og_description": site.meta_description,
-            "image": absolute(base_url(request, site), _default_image(site)), "site_name": site.seo_name or site.site_name,
-            "google": "", "jsonld": ""}
+    return {
+        "title": _title(site, title),
+        "description": site.meta_description,
+        "canonical": "",
+        "noindex": noindex,
+        "og_type": "website",
+        "og_title": title,
+        "og_description": site.meta_description,
+        "image": absolute(base_url(request, site), _default_image(site)),
+        "site_name": site.seo_name or site.site_name,
+        "google": "",
+        "jsonld": "",
+    }

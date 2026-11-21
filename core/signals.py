@@ -1,5 +1,6 @@
 """Keep old links working: when a page, blog post or success story gets a new web address (slug),
 a permanent (301) redirect from the old address is added automatically (Admin → Redirects)."""
+
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
 
@@ -23,6 +24,8 @@ def redirect_old_url(sender, instance, created, **kwargs):
     old, new = getattr(instance, "_old_url", None), instance.get_absolute_url()
     if not old or old == new:
         return
-    Redirect.objects.filter(old_path=new).delete()                 # the new address is a real page again
-    Redirect.objects.filter(new_path=old).update(new_path=new)     # no redirect chains: earlier redirects go straight to the new address
+    Redirect.objects.filter(old_path=new).delete()  # the new address is a real page again
+    Redirect.objects.filter(new_path=old).update(
+        new_path=new
+    )  # no redirect chains: earlier redirects go straight to the new address
     Redirect.objects.update_or_create(old_path=old, defaults={"new_path": new, "permanent": True, "is_active": True})

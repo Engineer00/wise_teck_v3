@@ -5,6 +5,7 @@
 Passwords are copied as their stored (hashed) form; nobody needs to know them. Existing users with the
 same username are updated. Only staff accounts are copied.
 """
+
 import sqlite3
 from pathlib import Path
 
@@ -33,6 +34,7 @@ class Command(BaseCommand):
             for k in ("is_staff", "is_superuser", "is_active"):
                 data[k] = bool(data[k])
             user, created = User.objects.update_or_create(username=data.pop("username"), defaults=data)
-            self.stdout.write(f"  {'added' if created else 'updated'}: {user.username}"
-                              f"{' (superuser)' if user.is_superuser else ''}")
+            self.stdout.write(
+                f"  {'added' if created else 'updated'}: {user.username}{' (superuser)' if user.is_superuser else ''}"
+            )
         self.stdout.write(self.style.SUCCESS(f"Copied {len(rows)} admin login(s) from the original site."))

@@ -8,6 +8,7 @@
   published on the next page view, and by `manage.py publish_scheduled` (run it from cron for exact timing).
   Blog posts and success stories have their own "Go live at" and stay hidden until then.
 """
+
 import json
 import uuid
 
@@ -18,9 +19,9 @@ from django.utils import timezone
 
 from .models import FooterColumn, Item, Page, Revision, Section
 
-KEEP_PER_OBJECT = 60                         # oldest revisions beyond this are removed
+KEEP_PER_OBJECT = 60  # oldest revisions beyond this are removed
 PAGE_FIELDS_SKIP = {"id", "slug", "draft_of", "publish_at", "created_at", "updated_at"}
-CHILDREN = {FooterColumn: ("links", "column")}   # simple objects saved together with their child rows
+CHILDREN = {FooterColumn: ("links", "column")}  # simple objects saved together with their child rows
 
 
 # ------------------------------------------------------------------------------------------ copies
@@ -48,8 +49,10 @@ def _apply(obj, data, skip=()):
 def page_snapshot(page):
     return {
         "page": _fields(page, PAGE_FIELDS_SKIP),
-        "sections": [dict(_fields(s, {"page"}), items=[_fields(i, {"section"}) for i in s.items.all()])
-                     for s in page.sections.all().order_by("order", "id")],
+        "sections": [
+            dict(_fields(s, {"page"}), items=[_fields(i, {"section"}) for i in s.items.all()])
+            for s in page.sections.all().order_by("order", "id")
+        ],
     }
 
 
@@ -86,10 +89,16 @@ def record(obj, reason, user=None, data=None):
     if obj is None or obj.pk is None:
         return None
     rev = Revision.objects.create(
-        content_type=ContentType.objects.get_for_model(type(obj)), object_id=obj.pk, object_repr=str(obj)[:300],
-        reason=reason[:120], data=data if data is not None else snapshot(obj),
-        user=user if getattr(user, "is_authenticated", False) else None)
-    old = Revision.objects.filter(content_type=rev.content_type, object_id=obj.pk).values_list("pk", flat=True)[KEEP_PER_OBJECT:]
+        content_type=ContentType.objects.get_for_model(type(obj)),
+        object_id=obj.pk,
+        object_repr=str(obj)[:300],
+        reason=reason[:120],
+        data=data if data is not None else snapshot(obj),
+        user=user if getattr(user, "is_authenticated", False) else None,
+    )
+    old = Revision.objects.filter(content_type=rev.content_type, object_id=obj.pk).values_list("pk", flat=True)[
+        KEEP_PER_OBJECT:
+    ]
     Revision.objects.filter(pk__in=list(old)).delete()
     return rev
 
@@ -97,7 +106,9 @@ def record(obj, reason, user=None, data=None):
 def history(obj):
     if obj is None or obj.pk is None:
         return Revision.objects.none()
-    return Revision.objects.filter(content_type=ContentType.objects.get_for_model(type(obj)), object_id=obj.pk).select_related("user")
+    return Revision.objects.filter(
+        content_type=ContentType.objects.get_for_model(type(obj)), object_id=obj.pk
+    ).select_related("user")
 
 
 def history_root(obj):
@@ -124,7 +135,7 @@ class Tracker:
             return
         try:
             self.root.refresh_from_db()
-        except type(self.root).DoesNotExist:          # it was deleted: keep the copy
+        except type(self.root).DoesNotExist:  # it was deleted: keep the copy
             record_deleted(self.root, self.before, self.reason, self.user)
             return
         if snapshot(self.root) != self.before:
@@ -132,9 +143,14 @@ class Tracker:
 
 
 def record_deleted(obj, data, reason, user):
-    Revision.objects.create(content_type=ContentType.objects.get_for_model(type(obj)), object_id=obj.pk,
-                            object_repr=str(obj)[:300], reason=reason[:120], data=data,
-                            user=user if getattr(user, "is_authenticated", False) else None)
+    Revision.objects.create(
+        content_type=ContentType.objects.get_for_model(type(obj)),
+        object_id=obj.pk,
+        object_repr=str(obj)[:300],
+        reason=reason[:120],
+        data=data,
+        user=user if getattr(user, "is_authenticated", False) else None,
+    )
 
 
 @transaction.atomic
@@ -170,8 +186,13 @@ def restore(revision, user=None):
 def create_draft(page, user=None, data=None, title_note=""):
     """A private copy of a live page (or of a saved version of it) to edit and publish later."""
     live = page.draft_of or page
-    draft = Page.objects.create(slug=f"draft-{uuid.uuid4().hex[:10]}", title=live.title,
-                                meta_description=live.meta_description, is_active=False, draft_of=live)
+    draft = Page.objects.create(
+        slug=f"draft-{uuid.uuid4().hex[:10]}",
+        title=live.title,
+        meta_description=live.meta_description,
+        is_active=False,
+        draft_of=live,
+    )
     src = data or page_snapshot(page)
     if data:
         _apply(draft, data["page"], PAGE_FIELDS_SKIP | {"is_active"})
@@ -188,7 +209,7 @@ def publish_draft(draft, user=None, scheduled=False):
         raise ValueError("Not a draft.")
     record(live, "Before publishing a scheduled draft" if scheduled else "Before publishing a draft", user)
     data = page_snapshot(draft)
-    data["page"]["is_active"] = live.is_active      # publishing a draft never unpublishes the live page
+    data["page"]["is_active"] = live.is_active  # publishing a draft never unpublishes the live page
     _apply(live, data["page"], PAGE_FIELDS_SKIP)
     live.save()
     _fill_page(live, data)

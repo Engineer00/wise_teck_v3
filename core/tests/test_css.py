@@ -1,4 +1,5 @@
 """Universal CSS: one stylesheet, every design value from a token, two breakpoints, no inline styles."""
+
 import re
 from pathlib import Path
 
@@ -36,8 +37,10 @@ class UniversalCssTest(SimpleTestCase):
             depth = before.count("{") - before.count("}")
             # allowed: top level, or directly inside an @media block (responsive token values) - never inside a layer
             opener = before[: before.rfind("{")].rsplit("}", 1)[-1].strip() if depth else ""
-            self.assertTrue(depth == 0 or (depth == 1 and opener.startswith("@media")),
-                            "a :root token block is nested inside a layer")
+            self.assertTrue(
+                depth == 0 or (depth == 1 and opener.startswith("@media")),
+                "a :root token block is nested inside a layer",
+            )
 
     def test_no_hard_coded_design_values(self):
         problems = []
@@ -55,9 +58,14 @@ class UniversalCssTest(SimpleTestCase):
 
     def test_only_the_standard_breakpoints(self):
         queries = {re.sub(r"\s+", "", q) for q in re.findall(r"@media\s*([^{]+)\{", _css())}
-        allowed = {"(max-width:1023px)", "(min-width:1024px)", "(max-width:639px)", "(min-width:640px)",
-                   "(max-width:1199px)",          # menu breakpoint: the full menu needs ~1100px of header width
-                   "(prefers-reduced-motion:reduce)"}
+        allowed = {
+            "(max-width:1023px)",
+            "(min-width:1024px)",
+            "(max-width:639px)",
+            "(min-width:640px)",
+            "(max-width:1199px)",  # menu breakpoint: the full menu needs ~1100px of header width
+            "(prefers-reduced-motion:reduce)",
+        }
         self.assertEqual(queries - allowed, set())
 
     def test_templates_have_no_inline_styles(self):
@@ -69,7 +77,7 @@ class UniversalCssTest(SimpleTestCase):
                 for m in re.finditer(r'style="([^"]*)"', line):
                     value = re.sub(r"\{\{.*?\}\}", "1", m.group(1))
                     if not re.fullmatch(r"(\s*--[\w-]+:[^;]+;?)+\s*", value) and value != "position:absolute":
-                        found.append(f"{f.relative_to(ROOT)}:{n} style=\"{m.group(1)}\"")
+                        found.append(f'{f.relative_to(ROOT)}:{n} style="{m.group(1)}"')
         self.assertEqual(found, [], "styles belong in wise-teck.css (passing a --custom-property is fine)")
 
     def test_mobile_menu_breakpoint_matches_css(self):

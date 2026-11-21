@@ -10,12 +10,14 @@
 <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
 <link rel="stylesheet" href="{% static 'css/wise-teck.css' %}?v={{ asset_v }}"/>
-{% if theme_css %}<style id="colour-scheme">{{ theme_css|safe }}</style>
+{% if site.ga_id %}<script src="{% static 'js/analytics.js' %}?v={{ asset_v }}" data-ga="{{ site.ga_id }}" async></script>
+{% endif %}{% if theme_css %}<style id="colour-scheme">{{ theme_css|safe }}</style>
 {% endif %}<link rel="icon" href="{% if site.favicon_src %}{{ site.favicon_src }}{% else %}{% static 'img/favicon.png' %}{% endif %}"/>
 </head>
 <body class="v3{% if not is_home %} inner{% endif %}">
 {% if theme_preview %}<div class="preview-bar" role="status"><b>Colour preview</b><span>{{ theme_preview }} — not saved yet</span><a href="{% url 'adminpanel_list' 'site-settings' %}">Back to Site Settings</a></div>{% endif %}
-{% if preview %}<div class="preview-bar" role="status"><b>Preview</b><span>{{ preview.label }}</span><a href="{{ preview.back }}">Back to the admin panel</a></div>{% endif %}
+{% if site.announcement %}<div class="announce" role="region" aria-label="Announcement"><div class="container"><p>{{ site.announcement }}</p>{% if site.announcement_url %}<a href="{{ site.announcement_url }}">{{ site.announcement_label|default:"Learn more" }} <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></a>{% endif %}</div></div>
+{% endif %}{% if preview %}<div class="preview-bar" role="status"><b>Preview</b><span>{{ preview.label }}</span><a href="{{ preview.back }}">Back to the admin panel</a></div>{% endif %}
 <svg width="0" height="0" style="position:absolute" aria-hidden="true">
   <defs>
     <linearGradient id="wPurple" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="{{ "#8b4dff"|themed:theme }}"/><stop offset="1" stop-color="{{ "#4c1d95"|themed:theme }}"/></linearGradient>

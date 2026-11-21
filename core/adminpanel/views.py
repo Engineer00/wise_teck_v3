@@ -4,9 +4,11 @@ Wise-Teck admin panel — full CRUD for all site models.
 Ported from the original site's custom panel (same screens and styling) and extended with the
 v2 website structure: pages, sections with their cards, menu, footer and site settings.
 """
+
+from urllib.parse import quote
+
 from django.contrib import messages
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required, user_passes_test
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models import Q
@@ -17,18 +19,26 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
-from . import forms as F
-from .. import versioning
+from .. import seo_audit, stats, throttle, versioning
 from ..layouts import ALWAYS, GUIDE
-from ..models import (BlogPost, ContactMessage, FooterColumn, NavItem, Page, Program, Redirect, Revision, Section,
-                     Service, SiteSettings, SuccessStory, TeamMember)
-
-
-def staff_required(view):
-    return login_required(login_url="adminpanel_login")(
-        user_passes_test(lambda u: u.is_staff, login_url="adminpanel_login")(view)
-    )
-
+from ..models import (
+    BlogPost,
+    ContactMessage,
+    FooterColumn,
+    NavItem,
+    Page,
+    Program,
+    Redirect,
+    Revision,
+    Section,
+    Service,
+    SiteSettings,
+    SuccessStory,
+    TeamMember,
+)
+from ..permissions import staff_required
+from ..seo import base_url
+from . import forms as F
 
 YES_NO = [(True, "Yes"), (False, "No")]
 LIVE_OR_DRAFT = [(True, "Live pages"), (False, "Drafts")]
@@ -51,10 +61,18 @@ RESOURCES = {
         "label": "Pages",
         "singular": "Page",
         "icon": "file",
-        "list_fields": [("__str__", "Title"), ("address", "Address"), ("section_count", "Sections"), ("status", "Status")],
+        "list_fields": [
+            ("__str__", "Title"),
+            ("address", "Address"),
+            ("section_count", "Sections"),
+            ("status", "Status"),
+        ],
         "search_fields": ["title", "slug", "meta_description"],
-        "filter_fields": [("draft_of__isnull", "Type", LIVE_OR_DRAFT), ("is_active", "Published", YES_NO),
-                          ("noindex", "Hidden from search", YES_NO)],
+        "filter_fields": [
+            ("draft_of__isnull", "Type", LIVE_OR_DRAFT),
+            ("is_active", "Published", YES_NO),
+            ("noindex", "Hidden from search", YES_NO),
+        ],
         "children": "sections",
         "fieldsets": [
             ("Page", ["title", "slug", "meta_description", "is_active", "publish_at"]),
@@ -71,17 +89,51 @@ RESOURCES = {
         "label": "Sections",
         "singular": "Section",
         "icon": "layers",
-        "list_fields": [("page", "Page"), ("order", "Order"), ("layout", "Layout"), ("title", "Title"), ("is_active", "Show")],
+        "list_fields": [
+            ("page", "Page"),
+            ("order", "Order"),
+            ("layout", "Layout"),
+            ("title", "Title"),
+            ("is_active", "Show"),
+        ],
         "search_fields": ["title", "eyebrow", "subtitle", "body", "page__title"],
-        "filter_fields": [("page", "Page", page_choices), ("layout", "Layout", Section.LAYOUTS), ("is_active", "Show", YES_NO)],
+        "filter_fields": [
+            ("page", "Page", page_choices),
+            ("layout", "Layout", Section.LAYOUTS),
+            ("is_active", "Show", YES_NO),
+        ],
         "fieldsets": [
             ("Placement", ["page", "order", "layout", "is_active", "anchor", "spacing", "divider_after", "motif"]),
             ("Heading", ["crumbs", "eyebrow", "title", "highlight", "lined", "subtitle"]),
             ("Text", ["body", "note", "list_title", "list_items"]),
-            ("Buttons", ["button_label", "button_url", "button_style", "button_icon",
-                         "button2_label", "button2_url", "button2_style", "button2_icon"]),
-            ("Visual", ["visual", "image", "image_url", "image_alt", "image2", "image2_url", "image_side",
-                        "badge_icon", "badge_text", "stats_style"]),
+            (
+                "Buttons",
+                [
+                    "button_label",
+                    "button_url",
+                    "button_style",
+                    "button_icon",
+                    "button2_label",
+                    "button2_url",
+                    "button2_style",
+                    "button2_icon",
+                ],
+            ),
+            (
+                "Visual",
+                [
+                    "visual",
+                    "image",
+                    "image_url",
+                    "image_alt",
+                    "image2",
+                    "image2_url",
+                    "image_side",
+                    "badge_icon",
+                    "badge_text",
+                    "stats_style",
+                ],
+            ),
             ("Quote", ["quote_text", "quote_highlight", "quote_author", "quote_role", "quote_icon"]),
             ("Centre label / pill", ["center_small", "center_big", "center_url"]),
             ("Cards", ["columns", "numbered", "item_label", "sub_title", "feed_limit"]),
@@ -136,13 +188,29 @@ RESOURCES = {
         "fieldsets": [
             ("Logo", ["site_name", "logo", "favicon"]),
             ("Colour scheme", ["color_scheme", "color_primary", "color_accent", "color_dark"]),
+            ("Announcement bar", ["announcement", "announcement_label", "announcement_url"]),
             ("Top bar and contact", ["topbar_text", "phone", "email", "address", "registration"]),
             ("Header button", ["apply_label", "apply_url"]),
             ("Footer", ["footer_text", "footer_contact_title", "copyright"]),
             ("Social links", ["facebook", "instagram", "linkedin", "youtube"]),
-            ("Contact form", ["notify_email", "contact_success"]),
-            ("Search engines", ["seo_name", "site_url", "meta_description", "seo_suffix", "share_image",
-                                "city", "country_code", "google_verification", "robots_extra"]),
+            ("Contact form", ["notify_email", "contact_success", "contact_error"]),
+            ("Page not found (404)", ["notfound_title", "notfound_highlight", "notfound_text", "notfound_button"]),
+            (
+                "Search engines and statistics",
+                [
+                    "seo_name",
+                    "site_url",
+                    "meta_description",
+                    "seo_suffix",
+                    "share_image",
+                    "city",
+                    "country_code",
+                    "google_verification",
+                    "ga_id",
+                    "trend_keywords",
+                    "robots_extra",
+                ],
+            ),
             ("3D coin colours (optional)", ["coin_base_color", "coin_ring_color", "coin_ring2_color"]),
         ],
     },
@@ -153,8 +221,13 @@ RESOURCES = {
         "label": "Redirects",
         "singular": "Redirect",
         "icon": "redirect",
-        "list_fields": [("old_path", "Old address"), ("new_path", "New address"), ("permanent", "Permanent"),
-                        ("hits", "Visits"), ("is_active", "Active")],
+        "list_fields": [
+            ("old_path", "Old address"),
+            ("new_path", "New address"),
+            ("permanent", "Permanent"),
+            ("hits", "Visits"),
+            ("is_active", "Active"),
+        ],
         "search_fields": ["old_path", "new_path"],
         "filter_fields": [("is_active", "Active", YES_NO)],
     },
@@ -166,8 +239,14 @@ RESOURCES = {
         "label": "Success Stories",
         "singular": "Success Story",
         "icon": "trophy",
-        "list_fields": [("title", "Title"), ("client_name", "Student"), ("category", "Category"),
-                        ("is_featured", "Featured"), ("is_active", "Published"), ("publish_at", "Go live at")],
+        "list_fields": [
+            ("title", "Title"),
+            ("client_name", "Student"),
+            ("category", "Category"),
+            ("is_featured", "Featured"),
+            ("is_active", "Published"),
+            ("publish_at", "Go live at"),
+        ],
         "search_fields": ["title", "client_name", "short_description", "category"],
         "filter_fields": [("is_active", "Published", YES_NO), ("is_featured", "Featured", YES_NO)],
     },
@@ -178,8 +257,13 @@ RESOURCES = {
         "label": "Team",
         "singular": "Team Member",
         "icon": "users",
-        "list_fields": [("name", "Name"), ("designation", "Designation"), ("service", "Department"),
-                        ("display_order", "Order"), ("is_active", "Show")],
+        "list_fields": [
+            ("name", "Name"),
+            ("designation", "Designation"),
+            ("service", "Department"),
+            ("display_order", "Order"),
+            ("is_active", "Show"),
+        ],
         "search_fields": ["name", "designation", "short_description", "service"],
         "filter_fields": [("is_active", "Show", YES_NO)],
     },
@@ -190,8 +274,15 @@ RESOURCES = {
         "label": "Blogs",
         "singular": "Blog Post",
         "icon": "book",
-        "list_fields": [("title", "Title"), ("author", "Author"), ("category", "Category"),
-                        ("is_featured", "Featured"), ("is_active", "Published"), ("publish_at", "Go live at"), ("published_at", "Date shown")],
+        "list_fields": [
+            ("title", "Title"),
+            ("author", "Author"),
+            ("category", "Category"),
+            ("is_featured", "Featured"),
+            ("is_active", "Published"),
+            ("publish_at", "Go live at"),
+            ("published_at", "Date shown"),
+        ],
         "search_fields": ["title", "short_description", "content", "author", "category"],
         "filter_fields": [("is_active", "Published", YES_NO), ("is_featured", "Featured", YES_NO)],
     },
@@ -216,8 +307,14 @@ RESOURCES = {
         "icon": "mail",
         "can_add": False,
         "no_history": True,
-        "list_fields": [("name", "Name"), ("email", "Email"), ("phone", "Phone"), ("interest", "Interested in"),
-                        ("is_read", "Read"), ("created_at", "Received")],
+        "list_fields": [
+            ("name", "Name"),
+            ("email", "Email"),
+            ("phone", "Phone"),
+            ("interest", "Interested in"),
+            ("is_read", "Read"),
+            ("created_at", "Received"),
+        ],
         "search_fields": ["name", "email", "message", "phone", "interest"],
         "filter_fields": [("is_read", "Read", YES_NO)],
     },
@@ -239,18 +336,33 @@ def resource_url(slug):
 
 
 def nav_items(active=None):
-    items = [{"key": "dashboard", "label": "Dashboard", "icon": "home",
-              "url": reverse("adminpanel_dashboard"), "active": active == "dashboard"}]
+    items = [
+        {
+            "key": "dashboard",
+            "label": "Dashboard",
+            "icon": "home",
+            "url": reverse("adminpanel_dashboard"),
+            "active": active == "dashboard",
+        }
+    ]
     group = None
     for slug, meta in RESOURCES.items():
         if meta["group"] != group:
             group = meta["group"]
             items.append({"heading": group})
-        item = {"key": slug, "label": meta["label"], "icon": meta["icon"], "url": resource_url(slug),
-                "active": active == slug}
+        item = {
+            "key": slug,
+            "label": meta["label"],
+            "icon": meta["icon"],
+            "url": resource_url(slug),
+            "active": active == slug,
+        }
         if not meta.get("singleton"):
-            item["count"] = (ContactMessage.objects.filter(is_read=False).count() if slug == "messages"
-                             else meta["model"].objects.count())
+            item["count"] = (
+                ContactMessage.objects.filter(is_read=False).count()
+                if slug == "messages"
+                else meta["model"].objects.count()
+            )
         items.append(item)
     return items
 
@@ -289,6 +401,7 @@ def form_groups(meta, form):
 # Auth
 # ---------------------------------------------------------------------------
 
+
 class AdminLoginView(View):
     template_name = "adminpanel/login.html"
 
@@ -303,15 +416,18 @@ class AdminLoginView(View):
         next_url = request.POST.get("next") or ""
         if not url_has_allowed_host_and_scheme(next_url, allowed_hosts={request.get_host()}):
             next_url = ""
+        context = {"username": username, "next": next_url}
+        if throttle.blocked("login", request):  # password guessing: wait before trying again
+            context["error"] = f"Too many attempts. Please wait {throttle.minutes('login')} minutes and try again."
+            return render(request, self.template_name, context, status=429)
         user = authenticate(request, username=username, password=password)
         if user is not None and user.is_staff:
+            throttle.clear("login", request)
             login(request, user)
             return redirect(next_url or reverse("adminpanel_dashboard"))
-        return render(request, self.template_name, {
-            "error": "Invalid credentials or insufficient permissions.",
-            "username": username,
-            "next": next_url,
-        })
+        throttle.hit("login", request)
+        context["error"] = "Invalid credentials or insufficient permissions."
+        return render(request, self.template_name, context)
 
 
 @staff_required
@@ -324,9 +440,33 @@ def admin_logout(request):
 # Dashboard
 # ---------------------------------------------------------------------------
 
+
+def _google_tools(site, base):
+    """Links to the Google tools that matter for this site, filled in with its address and keywords."""
+    keywords = [k.strip() for k in site.trend_keywords.split(",") if k.strip()][:5]
+    geo = (site.country_code or "").upper()
+    home = quote(base + "/", safe="")
+    return {
+        "sitemap": f"{base}/sitemap.xml",
+        "search_console": f"https://search.google.com/search-console?resource_id={home}",
+        "analytics": "https://analytics.google.com/analytics/web/" if site.ga_id else "",
+        "trends": (
+            f"https://trends.google.com/trends/explore?date=today%2012-m&geo={geo}&q="
+            + ",".join(quote(k) for k in keywords)
+        )
+        if keywords
+        else "",
+        "searches": [(k, f"https://www.google.com/search?q={quote(k)}&gl={geo.lower()}") for k in keywords],
+        "pagespeed": f"https://pagespeed.web.dev/analysis?url={home}",
+        "rich_results": f"https://search.google.com/test/rich-results?url={home}",
+        "business": "https://business.google.com/",
+    }
+
+
 @staff_required
 def dashboard(request):
-    stats = []
+    site = SiteSettings.load()
+    cards = []
     for slug, meta in RESOURCES.items():
         if meta.get("singleton"):
             continue
@@ -336,26 +476,45 @@ def dashboard(request):
             extra["unread"] = model.objects.filter(is_read=False).count()
         elif any(f.name == "is_active" for f in model._meta.fields):
             extra["active"] = model.objects.filter(is_active=True).count()
-        stats.append({"slug": slug, "label": meta["label"], "icon": meta["icon"],
-                      "total": model.objects.count(), "extra": extra, "url": resource_url(slug)})
+        cards.append(
+            {
+                "slug": slug,
+                "label": meta["label"],
+                "icon": meta["icon"],
+                "total": model.objects.count(),
+                "extra": extra,
+                "url": resource_url(slug),
+            }
+        )
 
-    return render(request, "adminpanel/dashboard.html", {
-        "nav_items": nav_items("dashboard"),
-        "page_title": "Dashboard",
-        "stats": stats,
-        "recent_contacts": ContactMessage.objects.all()[:6],
-        "recent_blogs": BlogPost.objects.all()[:5],
-        "settings_url": resource_url("site-settings"),
-        "drafts": Page.objects.drafts().select_related("draft_of").order_by("publish_at", "-updated_at")[:8],
-        "scheduled_items": (list(BlogPost.objects.filter(is_active=True, publish_at__gt=timezone.now()))
-                            + list(SuccessStory.objects.filter(is_active=True, publish_at__gt=timezone.now()))),
-        "recent_changes": Revision.objects.select_related("user")[:8],
-    })
+    return render(
+        request,
+        "adminpanel/dashboard.html",
+        {
+            "nav_items": nav_items("dashboard"),
+            "page_title": "Dashboard",
+            "stats": cards,
+            "visitors": stats.summary(),
+            "seo": seo_audit.audit(),
+            "google": _google_tools(site, base_url(request, site)),
+            "ga_id": site.ga_id,
+            "recent_contacts": ContactMessage.objects.all()[:6],
+            "recent_blogs": BlogPost.objects.all()[:5],
+            "settings_url": resource_url("site-settings"),
+            "drafts": Page.objects.drafts().select_related("draft_of").order_by("publish_at", "-updated_at")[:8],
+            "scheduled_items": (
+                list(BlogPost.objects.filter(is_active=True, publish_at__gt=timezone.now()))
+                + list(SuccessStory.objects.filter(is_active=True, publish_at__gt=timezone.now()))
+            ),
+            "recent_changes": Revision.objects.select_related("user")[:8],
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # Generic CRUD
 # ---------------------------------------------------------------------------
+
 
 @staff_required
 def resource_list(request, resource):
@@ -380,33 +539,41 @@ def resource_list(request, resource):
         raw = request.GET.get(field_name, "")
         valid = {str(v) for v, _ in choices}
         if raw in valid:
-            value = {"True": True, "False": False}.get(raw, raw) if all(isinstance(v, bool) for v, _ in choices) else raw
+            value = (
+                {"True": True, "False": False}.get(raw, raw) if all(isinstance(v, bool) for v, _ in choices) else raw
+            )
             qs = qs.filter(**{field_name: value})
             active_filters[field_name] = raw
-        filters.append({
-            "name": field_name,
-            "label": label,
-            "options": [{"value": str(v), "text": t, "selected": raw == str(v)} for v, t in choices],
-            "current": active_filters.get(field_name),
-        })
+        filters.append(
+            {
+                "name": field_name,
+                "label": label,
+                "options": [{"value": str(v), "text": t, "selected": raw == str(v)} for v, t in choices],
+                "current": active_filters.get(field_name),
+            }
+        )
 
     paginator = Paginator(qs, 25)
     page = paginator.get_page(request.GET.get("p"))  # "page" is the Sections filter
     rows = [{"obj": obj, "cells": [format_cell(obj, name) for name, _ in meta["list_fields"]]} for obj in page]
 
-    return render(request, "adminpanel/list.html", {
-        "nav_items": nav_items(resource),
-        "page_title": meta["label"],
-        "resource": resource,
-        "meta": meta,
-        "rows": rows,
-        "page_obj": page,
-        "q": q,
-        "active_filters": active_filters,
-        "filters": filters,
-        "total_count": paginator.count,
-        "can_add": meta.get("can_add", True),
-    })
+    return render(
+        request,
+        "adminpanel/list.html",
+        {
+            "nav_items": nav_items(resource),
+            "page_title": meta["label"],
+            "resource": resource,
+            "meta": meta,
+            "rows": rows,
+            "page_obj": page,
+            "q": q,
+            "active_filters": active_filters,
+            "filters": filters,
+            "total_count": paginator.count,
+            "can_add": meta.get("can_add", True),
+        },
+    )
 
 
 def _render_form(request, resource, meta, form, formset, obj):
@@ -416,30 +583,45 @@ def _render_form(request, resource, meta, form, formset, obj):
         children = obj.sections.order_by("order", "id")
     tracked = obj is not None and not meta.get("no_history")
     root = versioning.history_root(obj) if tracked else None
-    return render(request, "adminpanel/form.html", {
-        "nav_items": nav_items(resource),
-        "page_title": (f'Add {meta["singular"]}' if is_create
-                       else meta["singular"] if meta.get("singleton") else f'Edit {meta["singular"]}'),
-        "resource": resource,
-        "meta": meta,
-        "form": form,
-        "groups": form_groups(meta, form),
-        "formset": formset,
-        "object": obj,
-        "is_create": is_create,
-        "children": children,
-        "view_url": obj.get_absolute_url() if obj is not None and hasattr(obj, "get_absolute_url") else "",
-        "back_url": (reverse("adminpanel_change", kwargs={"resource": "pages", "pk": obj.page_id})
-                     if isinstance(obj, Section) else ""),
-        "layout_guide": {"always": ALWAYS, "layouts": GUIDE} if resource == "sections" else None,
-        # drafts, scheduling and version history
-        "history": list(versioning.history(root)[:30]) if root is not None else None,
-        "history_root": root,
-        "history_is_page": isinstance(root, Page),
-        "drafts": list(obj.drafts.all()) if isinstance(obj, Page) and not obj.is_draft else [],
-        "page_url": (reverse("adminpanel_change", kwargs={"resource": "pages", "pk": root.pk})
-                     if isinstance(root, Page) and not isinstance(obj, Page) else ""),
-    })
+    return render(
+        request,
+        "adminpanel/form.html",
+        {
+            "nav_items": nav_items(resource),
+            "page_title": (
+                f"Add {meta['singular']}"
+                if is_create
+                else meta["singular"]
+                if meta.get("singleton")
+                else f"Edit {meta['singular']}"
+            ),
+            "resource": resource,
+            "meta": meta,
+            "form": form,
+            "groups": form_groups(meta, form),
+            "formset": formset,
+            "object": obj,
+            "is_create": is_create,
+            "children": children,
+            "view_url": obj.get_absolute_url() if obj is not None and hasattr(obj, "get_absolute_url") else "",
+            "back_url": (
+                reverse("adminpanel_change", kwargs={"resource": "pages", "pk": obj.page_id})
+                if isinstance(obj, Section)
+                else ""
+            ),
+            "layout_guide": {"always": ALWAYS, "layouts": GUIDE} if resource == "sections" else None,
+            # drafts, scheduling and version history
+            "history": list(versioning.history(root)[:30]) if root is not None else None,
+            "history_root": root,
+            "history_is_page": isinstance(root, Page),
+            "drafts": list(obj.drafts.all()) if isinstance(obj, Page) and not obj.is_draft else [],
+            "page_url": (
+                reverse("adminpanel_change", kwargs={"resource": "pages", "pk": root.pk})
+                if isinstance(root, Page) and not isinstance(obj, Page)
+                else ""
+            ),
+        },
+    )
 
 
 def _who(request):
@@ -447,15 +629,23 @@ def _who(request):
 
 
 def _save(request, resource, meta, obj=None):
-    form = meta["form"](request.POST or None, request.FILES or None, instance=obj,
-                        initial={k: request.GET[k] for k in meta.get("prefill", []) if k in request.GET} if obj is None else None)
+    form = meta["form"](
+        request.POST or None,
+        request.FILES or None,
+        instance=obj,
+        initial={k: request.GET[k] for k in meta.get("prefill", []) if k in request.GET} if obj is None else None,
+    )
     formset = None
     if meta.get("formset"):
         formset = meta["formset"](request.POST or None, request.FILES or None, instance=obj or meta["model"]())
     if request.method == "POST" and form.is_valid() and (formset is None or formset.is_valid()):
         target = obj if obj is not None else (form.cleaned_data.get("page") if resource == "sections" else None)
-        label = f'{meta["singular"].lower()} “{obj}”' if obj is not None else f'new {meta["singular"].lower()}'
-        tracker = None if meta.get("no_history") else versioning.Tracker(target, f"Before editing {label}"[:120], _who(request))
+        label = f"{meta['singular'].lower()} “{obj}”" if obj is not None else f"new {meta['singular'].lower()}"
+        tracker = (
+            None
+            if meta.get("no_history")
+            else versioning.Tracker(target, f"Before editing {label}"[:120], _who(request))
+        )
         with transaction.atomic():
             saved = form.save()
             if formset is not None:
@@ -464,7 +654,7 @@ def _save(request, resource, meta, obj=None):
             if tracker:
                 tracker.done()
         verb = "created" if obj is None else "updated"
-        messages.success(request, f'{meta["singular"]} {verb} successfully.')
+        messages.success(request, f"{meta['singular']} {verb} successfully.")
         return redirect("adminpanel_change", resource=resource, pk=saved.pk)
     return _render_form(request, resource, meta, form, formset, obj)
 
@@ -492,32 +682,43 @@ def resource_delete(request, resource, pk):
     obj = get_object_or_404(meta["model"], pk=pk)
     if request.method == "POST":
         label = str(obj)
-        back = (reverse("adminpanel_change", kwargs={"resource": "pages", "pk": obj.page_id})
-                if isinstance(obj, Section) else reverse("adminpanel_list", kwargs={"resource": resource}))
+        back = (
+            reverse("adminpanel_change", kwargs={"resource": "pages", "pk": obj.page_id})
+            if isinstance(obj, Section)
+            else reverse("adminpanel_list", kwargs={"resource": resource})
+        )
         if isinstance(obj, Page) and obj.is_draft:
             back = reverse("adminpanel_change", kwargs={"resource": "pages", "pk": obj.draft_of_id})
-        skip = meta.get("no_history") or (isinstance(obj, Page) and obj.is_draft)   # discarding a draft
-        tracker = None if skip else versioning.Tracker(
-            obj, f'Before deleting {meta["singular"].lower()} “{label}”'[:120], _who(request))
+        skip = meta.get("no_history") or (isinstance(obj, Page) and obj.is_draft)  # discarding a draft
+        tracker = (
+            None
+            if skip
+            else versioning.Tracker(obj, f"Before deleting {meta['singular'].lower()} “{label}”"[:120], _who(request))
+        )
         with transaction.atomic():
             obj.delete()
             if tracker:
                 tracker.done()
-        messages.success(request, f'{meta["singular"]} “{label}” deleted.')
+        messages.success(request, f"{meta['singular']} “{label}” deleted.")
         return redirect(back)
 
-    return render(request, "adminpanel/delete.html", {
-        "nav_items": nav_items(resource),
-        "page_title": f'Delete {meta["singular"]}',
-        "resource": resource,
-        "meta": meta,
-        "object": obj,
-    })
+    return render(
+        request,
+        "adminpanel/delete.html",
+        {
+            "nav_items": nav_items(resource),
+            "page_title": f"Delete {meta['singular']}",
+            "resource": resource,
+            "meta": meta,
+            "object": obj,
+        },
+    )
 
 
 # ---------------------------------------------------------------------------
 # Drafts, publishing, version history
 # ---------------------------------------------------------------------------
+
 
 def _page_admin(pk):
     return redirect("adminpanel_change", resource="pages", pk=pk)
@@ -529,8 +730,11 @@ def page_create_draft(request, pk):
     if request.method != "POST":
         return _page_admin(pk)
     draft = versioning.create_draft(page, _who(request))
-    messages.success(request, "Draft created. Edit its sections below, preview it, then publish it when ready. "
-                              "Visitors still see the live page.")
+    messages.success(
+        request,
+        "Draft created. Edit its sections below, preview it, then publish it when ready. "
+        "Visitors still see the live page.",
+    )
     return _page_admin(draft.pk)
 
 
@@ -557,8 +761,11 @@ def revision_restore(request, pk):
     except ValueError as e:
         messages.error(request, str(e))
         return redirect(back)
-    messages.success(request, f"Restored “{obj}” to the version of {timezone.localtime(rev.created_at):%b %d, %Y %H:%M}. "
-                              "The version before restoring is kept in the history.")
+    messages.success(
+        request,
+        f"Restored “{obj}” to the version of {timezone.localtime(rev.created_at):%b %d, %Y %H:%M}. "
+        "The version before restoring is kept in the history.",
+    )
     return redirect(back)
 
 
@@ -569,8 +776,12 @@ def revision_to_draft(request, pk):
     page = get_object_or_404(Page, pk=rev.object_id)
     if request.method != "POST" or "sections" not in rev.data:
         return _page_admin(page.pk)
-    draft = versioning.create_draft(page.draft_of or page, _who(request), data=rev.data,
-                                    title_note=f"from the version of {timezone.localtime(rev.created_at):%b %d, %Y %H:%M}")
+    draft = versioning.create_draft(
+        page.draft_of or page,
+        _who(request),
+        data=rev.data,
+        title_note=f"from the version of {timezone.localtime(rev.created_at):%b %d, %Y %H:%M}",
+    )
     messages.success(request, "That version is now a draft. Check it, then publish it to make it live.")
     return _page_admin(draft.pk)
 
@@ -581,7 +792,7 @@ def contact_mark_read(request, pk):
     if request.method == "POST":
         contact.is_read = not contact.is_read
         contact.save(update_fields=["is_read"])
-        messages.success(request, f'Marked as {"read" if contact.is_read else "unread"}.')
+        messages.success(request, f"Marked as {'read' if contact.is_read else 'unread'}.")
     back = request.META.get("HTTP_REFERER", "")
     if not url_has_allowed_host_and_scheme(back, allowed_hosts={request.get_host()}):
         back = reverse("adminpanel_list", kwargs={"resource": "messages"})

@@ -1,5 +1,8 @@
 """Small helpers for the admin panel templates."""
+
 from django import template
+
+from core import images
 
 register = template.Library()
 
@@ -23,4 +26,14 @@ def is_image(value):
 def scheme_presets():
     """The ready-made colour schemes for the Site Settings picker."""
     from core import theme
+
     return [{"key": k, "name": n, "primary": a, "accent": b, "dark": c} for k, n, a, b, c in theme.PRESETS]
+
+
+@register.simple_tag
+def image_size(field):
+    """Recommended upload size for a photo field that always shows in the same place (core/images.py)."""
+    model = getattr(getattr(field.form, "_meta", None), "model", None)
+    if model is None:
+        return None
+    return images.size_hint(images.FIELD_SLOTS.get(f"{model._meta.model_name}.{field.name}", ""))

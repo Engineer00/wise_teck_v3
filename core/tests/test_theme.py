@@ -1,4 +1,5 @@
 """Colour schemes: three brand colours drive every colour on the site; the admin refuses unreadable colours."""
+
 from django.db.models.fields.files import FieldFile
 
 from core import theme
@@ -10,7 +11,7 @@ from .base import SeededTestCase
 
 class ThemeEngineTests(SeededTestCase):
     def test_presets_are_readable(self):
-        for key, name, primary, accent, dark in theme.PRESETS:
+        for _key, name, primary, accent, dark in theme.PRESETS:
             self.assertEqual(theme.check_contrast(primary, accent, dark), [], name)
 
     def test_anchor_shades_become_the_chosen_colours(self):
@@ -24,7 +25,7 @@ class ThemeEngineTests(SeededTestCase):
         L_before = theme.to_oklch("#f7f8fe")[0]
         L_after = theme.to_oklch(theme.recolor("#f7f8fe", scheme))[0]
         self.assertAlmostEqual(L_before, L_after, places=2)
-        self.assertEqual(theme.recolor("#dc2626", scheme), "#dc2626")       # error red
+        self.assertEqual(theme.recolor("#dc2626", scheme), "#dc2626")  # error red
         self.assertEqual(theme.recolor("#ffffff", scheme), "#ffffff")
 
 
@@ -46,16 +47,24 @@ class ThemeOnSiteTests(SeededTestCase):
         html = self.client.get("/").content.decode()
         self.assertIn("--p-violet-700:#1d4ed8", html)
         self.assertIn("data-theme-map=", html)
-        self.assertNotIn('stroke="#a9b3ee"', html)                         # motif lavender recoloured
-        self.assertIn("--p-err-600", theme.palette())                     # status colours exist ...
-        self.assertNotIn("--p-err-600:", html.split('id="colour-scheme">')[1].split("</style>")[0])   # ... but stay
+        self.assertNotIn('stroke="#a9b3ee"', html)  # motif lavender recoloured
+        self.assertIn("--p-err-600", theme.palette())  # status colours exist ...
+        overrides = html.split('id="colour-scheme">')[1].split("</style>")[0]
+        self.assertNotIn("--p-err-600:", overrides)  # ... but stay
+        self.assertNotIn("--p-wordmark", overrides)  # the logo never changes colour
 
     def test_preview_is_for_staff_only(self):
         self.assertNotIn("Colour preview", self.client.get("/?scheme=emerald").content.decode())
-        html = self.admin_client().get("/?scheme=custom&primary=%23047857&accent=%23d4af37&dark=%230f2a24").content.decode()
+        html = (
+            self.admin_client()
+            .get("/?scheme=custom&primary=%23047857&accent=%23d4af37&dark=%230f2a24")
+            .content.decode()
+        )
         self.assertIn("Colour preview", html)
         self.assertIn("--p-violet-700:#047857", html)
-        self.assertNotIn("--p-violet-700", self.client.get("/").content.decode().split("</head>")[0].split("wise-teck.css")[1])
+        self.assertNotIn(
+            "--p-violet-700", self.client.get("/").content.decode().split("</head>")[0].split("wise-teck.css")[1]
+        )
 
 
 class ThemeAdminTests(SeededTestCase):

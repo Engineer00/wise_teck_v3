@@ -18,6 +18,7 @@ The result reaches the page in three ways:
     js_map()          {default hex: new hex} for the scripts that draw (waves, 3D coin), read from <html>
     recolor_markup()  the same map applied to server-drawn SVG (background motifs, gradients)
 """
+
 import json
 import math
 import re
@@ -53,7 +54,7 @@ def _gam(c):
 
 def hex_to_rgb(h):
     h = h.lstrip("#")
-    return tuple(int(h[i:i + 2], 16) for i in (0, 2, 4))
+    return tuple(int(h[i : i + 2], 16) for i in (0, 2, 4))
 
 
 def rgb_to_hex(rgb):
@@ -76,9 +77,11 @@ def _oklch_to_rgb01(L, C, H):
     l_ = (L + 0.3963377774 * a + 0.2158037573 * b) ** 3
     m_ = (L - 0.1055613458 * a - 0.0638541728 * b) ** 3
     s_ = (L - 0.0894841775 * a - 1.2914855480 * b) ** 3
-    return (_gam(4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_),
-            _gam(-1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_),
-            _gam(-0.0041960863 * l_ - 0.7034186147 * m_ + 1.7076147010 * s_))
+    return (
+        _gam(4.0767416621 * l_ - 3.3077115913 * m_ + 0.2309699292 * s_),
+        _gam(-1.2684380046 * l_ + 2.6097574011 * m_ - 0.3413193965 * s_),
+        _gam(-0.0041960863 * l_ - 0.7034186147 * m_ + 1.7076147010 * s_),
+    )
 
 
 def from_oklch(L, C, H):
@@ -106,13 +109,13 @@ def contrast(a, b):
 def family(h):
     """Which brand colour a default palette colour follows: 'primary', 'accent', 'dark' or None (unchanged)."""
     L, C, H = to_oklch(h)
-    if C < 0.008:                       # white, black, greys
+    if C < 0.008:  # white, black, greys
         return None
-    if 50 <= H <= 110:                  # golds, ambers
+    if 50 <= H <= 110:  # golds, ambers
         return "accent"
-    if 180 <= H <= 330:                 # blues, violets, lavenders
+    if 180 <= H <= 330:  # blues, violets, lavenders
         return "dark" if L < 0.42 else "primary"
-    return None                         # reds, greens: status colours
+    return None  # reds, greens: status colours
 
 
 def recolor(h, scheme):
@@ -122,7 +125,7 @@ def recolor(h, scheme):
     L, C, H = to_oklch(h)
     La, Ca, Ha = to_oklch(DEFAULT[fam])
     Ln, Cn, Hn = to_oklch(scheme[fam])
-    pull = math.exp(-((L - La) / 0.16) ** 2)          # 1 at the anchor shade, ~0 for very light / very dark shades
+    pull = math.exp(-(((L - La) / 0.16) ** 2))  # 1 at the anchor shade, ~0 for very light / very dark shades
     return from_oklch(L + (Ln - La) * pull, C * (Cn / Ca if Ca else 1), H + (Hn - Ha))
 
 
@@ -130,7 +133,11 @@ def resolve(settings_obj, preview=None):
     """The active scheme {'key', 'primary', 'accent', 'dark'}; None means the default (nothing to override)."""
     key = preview if preview is not None else (settings_obj.color_scheme or "")
     if key == CUSTOM:
-        colours = {"primary": settings_obj.color_primary, "accent": settings_obj.color_accent, "dark": settings_obj.color_dark}
+        colours = {
+            "primary": settings_obj.color_primary,
+            "accent": settings_obj.color_accent,
+            "dark": settings_obj.color_dark,
+        }
         if not all(HEX.match(v or "") for v in colours.values()):
             return None
     else:
@@ -170,7 +177,7 @@ def _key(scheme):
 
 @lru_cache(maxsize=16)
 def _build(key):
-    scheme = dict(zip(("primary", "accent", "dark"), key))
+    scheme = dict(zip(("primary", "accent", "dark"), key, strict=True))
     css = []
     for name, value in palette().items():
         if name.startswith(NEVER):
@@ -206,7 +213,11 @@ def check_contrast(primary, accent, dark):
     if contrast(primary, "#ffffff") < 4.5:
         problems.append("White button text is hard to read on the primary colour — choose a darker primary colour.")
     if contrast(dark, "#ffffff") < 4.5:
-        problems.append("White text in the top bar and footer is hard to read on the dark colour — choose a darker colour.")
+        problems.append(
+            "White text in the top bar and footer is hard to read on the dark colour — choose a darker colour."
+        )
     if contrast(accent, recolor("#10123f", scheme)) < 4.5:
-        problems.append("Dark text on the accent (gold) buttons is hard to read — choose a lighter, brighter accent colour.")
+        problems.append(
+            "Dark text on the accent (gold) buttons is hard to read — choose a lighter, brighter accent colour."
+        )
     return problems

@@ -80,13 +80,24 @@ class ContactFormTest(SeededTestCase):
 
     def test_spam_trap(self):
         from core.models import ContactMessage
+
         Client().post("/contact/", {"name": "Bot", "phone": "1", "website": "spam"})
         self.assertEqual(ContactMessage.objects.count(), 0)
 
     def test_message_saved_and_thanked(self):
         from core.models import ContactMessage
-        r = Client().post("/contact/", {"name": "Ali Test", "phone": "+92 300 1234567", "email": "ali@example.com",
-                                        "interest": "Wise College", "message": "Hello"}, follow=True)
+
+        r = Client().post(
+            "/contact/",
+            {
+                "name": "Ali Test",
+                "phone": "+92 300 1234567",
+                "email": "ali@example.com",
+                "interest": "Wise College",
+                "message": "Hello",
+            },
+            follow=True,
+        )
         m = ContactMessage.objects.get()
         self.assertEqual((m.name, m.interest, m.page), ("Ali Test", "Wise College", "/contact/"))
         self.assertContains(r, "form-msg--success")

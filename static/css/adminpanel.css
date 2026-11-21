@@ -1,39 +1,42 @@
 /* Wise Teck Admin Panel */
 :root {
-  /* Wise-Teck brand (same values as the --p-* palette in wise-teck.css) */
-  --ap-ink: #10123f;              /* p-ink-900 */
-  --ap-ink-2: #2b2d4a;            /* p-ink-700 */
-  --ap-muted: #646a8f;            /* p-ink-500 */
-  --ap-line: color-mix(in srgb, var(--ap-ink) 12%, transparent);
+  /* Admin colour scheme: calm neutral workspace, one brand accent (Wise-Teck violet), status colours only for status.
+     Fixed on purpose: the admin keeps its look whatever colour scheme the website uses. */
+  --ap-ink: #111827;              /* text: near-black, 17:1 on white */
+  --ap-ink-2: #374151;            /* secondary headings */
+  --ap-muted: #5b6475;            /* help text: 5.9:1 on white, AA */
+  --ap-line: color-mix(in srgb, var(--ap-ink) 10%, transparent);
   --ap-surface: #ffffff;
-  --ap-canvas: #f7f8fe;           /* p-lav-50 */
-  --ap-canvas-2: #eef0fc;         /* p-lav-100 */
-  --ap-canvas-3: #e2e6fa;         /* p-lav-200 */
-  --ap-sidebar: #4c1d95;          /* p-violet-900 */
-  --ap-sidebar-2: #5b21b6;        /* p-violet-800 */
-  --ap-night: #2e1065;            /* p-violet-950: sidebar foot, login backdrop */
+  --ap-canvas: #f5f6fa;           /* page background */
+  --ap-canvas-2: #eceef5;
+  --ap-canvas-3: #e1e4ee;
+  --ap-sidebar: #1e1548;          /* midnight violet */
+  --ap-sidebar-2: #2a1d63;
+  --ap-night: #120c30;            /* sidebar foot, login backdrop */
   --ap-on-dark: #ffffff;
-  --ap-on-dark-soft: #e2e6fa;     /* p-lav-200 */
-  --ap-accent: #6d28d9;           /* p-violet-700 */
-  --ap-accent-2: #8b5cf6;         /* p-violet-500 */
-  --ap-accent-hover: #5b21b6;     /* p-violet-800 */
-  --ap-accent-deep: #4c1d95;      /* p-violet-900 */
-  --ap-accent-soft: color-mix(in srgb, var(--ap-accent) 12%, transparent);
-  --ap-gold: #d4af37;             /* p-gold-400 */
-  --ap-gold-2: #e6c463;           /* p-gold-300 */
-  --ap-gold-deep: #8a6a1f;        /* p-gold-600 */
+  --ap-on-dark-soft: #cfc9ee;
+  --ap-accent: #6d28d9;           /* Wise-Teck violet: primary buttons, links, active menu item, charts */
+  --ap-accent-2: #8b5cf6;
+  --ap-accent-hover: #5b21b6;
+  --ap-accent-deep: #4c1d95;
+  --ap-accent-soft: color-mix(in srgb, var(--ap-accent) 10%, transparent);
+  --ap-gold: #d4af37;             /* small brand touches only */
+  --ap-gold-2: #e6c463;
+  --ap-gold-deep: #8a6a1f;
   --ap-ok: #0f9d6e;
   --ap-ok-ink: #0a6b4a;
   --ap-ok-bg: color-mix(in srgb, var(--ap-ok) 12%, transparent);
   --ap-warn: #c97816;
+  --ap-warn-ink: #8a4f08;
   --ap-warn-bg: color-mix(in srgb, var(--ap-warn) 14%, transparent);
   --ap-danger: #d14343;
   --ap-danger-ink: #9b2c2c;
   --ap-danger-bg: color-mix(in srgb, var(--ap-danger) 10%, transparent);
   --ap-radius: 14px;
-  --ap-shadow: 0 10px 30px color-mix(in srgb, var(--ap-sidebar) 9%, transparent);
-  --ap-font: "DM Sans", system-ui, sans-serif;
-  --ap-display: "Syne", "DM Sans", sans-serif;
+  --ap-radius-sm: 10px;
+  --ap-shadow: 0 1px 2px color-mix(in srgb, var(--ap-ink) 6%, transparent), 0 8px 24px color-mix(in srgb, var(--ap-ink) 5%, transparent);
+  --ap-font: "Inter", system-ui, sans-serif;     /* one family everywhere, same as the website */
+  --ap-display: "Inter", system-ui, sans-serif;
   --ap-sidebar-w: 260px;
 }
 
@@ -431,6 +434,7 @@ body.ap-body {
 .ap-field-check { justify-content: center; }
 .ap-check-label { display: flex; align-items: center; gap: 0.55rem; font-weight: 600; }
 .ap-help { margin: 0; font-size: 0.78rem; color: var(--ap-muted); }
+.ap-size { display: inline-block; margin-left: 6px; padding: 1px 8px; border-radius: 999px; background: var(--ap-accent-soft); color: var(--ap-accent-deep); font-size: 0.72rem; font-weight: 600; letter-spacing: .01em; cursor: help; vertical-align: middle; }
 .ap-error { margin: 0; font-size: 0.8rem; color: var(--ap-danger); }
 .ap-form-actions {
   display: flex;
@@ -719,3 +723,53 @@ body.ap-body {
 .ap-scheme-name { font-weight: 600; color: var(--ap-ink); }
 .ap-scheme-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
 .ap-color { width: 72px; height: 44px; padding: 4px; cursor: pointer; }
+
+
+/* =========================================================
+   Dashboard: visitors, SEO health, Google tools
+   ========================================================= */
+.ap-visitors { margin-bottom: 1rem; }
+.ap-kpis { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 0.75rem; margin-bottom: 1rem; }
+.ap-kpi { display: flex; flex-direction: column; gap: 0.2rem; padding: 0.8rem 1rem; border-radius: var(--ap-radius-sm); background: var(--ap-canvas); }
+.ap-kpi span { font-size: 0.72rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ap-muted); }
+.ap-kpi strong { font-size: 1.6rem; line-height: 1.1; letter-spacing: -0.03em; font-variant-numeric: tabular-nums; }
+.ap-kpi-small strong { font-size: 1.25rem; }
+.ap-change { font-style: normal; font-size: 0.75rem; font-weight: 700; color: var(--ap-muted); }
+.ap-change-up { color: var(--ap-ok-ink); }
+.ap-change-down { color: var(--ap-danger-ink); }
+.ap-chart { margin: 0 0 1.1rem; }
+.ap-chart svg { display: block; width: 100%; height: 140px; }
+.ap-chart-area { fill: var(--ap-accent-soft); }
+.ap-chart-line { fill: none; stroke: var(--ap-accent); stroke-width: 2; stroke-linejoin: round; vector-effect: non-scaling-stroke; }
+.ap-chart figcaption { display: flex; justify-content: space-between; gap: 1rem; margin-top: 0.4rem; font-size: 0.75rem; color: var(--ap-muted); }
+.ap-subhead { margin: 0 0 0.4rem; font-size: 0.85rem; font-weight: 700; color: var(--ap-ink-2); }
+.ap-bars { list-style: none; margin: 0; padding: 0; }
+.ap-bars li { display: flex; justify-content: space-between; gap: 1rem; padding: 0.5rem 0; border-top: 1px solid var(--ap-line); font-size: 0.88rem; }
+.ap-bars li:first-child { border-top: 0; }
+.ap-bars a { color: inherit; text-decoration: none; }
+.ap-bars a:hover { color: var(--ap-accent); }
+.ap-bars b { font-variant-numeric: tabular-nums; }
+.ap-score { padding: 0.15rem 0.75rem; border-radius: 999px; font-size: 1.4rem; font-weight: 800; letter-spacing: -0.03em; }
+.ap-score small { margin-left: 2px; font-size: 0.72rem; font-weight: 600; opacity: 0.75; }
+.ap-score-good { background: var(--ap-ok-bg); color: var(--ap-ok-ink); }
+.ap-score-fair { background: var(--ap-warn-bg); color: var(--ap-warn-ink); }
+.ap-score-poor { background: var(--ap-danger-bg); color: var(--ap-danger-ink); }
+.ap-issues { list-style: none; margin: 0.75rem 0 0; padding: 0; max-height: 380px; overflow: auto; }
+.ap-issue a { display: flex; align-items: flex-start; gap: 0.65rem; padding: 0.6rem 0; border-top: 1px solid var(--ap-line); color: inherit; text-decoration: none; font-size: 0.86rem; line-height: 1.45; }
+.ap-issue a:hover span { color: var(--ap-accent); }
+.ap-issue em { flex: none; min-width: 64px; padding: 2px 8px; border-radius: 999px; font-style: normal; font-size: 0.68rem; font-weight: 700; letter-spacing: 0.05em; text-align: center; text-transform: uppercase; }
+.ap-issue-error em { background: var(--ap-danger-bg); color: var(--ap-danger-ink); }
+.ap-issue-warn em { background: var(--ap-warn-bg); color: var(--ap-warn-ink); }
+.ap-issue-tip em { background: var(--ap-accent-soft); color: var(--ap-accent-deep); }
+.ap-tools { list-style: none; margin: 0 0 0.85rem; padding: 0; display: grid; gap: 0.5rem; }
+.ap-tools a { display: block; padding: 0.7rem 0.9rem; border: 1px solid var(--ap-line); border-radius: var(--ap-radius-sm); color: inherit; text-decoration: none; transition: border-color 0.2s ease, background 0.2s ease; }
+.ap-tools a:hover { border-color: color-mix(in srgb, var(--ap-accent) 40%, transparent); background: var(--ap-canvas); }
+.ap-tools b { display: block; font-size: 0.9rem; }
+.ap-tools span { display: block; margin-top: 2px; font-size: 0.8rem; line-height: 1.45; color: var(--ap-muted); }
+.ap-tools code { padding: 1px 6px; border-radius: 6px; background: var(--ap-canvas-2); font-size: 0.75rem; word-break: break-all; }
+@media (max-width: 1100px) {
+  .ap-kpis { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 560px) {
+  .ap-kpis { grid-template-columns: 1fr 1fr; }
+}

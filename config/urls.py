@@ -6,8 +6,10 @@ from django.views.generic import RedirectView
 from core import views
 
 urlpatterns = [
-    path("admin/", include("core.adminpanel.urls")),            # Wise-Teck admin panel (the original site's panel)
-    re_path(r"^adminpanel/(?P<rest>.*)$", RedirectView.as_view(url="/admin/%(rest)s", query_string=True, permanent=False)),  # the original site's address
+    path("admin/", include("core.adminpanel.urls")),  # Wise-Teck admin panel (the original site's panel)
+    re_path(
+        r"^adminpanel/(?P<rest>.*)$", RedirectView.as_view(url="/admin/%(rest)s", query_string=True, permanent=False)
+    ),  # the original site's address
     path("robots.txt", views.robots_txt, name="robots_txt"),
     path("sitemap.xml", views.sitemap_xml, name="sitemap_xml"),
     path("preview/page/<int:pk>/", views.preview_page, name="preview_page"),

@@ -7,13 +7,14 @@ Text conventions (also explained in the admin help texts):
   rich    **bold**                   -> <b>bold</b>   (inline text)
   paras   blank line = new paragraph, **bold** kept
 """
+
 import re
 
 from django import template
-from django.utils.html import escape
+from django.utils.html import escape, format_html
 from django.utils.safestring import mark_safe
 
-from core import motifs, theme
+from core import images, motifs, theme
 
 register = template.Library()
 
@@ -91,8 +92,10 @@ def themed(colour, scheme):
 
 @register.simple_tag
 def wave(sym, h, cls):
-    return mark_safe(f'<svg class="{cls}" viewBox="0 0 1440 {h}" preserveAspectRatio="none" aria-hidden="true" '
-                     f'data-wave="{sym}"></svg>')
+    return mark_safe(
+        f'<svg class="{cls}" viewBox="0 0 1440 {h}" preserveAspectRatio="none" aria-hidden="true" '
+        f'data-wave="{sym}"></svg>'
+    )
 
 
 def _page_of(url):
@@ -111,3 +114,10 @@ def nav_on(item, path):
 @register.filter
 def same_page(url, path):
     return _page_of(url) == path
+
+
+@register.simple_tag
+def srcset(url, slot):
+    """srcset + sizes for an uploaded photo (WebP copies, core/images.py); nothing for links, SVG or GIF."""
+    value = images.srcset(url)
+    return format_html(' srcset="{}" sizes="{}"', value, images.DRAWN[slot]) if value else ""

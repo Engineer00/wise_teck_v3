@@ -3,13 +3,27 @@
 Every form is built from its model; StyledForm gives each widget the panel's classes, so new model
 fields appear in the panel automatically.
 """
+
 from django import forms
 from django.forms import inlineformset_factory, modelform_factory
 
 from .. import theme
-
-from ..models import (BlogPost, ContactMessage, FooterColumn, FooterLink, Item, NavItem, Page, Program, Redirect,
-                     Section, Service, SiteSettings, SuccessStory, TeamMember)
+from ..models import (
+    BlogPost,
+    ContactMessage,
+    FooterColumn,
+    FooterLink,
+    Item,
+    NavItem,
+    Page,
+    Program,
+    Redirect,
+    Section,
+    Service,
+    SiteSettings,
+    SuccessStory,
+    TeamMember,
+)
 
 try:
     from PIL import Image as PilImage
@@ -54,23 +68,57 @@ class BlogBase(StyledForm):
 
 
 # ----------------------------------------------------------------- content from the original site
-SuccessStoryForm = styled(SuccessStory, (
-    "title", "slug", "client_name", "category", "short_description", "description", "image", "image_url",
-    "display_order", "is_featured", "is_active", "publish_at"),
-    widgets={"slug": forms.TextInput(attrs={"placeholder": "Auto-generated if blank"}),
-             "description": forms.Textarea(attrs={"rows": 10})},
-    base=BlogBase)
+SuccessStoryForm = styled(
+    SuccessStory,
+    (
+        "title",
+        "slug",
+        "client_name",
+        "category",
+        "short_description",
+        "description",
+        "image",
+        "image_url",
+        "display_order",
+        "is_featured",
+        "is_active",
+        "publish_at",
+    ),
+    widgets={
+        "slug": forms.TextInput(attrs={"placeholder": "Auto-generated if blank"}),
+        "description": forms.Textarea(attrs={"rows": 10}),
+    },
+    base=BlogBase,
+)
 
-TeamMemberForm = styled(TeamMember, (
-    "name", "designation", "service", "display_order", "short_description", "description", "image", "is_active"))
+TeamMemberForm = styled(
+    TeamMember,
+    ("name", "designation", "service", "display_order", "short_description", "description", "image", "is_active"),
+)
 
 
-BlogPostForm = styled(BlogPost, (
-    "title", "slug", "author", "category", "published_at", "short_description", "content", "featured_image",
-    "is_featured", "is_active", "publish_at"),
-    widgets={"slug": forms.TextInput(attrs={"placeholder": "Auto-generated if blank"}),
-             "content": forms.Textarea(attrs={"rows": 18})},
-    base=BlogBase)
+BlogPostForm = styled(
+    BlogPost,
+    (
+        "title",
+        "slug",
+        "author",
+        "category",
+        "published_at",
+        "short_description",
+        "content",
+        "featured_image",
+        "is_featured",
+        "is_active",
+        "publish_at",
+    ),
+    widgets={
+        "slug": forms.TextInput(attrs={"placeholder": "Auto-generated if blank"}),
+        "content": forms.Textarea(attrs={"rows": 18}),
+    },
+    base=BlogBase,
+)
+
 
 class ServiceBase(StyledForm):
     """Same check as the original panel: the icon may be an SVG, otherwise it must be a real image."""
@@ -85,18 +133,35 @@ class ServiceBase(StyledForm):
             PilImage.open(f).verify()
             f.seek(0)
         except Exception:
-            raise forms.ValidationError("Upload an SVG or a valid image file.")
+            raise forms.ValidationError("Upload an SVG or a valid image file.") from None
         return f
 
 
-ServiceForm = styled(Service, ("name", "short_description", "image", "icon_file", "icon", "link_url", "display_order", "is_active"),
-                     base=ServiceBase)
+ServiceForm = styled(
+    Service,
+    ("name", "short_description", "image", "icon_file", "icon", "link_url", "display_order", "is_active"),
+    base=ServiceBase,
+)
 
 ContactMessageForm = styled(ContactMessage, ("name", "email", "phone", "interest", "message", "page", "is_read"))
 
 # ----------------------------------------------------------------- website structure (v2)
-RESERVED_SLUGS = {"admin", "adminpanel", "django-admin", "static", "media", "preview", "robots-txt", "sitemap-xml",
-                  "sitemap", "robots", "api", "login", "logout", "success-stories-detail"}
+RESERVED_SLUGS = {
+    "admin",
+    "adminpanel",
+    "django-admin",
+    "static",
+    "media",
+    "preview",
+    "robots-txt",
+    "sitemap-xml",
+    "sitemap",
+    "robots",
+    "api",
+    "login",
+    "logout",
+    "success-stories-detail",
+}
 
 
 class PageBase(StyledForm):
@@ -118,37 +183,121 @@ class PageBase(StyledForm):
             self.fields.pop("publish_at", None)
 
 
-PageForm = styled(Page, ("title", "slug", "meta_description", "is_active", "publish_at",
-                         "share_title", "share_description", "share_image", "noindex", "canonical_url"), base=PageBase,
-                  widgets={"meta_description": forms.Textarea(attrs={"rows": 2, "maxlength": 300}),
-                           "share_description": forms.Textarea(attrs={"rows": 2, "maxlength": 300})})
+PageForm = styled(
+    Page,
+    (
+        "title",
+        "slug",
+        "meta_description",
+        "is_active",
+        "publish_at",
+        "share_title",
+        "share_description",
+        "share_image",
+        "noindex",
+        "canonical_url",
+    ),
+    base=PageBase,
+    widgets={
+        "meta_description": forms.Textarea(attrs={"rows": 2, "maxlength": 300}),
+        "share_description": forms.Textarea(attrs={"rows": 2, "maxlength": 300}),
+    },
+)
 
 RedirectForm = styled(Redirect, ("old_path", "new_path", "permanent", "is_active"))
 
 SECTION_FIELDS = (
-    "page", "order", "layout", "is_active", "anchor", "spacing", "divider_after", "motif",
-    "crumbs", "eyebrow", "title", "highlight", "lined", "subtitle",
-    "body", "note", "list_title", "list_items",
-    "button_label", "button_url", "button_style", "button_icon",
-    "button2_label", "button2_url", "button2_style", "button2_icon",
-    "visual", "image", "image_url", "image_alt", "image2", "image2_url", "image_side", "badge_icon", "badge_text", "stats_style",
-    "quote_text", "quote_highlight", "quote_author", "quote_role", "quote_icon",
-    "center_small", "center_big", "center_url",
-    "columns", "numbered", "item_label", "sub_title", "feed_limit",
-    "form_title", "form_fields",
+    "page",
+    "order",
+    "layout",
+    "is_active",
+    "anchor",
+    "spacing",
+    "divider_after",
+    "motif",
+    "crumbs",
+    "eyebrow",
+    "title",
+    "highlight",
+    "lined",
+    "subtitle",
+    "body",
+    "note",
+    "list_title",
+    "list_items",
+    "button_label",
+    "button_url",
+    "button_style",
+    "button_icon",
+    "button2_label",
+    "button2_url",
+    "button2_style",
+    "button2_icon",
+    "visual",
+    "image",
+    "image_url",
+    "image_alt",
+    "image2",
+    "image2_url",
+    "image_side",
+    "badge_icon",
+    "badge_text",
+    "stats_style",
+    "quote_text",
+    "quote_highlight",
+    "quote_author",
+    "quote_role",
+    "quote_icon",
+    "center_small",
+    "center_big",
+    "center_url",
+    "columns",
+    "numbered",
+    "item_label",
+    "sub_title",
+    "feed_limit",
+    "form_title",
+    "form_fields",
 )
-SectionForm = styled(Section, SECTION_FIELDS, widgets={
-    "subtitle": forms.Textarea(attrs={"rows": 2}), "crumbs": forms.Textarea(attrs={"rows": 3}),
-    "quote_text": forms.Textarea(attrs={"rows": 2}), "note": forms.Textarea(attrs={"rows": 2}),
-    "form_fields": forms.Textarea(attrs={"rows": 5}), "body": forms.Textarea(attrs={"rows": 6}),
-})
+SectionForm = styled(
+    Section,
+    SECTION_FIELDS,
+    widgets={
+        "subtitle": forms.Textarea(attrs={"rows": 2}),
+        "crumbs": forms.Textarea(attrs={"rows": 3}),
+        "quote_text": forms.Textarea(attrs={"rows": 2}),
+        "note": forms.Textarea(attrs={"rows": 2}),
+        "form_fields": forms.Textarea(attrs={"rows": 5}),
+        "body": forms.Textarea(attrs={"rows": 6}),
+    },
+)
 
 ItemFormSet = inlineformset_factory(
-    Section, Item, form=StyledForm, extra=1, can_delete=True,
-    fields=("group", "order", "is_active", "icon", "title", "subtitle", "text", "bullets", "image", "image_url",
-            "link_label", "link_url", "logo_html"),
-    widgets={"text": forms.Textarea(attrs={"rows": 3}), "bullets": forms.Textarea(attrs={"rows": 3}),
-             "logo_html": forms.Textarea(attrs={"rows": 2})},
+    Section,
+    Item,
+    form=StyledForm,
+    extra=1,
+    can_delete=True,
+    fields=(
+        "group",
+        "order",
+        "is_active",
+        "icon",
+        "title",
+        "subtitle",
+        "text",
+        "bullets",
+        "image",
+        "image_url",
+        "link_label",
+        "link_url",
+        "logo_html",
+    ),
+    widgets={
+        "text": forms.Textarea(attrs={"rows": 3}),
+        "bullets": forms.Textarea(attrs={"rows": 3}),
+        "logo_html": forms.Textarea(attrs={"rows": 2}),
+    },
 )
 
 ProgramForm = styled(Program, ("title", "text", "icon", "link_url", "order", "is_active"))
@@ -167,11 +316,14 @@ class NavBase(StyledForm):
 NavItemForm = styled(NavItem, ("label", "url", "parent", "order", "is_active"), base=NavBase)
 
 FooterColumnForm = styled(FooterColumn, ("title", "order"))
-FooterLinkFormSet = inlineformset_factory(FooterColumn, FooterLink, form=StyledForm, extra=2, can_delete=True,
-                                          fields=("label", "url", "order"))
+FooterLinkFormSet = inlineformset_factory(
+    FooterColumn, FooterLink, form=StyledForm, extra=2, can_delete=True, fields=("label", "url", "order")
+)
+
 
 class SiteSettingsBase(StyledForm):
     """Site Settings: colour pickers for the custom scheme, and a check that the colours keep text readable."""
+
     COLOURS = ("color_primary", "color_accent", "color_dark")
 
     def __init__(self, *args, **kwargs):
@@ -184,7 +336,7 @@ class SiteSettingsBase(StyledForm):
         if data.get("color_scheme") != theme.CUSTOM:
             return data
         colours = [data.get(n) or "" for n in self.COLOURS]
-        bad = [n for n, v in zip(self.COLOURS, colours) if not theme.HEX.match(v)]
+        bad = [n for n, v in zip(self.COLOURS, colours, strict=True) if not theme.HEX.match(v)]
         for name in bad:
             self.add_error(name, "Choose a colour.")
         if not bad:

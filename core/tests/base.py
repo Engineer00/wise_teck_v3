@@ -1,4 +1,5 @@
 """Shared setup: a test database loaded with the full v3 content (photo links, no downloads)."""
+
 from io import StringIO
 
 from django.contrib.auth.models import User

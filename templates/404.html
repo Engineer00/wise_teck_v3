@@ -7,9 +7,9 @@
   <div class="container hero-body">
     <div class="reveal">
       <div class="eyebrow">404</div>
-      <h1>Page <span class="accent">Not Found</span></h1>
-      <p class="lead">The page you are looking for has moved or no longer exists.</p>
-      <div class="ctas"><a class="btn btn-navy" href="/">Back to Home <i class="fa-solid fa-arrow-right"></i></a></div>
+      <h1>{{ site.notfound_title|hl:site.notfound_highlight }}</h1>
+      <p class="lead">{{ site.notfound_text }}</p>
+      <div class="ctas"><a class="btn btn-navy" href="/">{{ site.notfound_button }} <i class="fa-solid fa-arrow-right"></i></a></div>
     </div>
   </div>
 </header>{% endblock %}

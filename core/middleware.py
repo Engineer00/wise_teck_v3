@@ -27,8 +27,24 @@ class RedirectFallbackMiddleware:
         return (HttpResponsePermanentRedirect if r.permanent else HttpResponseRedirect)(target)
 
 
+class AnalyticsCSPMiddleware:
+    """Allow Google Analytics in the Content-Security-Policy, only on pages that load it (Site Settings → Google
+    Analytics ID). Listed after Django's CSP middleware, so it runs first on the way out."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        if getattr(request, "uses_analytics", False):
+            response._csp_config = settings.SECURE_CSP_ANALYTICS  # the attribute Django's @csp_override sets
+        return response
+
+
 class PermissionsPolicyMiddleware:
-    """Tell browsers the site never uses the camera, microphone, location, payments or USB (settings.PERMISSIONS_POLICY)."""
+    """Tell browsers the site never uses the camera, microphone, location, payments or USB.
+
+    The list is settings.PERMISSIONS_POLICY."""
 
     def __init__(self, get_response):
         self.get_response = get_response

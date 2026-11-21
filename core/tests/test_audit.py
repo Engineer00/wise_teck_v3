@@ -1,4 +1,5 @@
 """Fixes from the site audit: security headers, pagination, social links, page weight, accessibility."""
+
 from django.core.cache import cache
 from django.utils import timezone
 
@@ -20,7 +21,11 @@ class SecurityHeadersTests(SeededTestCase):
 
     def test_no_inline_event_handlers_in_admin(self):
         page_section = Section.objects.filter(page__slug="about").first()
-        for url in ("/admin/sections/", f"/admin/pages/{page_section.page_id}/change/", "/admin/site-settings/1/change/"):
+        for url in (
+            "/admin/sections/",
+            f"/admin/pages/{page_section.page_id}/change/",
+            "/admin/site-settings/1/change/",
+        ):
             r = self.admin_client().get(url)
             self.assertEqual(r.status_code, 200, url)
             html = r.content.decode()
@@ -35,8 +40,8 @@ class SecurityHeadersTests(SeededTestCase):
 class PageWeightTests(SeededTestCase):
     def test_wave_drawing_is_not_inlined(self):
         html = self.client.get("/").content.decode()
-        self.assertNotIn('id="wv-hero"', html)            # the 200 KB fallback drawing is gone
-        self.assertIn('data-wave="wv-hero"', html)        # wt-waves.js draws into these
+        self.assertNotIn('id="wv-hero"', html)  # the 200 KB fallback drawing is gone
+        self.assertIn('data-wave="wv-hero"', html)  # wt-waves.js draws into these
         self.assertLess(len(html), 120_000)
 
     def test_three_js_is_loaded_later(self):
@@ -63,6 +68,7 @@ class SocialLinkTests(SeededTestCase):
 class AccessibilityTests(SeededTestCase):
     def test_duplicate_photo_links_hidden_from_screen_readers(self):
         import re
+
         post = BlogPost.objects.live().first()
         for url in ("/blog/", post.get_absolute_url()):
             tags = re.findall(r'<a class="ph"[^>]*>', self.client.get(url).content.decode())
@@ -76,8 +82,12 @@ class PaginationTests(SeededTestCase):
         cache.clear()
         now = timezone.now()
         for n in range(12):
-            BlogPost.objects.create(title=f"Extra post {n}", short_description="x" * 50, is_active=True,
-                                    published_at=now - timezone.timedelta(days=30 + n))
+            BlogPost.objects.create(
+                title=f"Extra post {n}",
+                short_description="x" * 50,
+                is_active=True,
+                published_at=now - timezone.timedelta(days=30 + n),
+            )
         self.total = BlogPost.objects.live().count()
 
     def test_blog_pages(self):
@@ -125,5 +135,6 @@ class MetaDescriptionTests(SeededTestCase):
 class ProductionSettingsTests(SeededTestCase):
     def test_hsts_in_production(self):
         from django.conf import settings
+
         text = (settings.BASE_DIR / "config" / "settings.py").read_text(encoding="utf8")
         self.assertIn("SECURE_HSTS_SECONDS = 31536000", text.split("if not DEBUG:")[1])

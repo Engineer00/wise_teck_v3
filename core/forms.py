@@ -12,7 +12,7 @@ class ContactForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.fields["phone"].required = True    # as in the design: name and phone are required, email optional
+        self.fields["phone"].required = True  # as in the design: name and phone are required, email optional
 
     def clean_website(self):
         if self.cleaned_data.get("website"):

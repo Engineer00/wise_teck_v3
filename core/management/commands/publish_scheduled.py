@@ -7,6 +7,7 @@ exact on a quiet site. On the server, run it every minute (see DEPLOY.md):
 
 Blog posts and success stories need nothing: they simply become visible at their 'Go live at' time.
 """
+
 from django.core.management.base import BaseCommand
 
 from core.versioning import publish_due

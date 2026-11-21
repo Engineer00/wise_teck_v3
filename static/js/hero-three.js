@@ -14,7 +14,6 @@
   let THREE = window.THREE;            // set when the library arrives (see boot below)
   const PURPLE = T3(0x5730b5);
   const LIGHT_PURPLE = T3(0x9a73ff);
-  const DARK_PURPLE = T3(0x351477);
   const WHITE = T3(0xffffff);
   const SCENE_SCALE = 0.702;
 
@@ -261,16 +260,18 @@
       this.logoPlaneBack.scale.x = 1;
       this.logoBadge.add(this.logoPlaneBack);
 
+      // The coin is the logo: its face, side, rim and glow keep the logo's colours in every colour scheme
+      // (plain hex, not T3). The platform, rings and particles around it follow the scheme.
       // Thick coin side — visible during rotation
       const edge = new THREE.Mesh(
         new THREE.CylinderGeometry(radius, radius, thickness, 96, 1, true),
         new THREE.MeshPhysicalMaterial({
-          color: T3(0x6b3fe8),
+          color: 0x6b3fe8,
           metalness: 0.55,
           roughness: 0.18,
           clearcoat: 0.9,
           clearcoatRoughness: 0.1,
-          emissive: DARK_PURPLE,
+          emissive: 0x351477,
           emissiveIntensity: 0.18,
           side: THREE.DoubleSide
         })
@@ -279,8 +280,8 @@
       this.logoBadge.add(edge);
 
       const rimMat = new THREE.MeshStandardMaterial({
-        color: T3(0xd8ccff),
-        emissive: T3(0xffffff),
+        color: 0xd8ccff,
+        emissive: 0xffffff,
         emissiveIntensity: 0.12,
         metalness: 0.92,
         roughness: 0.14
@@ -297,7 +298,7 @@
       const glow = new THREE.Mesh(
         new THREE.CircleGeometry(radius * 1.04, 96),
         new THREE.MeshBasicMaterial({
-          color: T3(0x7650dc),
+          color: 0x7650dc,
           transparent: true,
           opacity: 0.1,
           blending: THREE.AdditiveBlending,

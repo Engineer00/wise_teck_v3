@@ -1,4 +1,5 @@
 """Admin panel, drafts, scheduled publishing and version history."""
+
 from datetime import timedelta
 from io import StringIO
 
@@ -11,7 +12,7 @@ from core.models import BlogPost, FooterColumn, Page, Revision, Section, SiteSet
 
 from .base import SeededTestCase, section_post
 
-MARKER = "Incubation &amp; <span"      # a plain-text part of the About intro title, as rendered
+MARKER = "Incubation &amp; <span"  # a plain-text part of the About intro title, as rendered
 
 
 class AdminPanelTest(SeededTestCase):
@@ -28,8 +29,19 @@ class AdminPanelTest(SeededTestCase):
 
     def test_every_screen_opens(self):
         a = self.admin_client()
-        for res in ["pages", "sections", "menu", "programs", "footer", "redirects", "success-stories", "team", "blogs",
-                    "services", "messages"]:
+        for res in [
+            "pages",
+            "sections",
+            "menu",
+            "programs",
+            "footer",
+            "redirects",
+            "success-stories",
+            "team",
+            "blogs",
+            "services",
+            "messages",
+        ]:
             with self.subTest(resource=res):
                 self.assertEqual(a.get(f"/admin/{res}/").status_code, 200)
         self.assertEqual(a.get("/admin/").status_code, 200)
@@ -44,8 +56,10 @@ class AdminPanelTest(SeededTestCase):
 
     def test_reserved_page_address_refused(self):
         p = Page.objects.get(slug="placement")
-        r = self.admin_client().post(f"/admin/pages/{p.pk}/change/",
-                                     {"title": p.title, "meta_description": p.meta_description, "is_active": "on", "slug": "admin"})
+        r = self.admin_client().post(
+            f"/admin/pages/{p.pk}/change/",
+            {"title": p.title, "meta_description": p.meta_description, "is_active": "on", "slug": "admin"},
+        )
         self.assertContains(r, "used by the system")
 
 
@@ -56,31 +70,49 @@ class HistoryTest(SeededTestCase):
         self.intro = self.about.sections.get(layout="split", eyebrow="Who We Are")
 
     def test_edit_keeps_previous_version_and_restore_brings_it_back(self):
-        self.a.post(f"/admin/sections/{self.intro.pk}/change/", section_post(self.intro, title="History Test", highlight=""))
+        self.a.post(
+            f"/admin/sections/{self.intro.pk}/change/", section_post(self.intro, title="History Test", highlight="")
+        )
         self.assertContains(Client().get("/about/"), "History Test")
         rev = Revision.objects.get(content_type__model="page", object_id=self.about.pk)
         self.assertIn("Before editing section", rev.reason)
-        self.assertContains(self.a.get(f"/preview/version/{rev.pk}/"), MARKER)      # preview the old version
-        self.assertEqual(Page.objects.count(), 14)                                   # preview left nothing behind
+        self.assertContains(self.a.get(f"/preview/version/{rev.pk}/"), MARKER)  # preview the old version
+        self.assertEqual(Page.objects.count(), 14)  # preview left nothing behind
         self.a.post(f"/admin/versions/{rev.pk}/restore/", {"back": "/admin/"})
         page = Client().get("/about/")
         self.assertContains(page, MARKER)
         self.assertNotContains(page, "History Test")
-        self.assertTrue(Revision.objects.filter(object_id=self.about.pk, reason__startswith="Before restoring").exists())
+        self.assertTrue(
+            Revision.objects.filter(object_id=self.about.pk, reason__startswith="Before restoring").exists()
+        )
 
     def test_saving_without_changes_adds_no_version(self):
         self.a.post(f"/admin/sections/{self.intro.pk}/change/", section_post(self.intro))
         self.assertFalse(Revision.objects.exists())
 
     def test_page_settings_edit_keeps_the_old_values(self):
-        """Regression: a validated form puts new values on the object before saving; the 'before' copy must be the old one."""
+        """Regression: a validated form puts new values on the object before saving.
+
+        The 'before' copy must be the old one."""
         col = FooterColumn.objects.first()
         n = col.links.count()
-        data = {"title": "Renamed Column", "order": col.order, "links-TOTAL_FORMS": n, "links-INITIAL_FORMS": n,
-                "links-MIN_NUM_FORMS": 0, "links-MAX_NUM_FORMS": 1000}
+        data = {
+            "title": "Renamed Column",
+            "order": col.order,
+            "links-TOTAL_FORMS": n,
+            "links-INITIAL_FORMS": n,
+            "links-MIN_NUM_FORMS": 0,
+            "links-MAX_NUM_FORMS": 1000,
+        }
         for i, link in enumerate(col.links.all()):
-            data.update({f"links-{i}-id": link.pk, f"links-{i}-label": link.label, f"links-{i}-url": link.url,
-                         f"links-{i}-order": link.order})
+            data.update(
+                {
+                    f"links-{i}-id": link.pk,
+                    f"links-{i}-label": link.label,
+                    f"links-{i}-url": link.url,
+                    f"links-{i}-order": link.order,
+                }
+            )
         data["links-0-DELETE"] = "on"
         self.a.post(f"/admin/footer/{col.pk}/change/", data)
         rev = Revision.objects.get(content_type__model="footercolumn", object_id=col.pk)
@@ -115,7 +147,7 @@ class DraftsTest(SeededTestCase):
         self.assertEqual(draft.sections.count(), self.about.sections.count())
         self.assertNotContains(Client().get("/about/"), "Draft Only Title")
         self.assertContains(self.a.get(f"/preview/page/{draft.pk}/"), "Draft Only Title")
-        self.assertEqual(Client().get(f"/preview/page/{draft.pk}/").status_code, 302)      # visitors can't preview
+        self.assertEqual(Client().get(f"/preview/page/{draft.pk}/").status_code, 302)  # visitors can't preview
         self.assertEqual(Client().get(f"/{draft.slug}/").status_code, 404)
         self.a.post(f"/admin/pages/{draft.pk}/publish/")
         self.assertContains(Client().get("/about/"), "Draft Only Title")
@@ -126,8 +158,14 @@ class DraftsTest(SeededTestCase):
     def test_scheduled_draft_goes_live_by_itself(self):
         draft = self._draft_with_title("Scheduled Title")
         future = timezone.localtime() + timedelta(hours=2)
-        self.a.post(f"/admin/pages/{draft.pk}/change/", {"title": draft.title, "meta_description": draft.meta_description,
-                                                          "publish_at": future.strftime("%Y-%m-%dT%H:%M")})
+        self.a.post(
+            f"/admin/pages/{draft.pk}/change/",
+            {
+                "title": draft.title,
+                "meta_description": draft.meta_description,
+                "publish_at": future.strftime("%Y-%m-%dT%H:%M"),
+            },
+        )
         self.assertNotContains(Client().get("/about/"), "Scheduled Title")
         Page.objects.filter(pk=draft.pk).update(publish_at=timezone.now() - timedelta(minutes=1))
         self.assertContains(Client().get("/about/"), "Scheduled Title")

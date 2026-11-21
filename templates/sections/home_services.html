@@ -3,6 +3,6 @@
     {% include "sections/_head.html" %}
     <div class="svc-grid">{% for x in s.main_items %}<a class="svc reveal d{{ forloop.counter0|mod:4 }}" href="{{ x.link_url|default:'#' }}"><i class="fa-solid {{ x.icon }}"></i>{{ x.title|br }}</a>{% endfor %}</div>
     {% if s.sub_title %}<h2 class="sub-head reveal">{{ s.sub_title }}</h2>{% endif %}
-    <div class="sk-grid">{% for x in s.second_items %}<a class="sk reveal d{{ forloop.counter0|mod:4 }}" href="{{ x.link_url|default:'#' }}"><img src="{{ x.img }}" alt="" loading="lazy"/><span>{{ x.title|br }} <i class="fa-solid fa-arrow-right"></i></span></a>{% endfor %}</div>
+    <div class="sk-grid">{% for x in s.second_items %}<a class="sk reveal d{{ forloop.counter0|mod:4 }}" href="{{ x.link_url|default:'#' }}"><img src="{{ x.img }}"{% srcset x.img "tile" %} alt="" loading="lazy"/><span>{{ x.title|br }} <i class="fa-solid fa-arrow-right"></i></span></a>{% endfor %}</div>
   </div>
 </section>

@@ -1,0 +1,26 @@
+[project]
+name = "wise-teck"
+version = "3.0.0"
+description = "The Wise-Teck website: Django, every page and setting editable in the admin panel."
+requires-python = ">=3.12"
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+extend-exclude = ["core/migrations"]
+
+[tool.ruff.lint]
+# pycodestyle, pyflakes, import order, bugbear, modern syntax, Django rules, simplifications
+select = ["E", "W", "F", "I", "B", "UP", "DJ", "SIM", "C4"]
+ignore = [
+    "DJ001",   # nullable text fields: none in use, CharFields default to ""
+    "SIM105",  # try/except/pass reads clearer than contextlib.suppress here
+]
+
+[tool.ruff.lint.per-file-ignores]
+# content and drawing data: long strings are the data itself
+"core/management/commands/seed_content.py" = ["E501"]
+"core/motifs.py" = ["E501"]
+
+[tool.ruff.lint.isort]
+known-first-party = ["config", "core"]

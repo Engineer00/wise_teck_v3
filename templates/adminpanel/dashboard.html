@@ -26,7 +26,69 @@
   {% endfor %}
 </section>
 
-<div class="ap-grid-2">
+{% with v=visitors %}
+<section class="ap-panel ap-visitors">
+  <div class="ap-panel-head">
+    <h2>Visitors · last {{ v.days }} days</h2>
+    <span class="ap-help">Counted by the website itself: no cookies; bots and admins are left out.</span>
+  </div>
+  <div class="ap-kpis">
+    <div class="ap-kpi"><span>Page views</span><strong>{{ v.views }}</strong>{% include "adminpanel/_change.html" with change=v.views_change %}</div>
+    <div class="ap-kpi"><span>Visitors</span><strong>{{ v.visitors }}</strong>{% include "adminpanel/_change.html" with change=v.visitors_change %}</div>
+    {% for d in v.devices %}<div class="ap-kpi ap-kpi-small"><span>{{ d.name }}</span><strong>{{ d.share }}%</strong></div>{% endfor %}
+  </div>
+  {% with c=v.chart %}
+  <figure class="ap-chart">
+    <svg viewBox="0 0 {{ c.width }} {{ c.height }}" preserveAspectRatio="none" role="img" aria-label="Page views per day; highest {{ c.max }}">
+      <polygon class="ap-chart-area" points="{{ c.area }}"/><polyline class="ap-chart-line" points="{{ c.line }}"/>
+    </svg>
+    <figcaption><span>{{ v.first_day|date:"M d" }}</span><span>Page views per day (highest {{ c.max }})</span><span>Today</span></figcaption>
+  </figure>
+  {% endwith %}
+  <div class="ap-grid-2">
+    <div>
+      <h3 class="ap-subhead">Most viewed pages</h3>
+      {% if v.top_pages %}<ol class="ap-bars">{% for p in v.top_pages %}<li><a href="{{ p.path }}" target="_blank" rel="noopener">{{ p.title }}</a><b>{{ p.views }}</b></li>{% endfor %}</ol>
+      {% else %}<p class="ap-empty">No visits counted yet. Numbers appear as people visit the website.</p>{% endif %}
+    </div>
+    <div>
+      <h3 class="ap-subhead">Where visitors come from</h3>
+      {% if v.top_sources %}<ol class="ap-bars">{% for s in v.top_sources %}<li><span>{{ s.name }}</span><b>{{ s.views }}</b></li>{% endfor %}</ol>
+      {% else %}<p class="ap-empty">Google, Facebook, WhatsApp and others appear here once visitors arrive from them.</p>{% endif %}
+    </div>
+  </div>
+</section>
+{% endwith %}
+
+<div class="ap-grid-2 ap-grid-gap">
+  <section class="ap-panel ap-seo">
+    <div class="ap-panel-head">
+      <h2>SEO health</h2>
+      <span class="ap-score ap-score-{% if seo.score >= 90 %}good{% elif seo.score >= 70 %}fair{% else %}poor{% endif %}">{{ seo.score }}<small>/100</small></span>
+    </div>
+    <p class="ap-help">{{ seo.checks }} checks on every live page, blog post and success story, run each time this page opens.</p>
+    {% if seo.issues %}
+    <ul class="ap-issues">
+      {% for i in seo.issues %}<li class="ap-issue ap-issue-{{ i.level }}"><a href="{{ i.url }}"><em>{% if i.level == "error" %}Fix{% elif i.level == "warn" %}Improve{% else %}Tip{% endif %}</em><span>{{ i.text }}</span></a></li>{% endfor %}
+    </ul>
+    {% else %}<p class="ap-empty">Everything passes. Keep titles 30–60 and descriptions 70–160 characters as you add content.</p>{% endif %}
+  </section>
+
+  <section class="ap-panel ap-google">
+    <div class="ap-panel-head"><h2>Google tools</h2></div>
+    <ul class="ap-tools">
+      <li><a href="{{ google.search_console }}" target="_blank" rel="noopener"><b>Search Console</b><span>Searches that show the site, clicks and indexing. Submit the sitemap: <code>{{ google.sitemap }}</code></span></a></li>
+      {% if google.analytics %}<li><a href="{{ google.analytics }}" target="_blank" rel="noopener"><b>Google Analytics</b><span>Detailed visitor reports (ID {{ ga_id }}).</span></a></li>{% endif %}
+      {% if google.trends %}<li><a href="{{ google.trends }}" target="_blank" rel="noopener"><b>Google Trends</b><span>Interest in your keywords over the last 12 months.</span></a></li>{% endif %}
+      <li><a href="{{ google.pagespeed }}" target="_blank" rel="noopener"><b>PageSpeed Insights</b><span>Speed and Core Web Vitals of the home page, measured by Google.</span></a></li>
+      <li><a href="{{ google.rich_results }}" target="_blank" rel="noopener"><b>Rich Results Test</b><span>Checks the structured data Google reads: organisation, articles, breadcrumbs.</span></a></li>
+      <li><a href="{{ google.business }}" target="_blank" rel="noopener"><b>Google Business Profile</b><span>Your listing on Google Maps and local search: hours, photos, reviews.</span></a></li>
+    </ul>
+    {% if google.searches %}<p class="ap-help">Search Google as a visitor would: {% for k, url in google.searches %}<a class="ap-link" href="{{ url }}" target="_blank" rel="noopener">{{ k }}</a>{% if not forloop.last %} · {% endif %}{% endfor %}. Change the keywords in <a class="ap-link" href="{{ settings_url }}">Site Settings</a>.</p>{% endif %}
+  </section>
+</div>
+
+<div class="ap-grid-2 ap-grid-gap">
   <section class="ap-panel">
     <div class="ap-panel-head">
       <h2>Recent messages</h2>

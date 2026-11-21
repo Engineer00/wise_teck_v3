@@ -63,6 +63,7 @@
   --p-white:#ffffff;
   --p-wordmark-navy:#0d2035;
   --p-wordmark-violet:#5525d8;
+  --p-wordmark-violet-light:#c4b5fd;
   --p-black:#000000;
   --p-ok-50:#ecfdf3;
   --p-ok-200:#bbf7d0;
@@ -399,6 +400,12 @@
   .topbar .group{display:flex;gap:var(--sp-32);flex-wrap:wrap}
   .topbar i{color:var(--gold-2);margin-right:var(--sp-8)}
   .topbar a:hover{color:var(--p-white)}
+  /* announcement bar (Site Settings → Announcement): above everything, shown on every screen size */
+  .announce{background:linear-gradient(90deg,var(--p-violet-800),var(--p-violet-700));color:var(--p-white);font-size:var(--fs-small);font-weight:500}
+  .announce .container{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:var(--sp-4) var(--sp-16);min-height:40px;padding-block:var(--sp-8);text-align:center}
+  .announce p{margin:0}
+  .announce a{display:inline-flex;align-items:center;gap:var(--sp-8);padding-block:var(--sp-12);margin-block:calc(var(--sp-12) * -1);color:var(--gold-2);font-weight:700;white-space:nowrap}
+  .announce a:hover{color:var(--p-white)}
   .hero{position:relative;isolation:isolate;overflow:hidden;background:radial-gradient(50% 60% at 78% 42%, rgb(var(--p-violet-400-rgb) / 0.3) 0%, rgb(var(--p-violet-400-rgb) / 0) 65%),
     radial-gradient(55% 65% at 22% 45%, rgb(var(--p-white-rgb) / 0.95) 0%, rgb(var(--p-white-rgb) / 0) 70%),
     radial-gradient(40% 40% at 0% 10%, rgb(var(--p-lav-400-rgb) / 0.55) 0%, rgb(var(--p-lav-400-rgb) / 0) 70%),
@@ -562,7 +569,7 @@
   .st-slide{flex:0 0 100%;display:grid;gap:var(--sp-32)}
   .story{display:grid;grid-template-columns:120px 1fr;gap:var(--sp-24);align-items:center;background:var(--p-white);border-radius:var(--r-22);box-shadow:var(--shadow-card);padding:var(--sp-24) var(--sp-32)}
   .story img{width:110px;height:110px;border-radius:var(--r-round);object-fit:cover;box-shadow:0 0 0 6px var(--p-violet-50)}
-  .story .q{font-size:var(--fs-38);line-height:.6;color:var(--purple);font-weight:800;font-family:Georgia,serif}
+  .story .q{font-size:var(--fs-38);line-height:.6;color:var(--purple);font-weight:800}
   .story blockquote{margin:var(--sp-8) 0 var(--sp-12);font-size:var(--fs-body);font-weight:500;color:var(--ink);line-height:1.55}
   .story b{display:block;color:var(--ink)}
   .story small{color:var(--text);font-size:var(--fs-fine)}
@@ -689,15 +696,12 @@
   .collab{padding:var(--sp-56) 0 130px}
   /* ---------- v3 components: sections, waves, motifs, cards ---------- */
   /* =====================================================================
-     WISE-TECK v3 — traced-curve system + inner-page components
-     Curves: inline sprite from assets/wt-curves.svg (traced from the reference JPEG,
-     page px at 1440 wide). Each section shows its own slice of the one page-wide curve set:
-     <svg class="wt-slice" viewBox="0 TOP 1440 HEIGHT"><use href="#wt-curves"/></svg>
+     WISE-TECK v3: waves + inner-page components
+     Waves: the {% wave %} tag writes an empty <svg data-wave="..."> and static/js/wt-waves.js
+     draws into it (lavender silk, gold ribbon, navy), sized to the real width of the screen.
      ===================================================================== */
   .wt-sec{position:relative;isolation:isolate;overflow:hidden}
   .wt-sec > .container{position:relative;z-index:var(--z-2)}
-  /* silk = soft translucent satin: light periwinkle, white rim, slightly softened edge */
-  /* redrawn curve art (tools/draw_curves.py): layered satin silk, highlighted gold, deep navy */
   .wt-gold{filter:drop-shadow(0 -1px 2px rgb(var(--p-gold-775-rgb) / 0.2))}
   /* reference typography is ~10% larger than the base system */
   .v3 .hero p.lead{font-size:var(--fs-lead)}
@@ -762,7 +766,7 @@
   .split .media img{width:100%;height:100%;object-fit:cover}
   .quote-card{position:relative;padding:var(--sp-48) var(--sp-40) var(--sp-40)}
   .quote-card::before{content:"";position:absolute;top:0;left:40px;width:90px;height:4px;border-radius:0 0 var(--r-6) var(--r-6);background:linear-gradient(90deg,var(--gold-1),var(--gold-2),var(--gold-3))}
-  .quote-card .q{font-family:Georgia,serif;font-size:var(--fs-70);line-height:.5;color:var(--purple)}
+  .quote-card .q{font-size:var(--fs-70);line-height:.5;color:var(--purple)}
   .quote-card blockquote{margin:var(--sp-16) 0 var(--sp-24);font-size:var(--fs-quote-lg);font-weight:800;color:var(--ink);line-height:1.35}
   .quote-card .sig{display:flex;align-items:center;gap:var(--sp-16);padding-top:var(--sp-20);border-top:1px solid var(--p-lav-200)}
   .quote-card .sig span{width:44px;height:44px;border-radius:var(--r-round);background:linear-gradient(135deg,var(--p-violet-600),var(--p-violet-800));display:grid;place-items:center;color:var(--p-white)}
@@ -984,7 +988,7 @@
   .v3 .m-hex.l{left:0;-webkit-mask:linear-gradient(90deg,var(--p-black) 10%,transparent 95%);mask:linear-gradient(90deg,var(--p-black) 10%,transparent 95%)}
   .v3 .m-hex.r{right:0;-webkit-mask:linear-gradient(270deg,var(--p-black) 10%,transparent 95%);mask:linear-gradient(270deg,var(--p-black) 10%,transparent 95%)}
   /* success stories: oversized faint quotation marks */
-  .v3 .m-quote{font-family:Georgia,serif;font-size:var(--fs-220);line-height:1;color:var(--p-lav-500);opacity:.35}
+  .v3 .m-quote{font-size:var(--fs-220);line-height:1;color:var(--p-lav-500);opacity:.35}
   .v3 .m-quote.l{left:3%;top:-10px}
   .v3 .m-quote.r{right:3%;bottom:-90px}
   /* partners: city skylines on both sides + faint handshake */
@@ -1672,7 +1676,7 @@
   .wordmark__wise{fill:var(--p-wordmark-navy)}
   .wordmark__teck{fill:var(--p-wordmark-violet)}
   .ft-logo .wordmark__wise{fill:var(--p-white)}
-  .ft-logo .wordmark__teck{fill:var(--p-violet-300)}
+  .ft-logo .wordmark__teck{fill:var(--p-wordmark-violet-light)}
 
   /* menu button (phones + tablets): brand-violet rounded square, three lines -> X when the menu is open */
   .burger{place-items:center;width:var(--tap);height:var(--tap);padding:0;border:0;border-radius:var(--r-14);flex:none;cursor:pointer;

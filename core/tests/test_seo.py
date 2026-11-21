@@ -1,4 +1,5 @@
 """SEO: meta tags, structured data, sitemap, robots, redirects, slugs, image optimisation."""
+
 import io
 import json
 import os
@@ -92,7 +93,8 @@ class MetaTagsTest(SeededTestCase):
         self.assertEqual(h.meta["og:title"], "Share X")
         self.assertEqual(h.meta["twitter:description"], "Desc Y")
         from django.core.cache import cache
-        cache.clear()                     # the sitemap is cached for 15 minutes
+
+        cache.clear()  # the sitemap is cached for 15 minutes
         self.assertNotIn("/about/</loc>", Client().get("/sitemap.xml").content.decode())
 
     def test_main_address_setting_drives_canonical_and_robots(self):
@@ -119,7 +121,11 @@ class CrawlFilesTest(SeededTestCase):
 
 class RedirectsTest(SeededTestCase):
     def test_old_addresses(self):
-        for old, new in (("/about.html", "/about/"), ("/index.html", "/"), ("/explore-ecosystem/", "/about/#ecosystem")):
+        for old, new in (
+            ("/about.html", "/about/"),
+            ("/index.html", "/"),
+            ("/explore-ecosystem/", "/about/#ecosystem"),
+        ):
             with self.subTest(old=old):
                 r = Client().get(old)
                 self.assertEqual((r.status_code, r["Location"]), (301, new))
@@ -142,6 +148,7 @@ class RedirectsTest(SeededTestCase):
 class ImageOptimisationTest(SeededTestCase):
     def test_large_upload_is_resized_and_compressed(self):
         from PIL import Image
+
         big = io.BytesIO()
         Image.new("RGB", (4000, 3000), (120, 80, 200)).save(big, "JPEG", quality=98)
         s = SiteSettings.load()

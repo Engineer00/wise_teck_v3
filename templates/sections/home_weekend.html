@@ -1,7 +1,7 @@
 {% load wt %}<section class="section weekend wt-sec"{% if s.anchor %} id="{{ s.anchor }}"{% endif %}>
   {% motif s.motif %}<div class="container">
     <div class="wk glass reveal">
-      <div class="img"><img src="{{ s.img }}" alt="{{ s.image_alt }}" loading="lazy"/></div>
+      <div class="img"><img src="{{ s.img }}"{% srcset s.img "weekend" %} alt="{{ s.image_alt }}" loading="lazy"/></div>
       <div>
         <div class="wk-top"><div class="rhythm">{% if s.eyebrow %}<div class="tag">{{ s.eyebrow }}</div>{% endif %}<h2>{{ s.title|hl:s.highlight }}</h2>{% if s.subtitle %}<p>{{ s.subtitle|rich }}</p>{% endif %}</div>{% include "partials/buttons.html" %}</div>
         <div class="wk-feats">{% for x in s.main_items %}<div><i class="fa-solid {{ x.icon }}"></i>{{ x.title|br }}</div>{% endfor %}</div>

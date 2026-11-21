@@ -12,6 +12,24 @@
 
   function fieldsIn(root) { return [].slice.call(root.querySelectorAll('[data-field]')); }
   function labelOf(box) { return box.querySelector('.ap-label-text'); }
+
+  // Best upload size for a photo field in this layout: a badge next to the label (tooltip) + a help line.
+  function showSize(box, hint) {
+    [].forEach.call(box.querySelectorAll('[data-size-hint]'), function (n) { n.remove(); });
+    var l = labelOf(box);
+    if (!hint || !l) return;
+    var badge = document.createElement('span');
+    badge.className = 'ap-size';
+    badge.setAttribute('data-size-hint', '');
+    badge.title = hint.tip;
+    badge.textContent = hint.size;
+    l.parentNode.appendChild(badge);
+    var line = document.createElement('p');
+    line.className = 'ap-help';
+    line.setAttribute('data-size-hint', '');
+    line.textContent = hint.tip;
+    box.appendChild(line);
+  }
   fieldsIn(form).forEach(function (box) {
     var l = labelOf(box);
     if (l && !original[box.dataset.field]) original[box.dataset.field] = l.textContent;
@@ -27,6 +45,7 @@
         box.hidden = !on;
         var l = labelOf(box);
         if (l) l.textContent = (g && g.fields[name]) || original[name] || l.textContent;
+        showSize(box, g && on ? g.sizes[name] : null);
         if (on) shown++;
       });
       fs.hidden = shown === 0;
@@ -43,6 +62,7 @@
         box.hidden = has && !(name in items);
         var l = labelOf(box);
         if (l) l.textContent = (has && items[name]) || original[name] || l.textContent;
+        showSize(box, has ? g.item_sizes[name] : null);
       });
     }
   }
