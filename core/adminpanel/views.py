@@ -135,6 +135,7 @@ RESOURCES = {
         "singleton": True,
         "fieldsets": [
             ("Logo", ["site_name", "logo", "favicon"]),
+            ("Colour scheme", ["color_scheme", "color_primary", "color_accent", "color_dark"]),
             ("Top bar and contact", ["topbar_text", "phone", "email", "address", "registration"]),
             ("Header button", ["apply_label", "apply_url"]),
             ("Footer", ["footer_text", "footer_contact_title", "copyright"]),

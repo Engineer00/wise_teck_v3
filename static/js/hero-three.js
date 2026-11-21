@@ -5,12 +5,17 @@
  */
 (function () {
   "use strict";
+  var THEME = (function () {          // colour scheme from Site Settings: {default colour: new colour}
+    try { return JSON.parse(document.documentElement.getAttribute("data-theme-map") || "{}"); } catch (e) { return {}; }
+  })();
+  function T(c) { return THEME[c.toLowerCase()] || c; }
+  function T3(n) { return parseInt(T("#" + n.toString(16).padStart(6, "0")).slice(1), 16); }
 
   let THREE = window.THREE;            // set when the library arrives (see boot below)
-  const PURPLE = 0x5730b5;
-  const LIGHT_PURPLE = 0x9a73ff;
-  const DARK_PURPLE = 0x351477;
-  const WHITE = 0xffffff;
+  const PURPLE = T3(0x5730b5);
+  const LIGHT_PURPLE = T3(0x9a73ff);
+  const DARK_PURPLE = T3(0x351477);
+  const WHITE = T3(0xffffff);
   const SCENE_SCALE = 0.702;
 
   function clamp(v, min, max) {
@@ -113,7 +118,7 @@
         powerPreference: "high-performance"
       });
       if (!this.renderer.getContext()) throw new Error("WebGL is not available.");
-      this.renderer.setClearColor(0x000000, 0);
+      this.renderer.setClearColor(T3(0x000000), 0);
       this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       this.renderer.setSize(w, h, false);
       this.renderer.outputColorSpace = THREE.SRGBColorSpace;
@@ -126,9 +131,9 @@
     }
 
     _initLights() {
-      this.scene.add(new THREE.HemisphereLight(0xffffff, 0xe8ddff, 2.8));
+      this.scene.add(new THREE.HemisphereLight(T3(0xffffff), T3(0xe8ddff), 2.8));
 
-      this.keyLight = new THREE.DirectionalLight(0xffffff, 4);
+      this.keyLight = new THREE.DirectionalLight(T3(0xffffff), 4);
       this.keyLight.position.set(4, 7, 8);
       this.scene.add(this.keyLight);
 
@@ -208,7 +213,7 @@
       const energyDisc = new THREE.Mesh(
         new THREE.CylinderGeometry(1.25, 1.25, 0.05, 96),
         new THREE.MeshStandardMaterial({
-          color: 0xeee8ff,
+          color: T3(0xeee8ff),
           emissive: PURPLE,
           emissiveIntensity: 1.2
         })
@@ -260,7 +265,7 @@
       const edge = new THREE.Mesh(
         new THREE.CylinderGeometry(radius, radius, thickness, 96, 1, true),
         new THREE.MeshPhysicalMaterial({
-          color: 0x6b3fe8,
+          color: T3(0x6b3fe8),
           metalness: 0.55,
           roughness: 0.18,
           clearcoat: 0.9,
@@ -274,8 +279,8 @@
       this.logoBadge.add(edge);
 
       const rimMat = new THREE.MeshStandardMaterial({
-        color: 0xd8ccff,
-        emissive: 0xffffff,
+        color: T3(0xd8ccff),
+        emissive: T3(0xffffff),
         emissiveIntensity: 0.12,
         metalness: 0.92,
         roughness: 0.14
@@ -292,7 +297,7 @@
       const glow = new THREE.Mesh(
         new THREE.CircleGeometry(radius * 1.04, 96),
         new THREE.MeshBasicMaterial({
-          color: 0x7650dc,
+          color: T3(0x7650dc),
           transparent: true,
           opacity: 0.1,
           blending: THREE.AdditiveBlending,

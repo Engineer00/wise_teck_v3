@@ -8,6 +8,10 @@
    ===================================================================== */
 (function () {
   "use strict";
+  var THEME = (function () {          // colour scheme from Site Settings: {default colour: new colour}
+    try { return JSON.parse(document.documentElement.getAttribute("data-theme-map") || "{}"); } catch (e) { return {}; }
+  })();
+  function T(c) { return THEME[c.toLowerCase()] || c; }
   var NS = "http://www.w3.org/2000/svg";
   var REDUCE = (window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches) || /[?&]static/.test(location.search);   // ?static = still frame (testing/screenshots)
   var uid = 0;
@@ -53,7 +57,7 @@
   }
 
   /* palette — flat 2D lavender family (no white) */
-  var C = { wash: "#dfe3fb", a: "#cbd2f7", sheen: "#e6e2fd", b: "#b7c0f1", c: "#a3adeb", v: "#8c79ef", gold1: "#f0d27a", gold2: "#d4af37", gold3: "#8a6a1f", navy1: "#1c3d92", navy2: "#0d2158" };
+  var C = { wash: T("#dfe3fb"), a: T("#cbd2f7"), sheen: T("#e6e2fd"), b: T("#b7c0f1"), c: T("#a3adeb"), v: T("#8c79ef"), gold1: T("#f0d27a"), gold2: T("#d4af37"), gold3: T("#8a6a1f"), navy1: T("#1c3d92"), navy2: T("#0d2158") };
 
   /* ======================= HERO (height 320) ======================= */
   function hero(svg) {
@@ -61,21 +65,21 @@
     var F = [[0, 150], [0.333, 186], [0.639, 160], [0.833, 118], [1, 66]];   // the shared flow path
     var fills = {
       wash: grad(defs, [[0, C.wash, .9], [.6, C.wash, .5], [1, C.wash, 0]], "v"),
-      a: grad(defs, [[0, "#d3d9f8", .95], [1, "#bdc5f2", .75]], "v"),
+      a: grad(defs, [[0, T("#d3d9f8"), .95], [1, T("#bdc5f2"), .75]], "v"),
       sheen: grad(defs, [[0, C.sheen, .95], [1, C.sheen, .55]]),
-      b: grad(defs, [[0, "#c4ccf4"], [1, C.b]]),
+      b: grad(defs, [[0, T("#c4ccf4")], [1, C.b]]),
       c: grad(defs, [[0, C.c, .85], [.6, C.c, .45], [1, C.c, 0]], "v"),          // lowest ribbon melts away at its bottom edge
       v: grad(defs, [[0, C.v, .25], [.5, C.v, .55], [1, C.v, .3]]),
       gold: grad(defs, [[0, C.gold1], [.5, C.gold2], [1, C.gold3]]),
-      goldHi: grad(defs, [[0, "#fff6d8", .85], [1, "#fff6d8", 0]], "v"),
+      goldHi: grad(defs, [[0, T("#fff6d8"), .85], [1, T("#fff6d8"), 0]], "v"),
       navy: grad(defs, [[0, C.navy2], [1, C.navy1]])
     };
     ["wash", "a", "b", "sheen", "v", "c"].forEach(function (k) { P[k] = el("path", { fill: fills[k], opacity: k === "wash" ? 1 : k === "v" ? 1 : .92, "class": "wv-soft" }, svg); });
-    P.page = el("path", { fill: "#f7f8fe", "class": "wv-page" }, svg);   // page colour under the silk (inner pages only)
+    P.page = el("path", { fill: T("#f7f8fe"), "class": "wv-page" }, svg);   // page colour under the silk (inner pages only)
     P.gold = el("path", { fill: fills.gold, "class": "wv-gold" }, svg);
     P.goldHi = el("path", { fill: fills.goldHi, "class": "wv-gold" }, svg);
     P.navy = el("path", { fill: fills.navy, "class": "wv-navy" }, svg);
-    P.navyHi = el("path", { fill: "#6f8fd8", opacity: .28, "class": "wv-navy" }, svg);
+    P.navyHi = el("path", { fill: T("#6f8fd8"), opacity: .28, "class": "wv-navy" }, svg);
     return function draw(W, t) {
       // UNIFORM + SYMMETRIC: every layer (silk, gold, navy) rides ONE shared curve Y(u) with fixed
       // offsets and fixed widths, so all bends match exactly. The curve = a gentle bowl (lowest in the
@@ -142,11 +146,11 @@
     var H = 170, defs = el("defs", {}, svg);
     var l2 = el("path", { fill: grad(defs, [[0, C.b, .55], [.5, C.a, .35], [1, C.b, .55]]), "class": "wv-soft" }, svg);
     var l1 = el("path", { fill: grad(defs, [[0, C.c, .75], [.5, C.b, .5], [1, C.c, .75]]), "class": "wv-soft" }, svg);
-    var gold = el("path", { fill: grad(defs, [[0, "#e2c25a"], [.15, C.gold3], [.5, C.gold1], [.85, C.gold3], [1, "#e2c25a"]]) }, svg);
-    var goldHi = el("path", { fill: grad(defs, [[0, "#fff6d8", .8], [1, "#fff6d8", 0]], "v") }, svg);
+    var gold = el("path", { fill: grad(defs, [[0, T("#e2c25a")], [.15, C.gold3], [.5, C.gold1], [.85, C.gold3], [1, T("#e2c25a")]]) }, svg);
+    var goldHi = el("path", { fill: grad(defs, [[0, T("#fff6d8"), .8], [1, T("#fff6d8"), 0]], "v") }, svg);
     // brand navy, matching the footer body colour where the wave ends (see wise-teck.css)
-    var navy = el("path", { fill: "#0d2158" }, svg);   // flat; the footer body continues the same colour
-    var navyHi = el("path", { fill: "#6f8fd8", opacity: .22 }, svg);
+    var navy = el("path", { fill: T("#0d2158") }, svg);   // flat; the footer body continues the same colour
+    var navyHi = el("path", { fill: T("#6f8fd8"), opacity: .22 }, svg);
     return function draw(W, t) {
       // three clean, even, symmetric waves (+ a gentle overall dip); breathes in place
       var xs = samples(0, W, 10), breathe = .86 + .14 * Math.sin(.5 * t);

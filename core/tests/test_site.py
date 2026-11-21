@@ -1,17 +1,10 @@
-"""Public site: every page renders, matches the v3 design, and its content is editable."""
-import importlib.util
-import os
-from pathlib import Path
-from unittest import skipUnless
+"""Public site: every page renders and its content is editable."""
 
 from django.test import Client, override_settings
 
 from core.models import NavItem, Page, Program, Section, SiteSettings, SuccessStory
 
 from .base import SeededTestCase
-
-V3_DIR = Path(__file__).resolve().parents[3] / "wise-teck-v3"
-COMPARE = Path(__file__).resolve().parents[2] / "tools" / "compare_with_v3.py"
 
 
 class PagesTest(SeededTestCase):
@@ -38,18 +31,6 @@ class PagesTest(SeededTestCase):
         for n, (layout, _) in enumerate(Section.LAYOUTS, 2):
             Section.objects.create(page=page, order=n, layout=layout, title=f"T {layout}")
         self.assertEqual(Client().get("/layout-test/").status_code, 200)
-
-    @skipUnless(V3_DIR.exists() and os.environ.get("WISE_COMPARE_V3") == "1",
-                "optional: set WISE_COMPARE_V3=1 to compare with ../wise-teck-v3 (the Django site is now the design source)")
-    def test_pages_match_the_v3_static_site(self):
-        spec = importlib.util.spec_from_file_location("compare_with_v3", COMPARE)
-        compare = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(compare)
-        for v3_file, url in compare.MAP.items():
-            with self.subTest(page=url):
-                expected = compare.tokens((V3_DIR / v3_file).read_text(encoding="utf-8"))
-                actual = compare.tokens(Client().get(url).content.decode())
-                self.assertEqual(expected, actual)
 
 
 class EditingTest(SeededTestCase):

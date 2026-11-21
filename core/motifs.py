@@ -42,8 +42,8 @@ def globe():
         p.append(f'<path d="M{x1:.0f} {y1:.0f} Q{mx:.0f} {my:.0f} {x2:.0f} {y2:.0f}" fill="none" stroke="{VIO}" stroke-width="1" opacity=".55"/>')
     for x, y in nodes:
         p.append(f'<circle cx="{x:.0f}" cy="{y:.0f}" r="7" fill="{VIO}" opacity=".18"/><circle cx="{x:.0f}" cy="{y:.0f}" r="2.6" fill="{VIO}"/>')
-    defs = (f'<defs><radialGradient id="mgGlow"><stop offset="0" stop-color="#e6e2fd" stop-opacity=".9"/>'
-            f'<stop offset="1" stop-color="#e6e2fd" stop-opacity="0"/></radialGradient></defs>')
+    defs = ('<defs><radialGradient id="mgGlow"><stop offset="0" stop-color="#e6e2fd" stop-opacity=".9"/>'
+            '<stop offset="1" stop-color="#e6e2fd" stop-opacity="0"/></radialGradient></defs>')
     return _svg("0 0 520 520", defs + "".join(p), "m-globe")
 
 

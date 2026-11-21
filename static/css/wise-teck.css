@@ -1,9 +1,18 @@
 /* =====================================================================
-   WISE-TECK — site stylesheet (generated once by tools/build_css.py; edit THIS file from now on)
-   Layers (later wins): vendor (Font Awesome) -> site -> type
-   site = base design system, then v3 components, then the 3D spinners - kept in their original
-   order so every rule resolves exactly as before; type = the one typography system on top.
-   All sizes / line heights / weights / spacing come from the tokens below.
+   WISE-TECK — the one stylesheet for the whole site (universal, token based)
+
+   1. Tokens (:root)  every colour, font size, line height, space, radius and z-index is a variable here.
+                      Colour schemes chosen in the admin override the --p-* palette (core/theme.py).
+   2. Layers          later layers win, whatever the selector:
+                        vendor  Font Awesome icons
+                        site    components (header, hero, cards, footer ...)
+                        type    typography: one style per text role
+                        layout  containers, section rhythm, grids, breakpoints
+                        system  spacing rhythm, surfaces, menu button, pagination
+   3. Breakpoints     1200px menu, 1024px tablet, 640px phone. Sizes in between are fluid (clamp()).
+
+   Rules (checked by core/tests/test_css.py): no hard-coded colours, sizes or z-index outside the tokens,
+   only the breakpoints above, no inline styles in templates.
    ===================================================================== */
 @layer vendor, site, type, layout, system;
 /* icon library in the lowest layer, so site styles always win over it */
@@ -1426,38 +1435,6 @@
   body.v3 .pf-stats--text .pf-stat b{font-size:var(--fs-body);white-space:normal;overflow:visible;overflow-wrap:anywhere}
   body.v3 .ft-col a:not(.logo):hover,body.v3 .ft-col a:not(.logo):focus-visible{color:var(--p-gold-200)}
 }
-/* =====================================================================
-   INNER PAGE HEADER (compact) — homepage hero = the big brand moment; inner pages get a shorter,
-   calmer header with the same language: breadcrumb, tag line, title, short intro, facts, buttons,
-   a smaller visual and a slimmer version of the wave.
-   ===================================================================== */
-/* home ecosystem orbit: larger, everything scales with the orbit size */
-/* About / inner hero photo: photo sits right on the gold + navy frame (no gap), flat 2D look */
-/* ecosystem: give the orbit the full left half (larger than its grid cell) */
-/* align orbit: top of the two upper badges = card top, bottom of the lower badge = card bottom.
-   orbit W = column + 70px; badge r = 46px; upper badges sit 0.305W - 46 below the orbit box top */
-/* footer link lists: tighter rhythm (item spacing 6px, line height 1.45) */
-/* footer links: golden yellow on hover / keyboard focus */
-/* ===== inner pages: centered banner header (home keeps the full split hero) ===== */
-/* ===== inner banner v2: calm background (no wave stripes) + layered feature photo ===== */
-/* ===== inner pages: own background system (home keeps the waves) =====
-   calm banner + clean alternating bands; a faint grid (the inner-page motif) on tinted bands */
-/* feature photo spans the content column (aligns with the sections below) */
-/* ===== inner feature photo: premium treatment =====
-   glowing gradient aura + gradient frame ring + tint & light sweep + glass badge + dot accents */
-/* inner banner: uniform symmetrical wave at the bottom (4 even crests, 2 layers) + taller photo + stat cards */
-/* inner feature: wave fully visible end to end (photo starts under it) + tilted photo like the home About photo */
-/* feature badge: top-centre, straddling the photo's top edge (mirrors the stat cards at the bottom) */
-/* ===== inner feature: designed photo pair (large 2/3 + small 1/3), tilted as one unit ===== */
-/* photo pair: almost touching, and wider (fills more of the side space) */
-/* CTA band: decorative grey + gold lines sit below the text, never across it */
-/* inner banner: same lavender silk wave as the home hero, without the gold and navy ribbons */
-/* home ecosystem: smaller rings and coin (nodes stay aligned with the card) */
-/* footer contact: no outlined box — plain column like the other footer columns */
-/* lighter footer: hover uses light gold so it stays readable (WCAG AA) */
-/* footer "Our Services": each link on one line (e.g. Placement Department) */
-/* premium metallic gold: polished-metal gradient (shadow -> highlight -> shadow) on the key gold accents */
-/* glossy gold: glassy top highlight + a light streak that sweeps across (every few seconds and on hover) */
 /* =========================================================================
    LAYOUT SYSTEM: the single source of truth for size, spacing and placement.
    Lives in the last cascade layer (`layout`), so it beats every older
@@ -1627,9 +1604,6 @@
     .ctas .btn-ghost .play{width:28px;height:28px;font-size:var(--fs-9)}
   }
 }
-/* ---- Django site additions (contact form states, article pages, feeds, staff preview bar).
-   Tokens only, like the rest of this file; nothing is styled inline in the templates. ---- */
-
 /* ---- SYSTEM: the global spacing rules (last layer, so it always wins). ----
    Text rhythm: add class="rhythm" to any block of text; its children are spaced by the tokens above:
    kicker -> h1/h2 12 · kicker -> h3/h4 8 · h1 -> next 20 · h2 -> next 16 · h3-h5 -> next 12 ·

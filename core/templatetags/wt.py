@@ -13,7 +13,7 @@ from django import template
 from django.utils.html import escape
 from django.utils.safestring import mark_safe
 
-from core import motifs
+from core import motifs, theme
 
 register = template.Library()
 
@@ -78,9 +78,15 @@ def longest(values):
     return any(len(v.title or "") > 10 for v in values)
 
 
-@register.simple_tag
-def motif(kind):
-    return mark_safe(motifs.motif(kind) if kind else "")
+@register.simple_tag(takes_context=True)
+def motif(context, kind):
+    return mark_safe(theme.recolor_markup(motifs.motif(kind), context.get("theme")) if kind else "")
+
+
+@register.filter
+def themed(colour, scheme):
+    """A default palette colour in the active colour scheme."""
+    return theme.recolor(colour, scheme) if scheme else colour
 
 
 @register.simple_tag

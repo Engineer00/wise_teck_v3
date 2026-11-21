@@ -13,6 +13,8 @@ Text conventions used by the templates (see core/templatetags/wt.py):
 """
 from django.db import models
 
+from . import theme
+
 ICON_HELP = "Font Awesome icon name, e.g. fa-users or fa-graduation-cap (see fontawesome.com/icons, free solid set)."
 BUTTON_STYLES = [("gold", "Gold"), ("navy", "Navy"), ("purple", "Purple"), ("ghost", "Ghost (round icon + text)"),
                  ("outline-light", "Outline (on dark)")]
@@ -73,6 +75,16 @@ class SiteSettings(models.Model):
                                        help_text="Optional, e.g. #ffffff. Empty = the design's default.")
     coin_ring_color = models.CharField("3D coin ring colour (lower)", max_length=7, blank=True)
     coin_ring2_color = models.CharField("3D coin ring colour (upper)", max_length=7, blank=True)
+    # colour scheme (see core/theme.py): every colour on the site follows these three
+    color_scheme = models.CharField("Colour scheme", max_length=20, blank=True, default="", choices=theme.CHOICES,
+                                    help_text="Every colour on the website follows the scheme: buttons, backgrounds, "
+                                              "waves, footer and the 3D coin.")
+    color_primary = models.CharField("Primary colour", max_length=7, blank=True, default=theme.DEFAULT["primary"],
+                                     help_text="Buttons, links, highlights and the light page backgrounds.")
+    color_accent = models.CharField("Accent colour", max_length=7, blank=True, default=theme.DEFAULT["accent"],
+                                    help_text="The call-to-action buttons (gold by default).")
+    color_dark = models.CharField("Dark colour", max_length=7, blank=True, default=theme.DEFAULT["dark"],
+                                  help_text="Top bar, footer and headings.")
     notify_email = models.CharField("Send contact form alerts to", max_length=300, blank=True,
                                     help_text="Email address(es) that get an alert for every new message. "
                                               "Separate several with commas. Leave empty for no alerts.")

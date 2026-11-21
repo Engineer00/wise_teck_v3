@@ -6,6 +6,8 @@ fields appear in the panel automatically.
 from django import forms
 from django.forms import inlineformset_factory, modelform_factory
 
+from .. import theme
+
 from ..models import (BlogPost, ContactMessage, FooterColumn, FooterLink, Item, NavItem, Page, Program, Redirect,
                      Section, Service, SiteSettings, SuccessStory, TeamMember)
 
@@ -168,4 +170,27 @@ FooterColumnForm = styled(FooterColumn, ("title", "order"))
 FooterLinkFormSet = inlineformset_factory(FooterColumn, FooterLink, form=StyledForm, extra=2, can_delete=True,
                                           fields=("label", "url", "order"))
 
-SiteSettingsForm = styled(SiteSettings, "__all__")
+class SiteSettingsBase(StyledForm):
+    """Site Settings: colour pickers for the custom scheme, and a check that the colours keep text readable."""
+    COLOURS = ("color_primary", "color_accent", "color_dark")
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for name in self.COLOURS:
+            self.fields[name].widget = forms.TextInput(attrs={"type": "color", "class": "ap-input ap-color"})
+
+    def clean(self):
+        data = super().clean()
+        if data.get("color_scheme") != theme.CUSTOM:
+            return data
+        colours = [data.get(n) or "" for n in self.COLOURS]
+        bad = [n for n, v in zip(self.COLOURS, colours) if not theme.HEX.match(v)]
+        for name in bad:
+            self.add_error(name, "Choose a colour.")
+        if not bad:
+            for problem in theme.check_contrast(*colours):
+                self.add_error("color_scheme", problem)
+        return data
+
+
+SiteSettingsForm = styled(SiteSettings, "__all__", base=SiteSettingsBase)

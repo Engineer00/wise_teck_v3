@@ -20,8 +20,10 @@ class SecurityHeadersTests(SeededTestCase):
 
     def test_no_inline_event_handlers_in_admin(self):
         page_section = Section.objects.filter(page__slug="about").first()
-        for url in ("/admin/sections/", f"/admin/pages/{page_section.page_id}/"):
-            html = self.admin_client().get(url).content.decode()
+        for url in ("/admin/sections/", f"/admin/pages/{page_section.page_id}/change/", "/admin/site-settings/1/change/"):
+            r = self.admin_client().get(url)
+            self.assertEqual(r.status_code, 200, url)
+            html = r.content.decode()
             for handler in (" onclick=", " onsubmit=", " onchange="):
                 self.assertNotIn(handler, html, url)
 

@@ -699,3 +699,23 @@ body.ap-body {
 [data-icon="settings"] { --ap-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6zM19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1z'/%3E%3C/svg%3E"); }
 [data-icon="trophy"] { --ap-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M8 21h8M12 17v4M7 4h10v4a5 5 0 0 1-10 0V4zM7 6H5a2 2 0 0 0 0 4h2M17 6h2a2 2 0 1 1 0 4h-2'/%3E%3C/svg%3E"); }
 [data-icon="users"] { --ap-icon: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='black'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2M12 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM21 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75'/%3E%3C/svg%3E"); }
+
+/* ---- Site Settings: colour scheme picker ---- */
+.ap-schemes { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; margin-top: 8px; }
+.ap-scheme { position: relative; display: flex; flex-direction: column; gap: 10px; padding: 14px; border-radius: var(--ap-radius);
+  background: var(--ap-surface); box-shadow: inset 0 0 0 1px var(--ap-line); cursor: pointer; transition: box-shadow .15s, transform .15s; }
+.ap-scheme:hover { transform: translateY(-1px); box-shadow: inset 0 0 0 1px var(--ap-accent-2), var(--ap-shadow); }
+.ap-scheme input { position: absolute; opacity: 0; pointer-events: none; }
+.ap-scheme:has(input:checked) { box-shadow: inset 0 0 0 2px var(--ap-accent), var(--ap-shadow); }
+.ap-scheme:has(input:checked)::after { content: "✓"; position: absolute; top: 10px; right: 12px; width: 22px; height: 22px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--ap-accent); color: var(--ap-on-dark); font-size: 12px; font-weight: 700; }
+.ap-scheme:has(input:focus-visible) { outline: 2px solid var(--ap-accent); outline-offset: 2px; }
+.ap-scheme-swatches { display: flex; }
+.ap-scheme-swatches i { width: 30px; height: 30px; border-radius: 50%; box-shadow: 0 0 0 2px var(--ap-surface); }
+.ap-scheme-swatches i + i { margin-left: -6px; }
+.ap-scheme-swatches i:nth-child(1) { background: var(--c1); }
+.ap-scheme-swatches i:nth-child(2) { background: var(--c2); }
+.ap-scheme-swatches i:nth-child(3) { background: var(--c3); }
+.ap-scheme-name { font-weight: 600; color: var(--ap-ink); }
+.ap-scheme-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 12px; }
+.ap-color { width: 72px; height: 44px; padding: 4px; cursor: pointer; }

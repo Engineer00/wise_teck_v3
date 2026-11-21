@@ -1,10 +1,94 @@
-# Deploying Wise-Teck v3 (Django) on the VPS
+# Deploying Wise-Teck on the VPS
 
 Server: Ubuntu 24.04, `159.198.43.141`, logged in as `root` (PuTTY). Nginx is already running and serves
 `dehleze.store`. **Do not edit or remove anything belonging to dehleze** (`/etc/nginx/sites-available/dehleze`,
 its folders or its database). Everything below only adds new files.
 
-Replace `wiseteck.dev` with the real domain everywhere.
+The site is already live at https://wiseteck.dev. To bring a new version online, follow
+**Update the live site** right below. Sections 1–9 are the first-time setup, kept for reference.
+
+## Update the live site
+
+Run these in PuTTY as `root`. They change only Wise-Teck; dehleze is not touched.
+
+**Never overwrite** `/srv/wiseteck/.env` (passwords), `/srv/wiseteck/app/media/` (uploaded photos) or the database:
+they exist only on the server. Updating the code and running `migrate` keeps all content edited in the admin.
+
+### Step 1: back up
+
+```
+sudo -u postgres pg_dump wiseteck > /root/wiseteck-$(date +%F).sql
+tar czf /root/wiseteck-media-$(date +%F).tgz -C /srv/wiseteck/app media
+```
+
+### Step 2: get the new code (choose A or B)
+
+**A. From GitHub (recommended)**
+
+```
+cd /srv/wiseteck/app
+git status            # must say "nothing to commit"; if not, stop and ask
+git pull origin main
+```
+
+**B. From the zip file**: copy the zip to `/root/` with WinSCP, then:
+
+```
+apt install -y unzip
+cd /root && rm -rf wiseteck-new && unzip -q wise-teck-site.zip -d wiseteck-new
+rsync -a --exclude media/ --exclude staticfiles/ --exclude .env --exclude db.sqlite3 wiseteck-new/ /srv/wiseteck/app/
+cp -rn wiseteck-new/media/seed /srv/wiseteck/app/media/
+```
+
+### Step 3: install, update the database, restart
+
+```
+cd /srv/wiseteck/app
+set -a; . /srv/wiseteck/.env; set +a
+../venv/bin/pip install -r requirements.txt
+../venv/bin/python manage.py migrate
+../venv/bin/python manage.py check --deploy
+../venv/bin/python manage.py collectstatic --noinput
+chown -R www-data:www-data /srv/wiseteck/app/media
+systemctl restart wiseteck
+systemctl status wiseteck --no-pager
+```
+
+`check --deploy` must end with "no issues (1 silenced)". The database changes in this release only add settings
+(colour scheme), remove the logo subtitle setting, improve page descriptions that were never edited, and hide the
+"[Placeholder]" sections. Nothing typed in the admin is overwritten.
+
+### Step 4: Nginx improvements (once)
+
+Open the Wise-Teck site file only: `nano /etc/nginx/sites-available/wiseteck` (never the dehleze file).
+
+1. Inside the `server { ... }` block that has `listen 443 ssl`, add near the top:
+
+   ```
+   server_tokens off;
+   gzip on;
+   gzip_types text/css application/javascript application/json image/svg+xml application/xml text/plain;
+   gzip_min_length 1024;
+   if ($host = www.wiseteck.dev) { return 301 https://wiseteck.dev$request_uri; }
+   ```
+
+2. Save, then check and reload:
+
+   ```
+   nginx -t && systemctl reload nginx
+   ```
+
+`nginx -t` must say "syntax is ok"; if not, undo the edit before reloading.
+
+### Step 5: check
+
+- https://wiseteck.dev opens; the menu, logo and pages look right on a phone.
+- https://www.wiseteck.dev goes to https://wiseteck.dev.
+- https://wiseteck.dev/admin/ signs in.
+- https://dehleze.store still works.
+
+If something goes wrong: `journalctl -u wiseteck -n 50 --no-pager` shows the error. To go back to the previous version,
+use `git checkout <previous commit>` and restart (or restore the backups from step 1).
 
 ## 1. Packages
 
@@ -63,8 +147,8 @@ chown -R www-data:www-data /srv/wiseteck/app/media
 
 For the admin login: copy the original site's `db.sqlite3` (from `D:\wise teck site\wise_teck ORIGINAL\`) to
 `/srv/wiseteck/original-db.sqlite3` first (e.g. with WinSCP), and delete it after the command. Or create a new login with
-`../venv/bin/python manage.py createsuperuser`. Change the password to a strong one before going live
-(Django admin at `/django-admin/` → Users, or `manage.py changepassword admin`).
+`../venv/bin/python manage.py createsuperuser`. Change the password to a strong one before the site is announced:
+`../venv/bin/python manage.py changepassword admin`.
 
 To bring content edited locally instead of the fresh seed: on the PC run
 `py manage.py dumpdata --exclude contenttypes --exclude auth.permission --exclude sessions --indent 1 > content.json`,
@@ -178,16 +262,8 @@ Then check https://wiseteck.dev, https://wiseteck.dev/admin/ and that https://de
 
 ## Updating later
 
-```
-cd /srv/wiseteck/app && git pull
-set -a; . /srv/wiseteck/.env; set +a
-../venv/bin/pip install -r requirements.txt
-../venv/bin/python manage.py migrate
-../venv/bin/python manage.py collectstatic --noinput
-systemctl restart wiseteck
-```
-
-Never run `seed_content --reset` on the live server: it replaces the client's edits.
+See **Update the live site** at the top. Never run `seed_content --reset` on the live server: it replaces the
+client's edits.
 
 ## Backups
 
