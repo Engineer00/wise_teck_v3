@@ -5,55 +5,86 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0008_colour_scheme'),
+        ("core", "0008_colour_scheme"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='announcement',
-            field=models.CharField(blank=True, help_text='Optional thin bar at the very top of every page, e.g. “Admissions open for the Spring batch”. Leave empty to hide the bar.', max_length=200, verbose_name='Announcement'),
+            model_name="sitesettings",
+            name="announcement",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional thin bar at the very top of every page, e.g. “Admissions open for the Spring batch”. Leave empty to hide the bar.",
+                max_length=200,
+                verbose_name="Announcement",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='announcement_label',
-            field=models.CharField(blank=True, help_text='Optional, e.g. Apply now.', max_length=40, verbose_name='Announcement link text'),
+            model_name="sitesettings",
+            name="announcement_label",
+            field=models.CharField(
+                blank=True, help_text="Optional, e.g. Apply now.", max_length=40, verbose_name="Announcement link text"
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='announcement_url',
-            field=models.CharField(blank=True, help_text='Optional, e.g. /contact/ or a full https:// address.', max_length=300, verbose_name='Announcement link'),
+            model_name="sitesettings",
+            name="announcement_url",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional, e.g. /contact/ or a full https:// address.",
+                max_length=300,
+                verbose_name="Announcement link",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='contact_error',
-            field=models.CharField(default='Please check the highlighted fields.', max_length=300, verbose_name='Message shown when a field needs fixing'),
+            model_name="sitesettings",
+            name="contact_error",
+            field=models.CharField(
+                default="Please check the highlighted fields.",
+                max_length=300,
+                verbose_name="Message shown when a field needs fixing",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='ga_id',
-            field=models.CharField(blank=True, help_text='Optional. Google Analytics → Admin → Data streams → your website → Measurement ID (starts with G-). Leave empty for no tracking.', max_length=20, validators=[django.core.validators.RegexValidator('^G-[A-Z0-9]{4,15}$', 'Use the Measurement ID from Google Analytics, e.g. G-AB12CD34EF.')], verbose_name='Google Analytics ID'),
+            model_name="sitesettings",
+            name="ga_id",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional. Google Analytics → Admin → Data streams → your website → Measurement ID (starts with G-). Leave empty for no tracking.",
+                max_length=20,
+                validators=[
+                    django.core.validators.RegexValidator(
+                        "^G-[A-Z0-9]{4,15}$", "Use the Measurement ID from Google Analytics, e.g. G-AB12CD34EF."
+                    )
+                ],
+                verbose_name="Google Analytics ID",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='notfound_button',
-            field=models.CharField(default='Back to Home', max_length=40, verbose_name='Button text'),
+            model_name="sitesettings",
+            name="notfound_button",
+            field=models.CharField(default="Back to Home", max_length=40, verbose_name="Button text"),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='notfound_highlight',
-            field=models.CharField(blank=True, default='Not Found', max_length=120, verbose_name='Words in the title to colour'),
+            model_name="sitesettings",
+            name="notfound_highlight",
+            field=models.CharField(
+                blank=True, default="Not Found", max_length=120, verbose_name="Words in the title to colour"
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='notfound_text',
-            field=models.CharField(default='The page you are looking for has moved or no longer exists.', max_length=300, verbose_name='Text'),
+            model_name="sitesettings",
+            name="notfound_text",
+            field=models.CharField(
+                default="The page you are looking for has moved or no longer exists.",
+                max_length=300,
+                verbose_name="Text",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='notfound_title',
-            field=models.CharField(default='Page Not Found', max_length=120, verbose_name='Title'),
+            model_name="sitesettings",
+            name="notfound_title",
+            field=models.CharField(default="Page Not Found", max_length=120, verbose_name="Title"),
         ),
     ]

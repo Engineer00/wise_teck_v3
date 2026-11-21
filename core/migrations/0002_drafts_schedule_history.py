@@ -6,64 +6,97 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('contenttypes', '0002_remove_content_type_name'),
-        ('core', '0001_initial'),
+        ("contenttypes", "0002_remove_content_type_name"),
+        ("core", "0001_initial"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='blogpost',
-            name='publish_at',
-            field=models.DateTimeField(blank=True, help_text='Optional. Keep it hidden until this date and time (it must also be Published).', null=True, verbose_name='Go live at'),
+            model_name="blogpost",
+            name="publish_at",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Optional. Keep it hidden until this date and time (it must also be Published).",
+                null=True,
+                verbose_name="Go live at",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='created_at',
+            model_name="page",
+            name="created_at",
             field=models.DateTimeField(auto_now_add=True, null=True),
         ),
         migrations.AddField(
-            model_name='page',
-            name='draft_of',
-            field=models.ForeignKey(blank=True, help_text='Set when this is a draft copy of a live page.', null=True, on_delete=django.db.models.deletion.CASCADE, related_name='drafts', to='core.page'),
+            model_name="page",
+            name="draft_of",
+            field=models.ForeignKey(
+                blank=True,
+                help_text="Set when this is a draft copy of a live page.",
+                null=True,
+                on_delete=django.db.models.deletion.CASCADE,
+                related_name="drafts",
+                to="core.page",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='publish_at',
-            field=models.DateTimeField(blank=True, help_text='When this draft replaces the live page automatically. Leave empty to publish by hand.', null=True, verbose_name='Go live at'),
+            model_name="page",
+            name="publish_at",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="When this draft replaces the live page automatically. Leave empty to publish by hand.",
+                null=True,
+                verbose_name="Go live at",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='updated_at',
+            model_name="page",
+            name="updated_at",
             field=models.DateTimeField(auto_now=True, null=True),
         ),
         migrations.AddField(
-            model_name='successstory',
-            name='publish_at',
-            field=models.DateTimeField(blank=True, help_text='Optional. Keep it hidden until this date and time (it must also be Published).', null=True, verbose_name='Go live at'),
+            model_name="successstory",
+            name="publish_at",
+            field=models.DateTimeField(
+                blank=True,
+                help_text="Optional. Keep it hidden until this date and time (it must also be Published).",
+                null=True,
+                verbose_name="Go live at",
+            ),
         ),
         migrations.AlterField(
-            model_name='blogpost',
-            name='published_at',
-            field=models.DateTimeField(blank=True, null=True, verbose_name='Date shown on the post'),
+            model_name="blogpost",
+            name="published_at",
+            field=models.DateTimeField(blank=True, null=True, verbose_name="Date shown on the post"),
         ),
         migrations.CreateModel(
-            name='Revision',
+            name="Revision",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('object_id', models.PositiveBigIntegerField()),
-                ('object_repr', models.CharField(max_length=300, verbose_name='What')),
-                ('reason', models.CharField(max_length=120)),
-                ('data', models.JSONField()),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('content_type', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='contenttypes.contenttype')),
-                ('user', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("object_id", models.PositiveBigIntegerField()),
+                ("object_repr", models.CharField(max_length=300, verbose_name="What")),
+                ("reason", models.CharField(max_length=120)),
+                ("data", models.JSONField()),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                (
+                    "content_type",
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to="contenttypes.contenttype"),
+                ),
+                (
+                    "user",
+                    models.ForeignKey(
+                        blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to=settings.AUTH_USER_MODEL
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-created_at', '-id'],
-                'indexes': [models.Index(fields=['content_type', 'object_id', '-created_at'], name='core_revisi_content_a3d0a9_idx')],
+                "ordering": ["-created_at", "-id"],
+                "indexes": [
+                    models.Index(
+                        fields=["content_type", "object_id", "-created_at"], name="core_revisi_content_a3d0a9_idx"
+                    )
+                ],
             },
         ),
     ]

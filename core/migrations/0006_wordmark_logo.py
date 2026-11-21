@@ -4,19 +4,23 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0005_list_pagination'),
+        ("core", "0005_list_pagination"),
     ]
 
     operations = [
         migrations.RemoveField(
-            model_name='sitesettings',
-            name='site_subtitle',
+            model_name="sitesettings",
+            name="site_subtitle",
         ),
         migrations.AlterField(
-            model_name='sitesettings',
-            name='site_name',
-            field=models.CharField(default='WISE-TECK', help_text='Read out for the logo by screen readers; also used by search engines.', max_length=80, verbose_name='Site name'),
+            model_name="sitesettings",
+            name="site_name",
+            field=models.CharField(
+                default="WISE-TECK",
+                help_text="Read out for the logo by screen readers; also used by search engines.",
+                max_length=80,
+                verbose_name="Site name",
+            ),
         ),
     ]

@@ -6,57 +6,77 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0010_seo_titles_and_summaries'),
+        ("core", "0010_seo_titles_and_summaries"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='trend_keywords',
-            field=models.CharField(blank=True, default='IT courses Lahore, freelancing course, digital marketing course', help_text='Search terms people use to find you, separated by commas. The dashboard opens them in Google Trends and Google Search.', max_length=300, verbose_name='Keywords to watch'),
+            model_name="sitesettings",
+            name="trend_keywords",
+            field=models.CharField(
+                blank=True,
+                default="IT courses Lahore, freelancing course, digital marketing course",
+                help_text="Search terms people use to find you, separated by commas. The dashboard opens them in Google Trends and Google Search.",
+                max_length=300,
+                verbose_name="Keywords to watch",
+            ),
         ),
         migrations.AlterField(
-            model_name='service',
-            name='icon_file',
-            field=models.FileField(blank=True, upload_to='services/icons/', validators=[django.core.validators.FileExtensionValidator(['svg', 'png', 'jpg', 'jpeg', 'webp']), core.models.safe_svg], verbose_name='Icon (SVG or image)'),
+            model_name="service",
+            name="icon_file",
+            field=models.FileField(
+                blank=True,
+                upload_to="services/icons/",
+                validators=[
+                    django.core.validators.FileExtensionValidator(["svg", "png", "jpg", "jpeg", "webp"]),
+                    core.models.safe_svg,
+                ],
+                verbose_name="Icon (SVG or image)",
+            ),
         ),
         migrations.CreateModel(
-            name='Attempt',
+            name="Attempt",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('kind', models.CharField(max_length=20)),
-                ('key', models.CharField(max_length=64)),
-                ('at', models.DateTimeField(auto_now_add=True, db_index=True)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("kind", models.CharField(max_length=20)),
+                ("key", models.CharField(max_length=64)),
+                ("at", models.DateTimeField(auto_now_add=True, db_index=True)),
             ],
             options={
-                'indexes': [models.Index(fields=['kind', 'key', 'at'], name='core_attemp_kind_fe5cee_idx')],
+                "indexes": [models.Index(fields=["kind", "key", "at"], name="core_attemp_kind_fe5cee_idx")],
             },
         ),
         migrations.CreateModel(
-            name='DailyVisit',
+            name="DailyVisit",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('day', models.DateField(db_index=True)),
-                ('path', models.CharField(max_length=255)),
-                ('source', models.CharField(blank=True, help_text='Referring site, e.g. Google; empty = direct.', max_length=120)),
-                ('device', models.CharField(max_length=10)),
-                ('views', models.PositiveIntegerField(default=0)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("day", models.DateField(db_index=True)),
+                ("path", models.CharField(max_length=255)),
+                (
+                    "source",
+                    models.CharField(
+                        blank=True, help_text="Referring site, e.g. Google; empty = direct.", max_length=120
+                    ),
+                ),
+                ("device", models.CharField(max_length=10)),
+                ("views", models.PositiveIntegerField(default=0)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('day', 'path', 'source', 'device'), name='unique_daily_visit')],
+                "constraints": [
+                    models.UniqueConstraint(fields=("day", "path", "source", "device"), name="unique_daily_visit")
+                ],
             },
         ),
         migrations.CreateModel(
-            name='DailyVisitor',
+            name="DailyVisitor",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('day', models.DateField(db_index=True)),
-                ('key', models.CharField(max_length=32)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                ("day", models.DateField(db_index=True)),
+                ("key", models.CharField(max_length=32)),
             ],
             options={
-                'constraints': [models.UniqueConstraint(fields=('day', 'key'), name='unique_daily_visitor')],
+                "constraints": [models.UniqueConstraint(fields=("day", "key"), name="unique_daily_visitor")],
             },
         ),
     ]

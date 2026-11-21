@@ -4,100 +4,180 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0002_drafts_schedule_history'),
+        ("core", "0002_drafts_schedule_history"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Redirect',
+            name="Redirect",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('old_path', models.CharField(help_text='The path only, starting with /, e.g. /about.html or /explore-ecosystem/', max_length=300, unique=True, verbose_name='Old address')),
-                ('new_path', models.CharField(help_text='e.g. /about/ or a full https:// link', max_length=300, verbose_name='New address')),
-                ('permanent', models.BooleanField(default=True, help_text="Keep ticked for moved pages; Google then moves the old address's ranking to the new one.", verbose_name='Permanent (301)')),
-                ('is_active', models.BooleanField(default=True, verbose_name='Active')),
-                ('hits', models.PositiveIntegerField(default=0, editable=False)),
-                ('created_at', models.DateTimeField(auto_now_add=True)),
+                ("id", models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name="ID")),
+                (
+                    "old_path",
+                    models.CharField(
+                        help_text="The path only, starting with /, e.g. /about.html or /explore-ecosystem/",
+                        max_length=300,
+                        unique=True,
+                        verbose_name="Old address",
+                    ),
+                ),
+                (
+                    "new_path",
+                    models.CharField(
+                        help_text="e.g. /about/ or a full https:// link", max_length=300, verbose_name="New address"
+                    ),
+                ),
+                (
+                    "permanent",
+                    models.BooleanField(
+                        default=True,
+                        help_text="Keep ticked for moved pages; Google then moves the old address's ranking to the new one.",
+                        verbose_name="Permanent (301)",
+                    ),
+                ),
+                ("is_active", models.BooleanField(default=True, verbose_name="Active")),
+                ("hits", models.PositiveIntegerField(default=0, editable=False)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
             ],
             options={
-                'ordering': ['old_path'],
+                "ordering": ["old_path"],
             },
         ),
         migrations.AddField(
-            model_name='page',
-            name='canonical_url',
-            field=models.CharField(blank=True, help_text="Only if this page's content officially lives at another address. Normally empty.", max_length=300, verbose_name='Canonical address (advanced)'),
+            model_name="page",
+            name="canonical_url",
+            field=models.CharField(
+                blank=True,
+                help_text="Only if this page's content officially lives at another address. Normally empty.",
+                max_length=300,
+                verbose_name="Canonical address (advanced)",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='noindex',
-            field=models.BooleanField(default=False, help_text='Keeps the page out of Google and the sitemap (it still opens for visitors).', verbose_name='Hide from search engines'),
+            model_name="page",
+            name="noindex",
+            field=models.BooleanField(
+                default=False,
+                help_text="Keeps the page out of Google and the sitemap (it still opens for visitors).",
+                verbose_name="Hide from search engines",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='share_description',
-            field=models.CharField(blank=True, help_text='Optional. Empty = SEO description.', max_length=300, verbose_name='Sharing description'),
+            model_name="page",
+            name="share_description",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional. Empty = SEO description.",
+                max_length=300,
+                verbose_name="Sharing description",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='share_image',
-            field=models.ImageField(blank=True, help_text="Shown in link previews. Best 1200 × 630. Empty = the page's main photo, or the default sharing image in Site Settings.", upload_to='share/', verbose_name='Sharing image'),
+            model_name="page",
+            name="share_image",
+            field=models.ImageField(
+                blank=True,
+                help_text="Shown in link previews. Best 1200 × 630. Empty = the page's main photo, or the default sharing image in Site Settings.",
+                upload_to="share/",
+                verbose_name="Sharing image",
+            ),
         ),
         migrations.AddField(
-            model_name='page',
-            name='share_title',
-            field=models.CharField(blank=True, help_text='Optional title for WhatsApp / Facebook / LinkedIn / X previews. Empty = page title.', max_length=160, verbose_name='Sharing title'),
+            model_name="page",
+            name="share_title",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional title for WhatsApp / Facebook / LinkedIn / X previews. Empty = page title.",
+                max_length=160,
+                verbose_name="Sharing title",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='city',
-            field=models.CharField(blank=True, default='Lahore', max_length=80),
+            model_name="sitesettings",
+            name="city",
+            field=models.CharField(blank=True, default="Lahore", max_length=80),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='country_code',
-            field=models.CharField(blank=True, default='PK', help_text='Two letters, e.g. PK.', max_length=2, verbose_name='Country code'),
+            model_name="sitesettings",
+            name="country_code",
+            field=models.CharField(
+                blank=True, default="PK", help_text="Two letters, e.g. PK.", max_length=2, verbose_name="Country code"
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='google_verification',
-            field=models.CharField(blank=True, help_text='Only the content="…" value of Google\'s verification meta tag.', max_length=120, verbose_name='Google Search Console code'),
+            model_name="sitesettings",
+            name="google_verification",
+            field=models.CharField(
+                blank=True,
+                help_text='Only the content="…" value of Google\'s verification meta tag.',
+                max_length=120,
+                verbose_name="Google Search Console code",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='robots_extra',
-            field=models.TextField(blank=True, help_text='Optional lines added to robots.txt. The admin, previews and the sitemap link are handled automatically.', verbose_name='Extra robots.txt rules'),
+            model_name="sitesettings",
+            name="robots_extra",
+            field=models.TextField(
+                blank=True,
+                help_text="Optional lines added to robots.txt. The admin, previews and the sitemap link are handled automatically.",
+                verbose_name="Extra robots.txt rules",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='seo_name',
-            field=models.CharField(default='Wise-Teck', max_length=120, verbose_name='Organisation name (search engines)'),
+            model_name="sitesettings",
+            name="seo_name",
+            field=models.CharField(
+                default="Wise-Teck", max_length=120, verbose_name="Organisation name (search engines)"
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='seo_suffix',
-            field=models.CharField(blank=True, help_text="Optional, e.g. ' | Wise-Teck'. Leave empty when page titles already include it.", max_length=60, verbose_name='Added after page titles'),
+            model_name="sitesettings",
+            name="seo_suffix",
+            field=models.CharField(
+                blank=True,
+                help_text="Optional, e.g. ' | Wise-Teck'. Leave empty when page titles already include it.",
+                max_length=60,
+                verbose_name="Added after page titles",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='share_image',
-            field=models.ImageField(blank=True, help_text='Shown when a page is shared on WhatsApp, Facebook, LinkedIn or X and the page has no image of its own. Best size 1200 × 630.', upload_to='site/', verbose_name='Default sharing image'),
+            model_name="sitesettings",
+            name="share_image",
+            field=models.ImageField(
+                blank=True,
+                help_text="Shown when a page is shared on WhatsApp, Facebook, LinkedIn or X and the page has no image of its own. Best size 1200 × 630.",
+                upload_to="site/",
+                verbose_name="Default sharing image",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='site_url',
-            field=models.CharField(blank=True, help_text='e.g. https://wise-teck.dev — used for canonical links, the sitemap and sharing. Empty = the address the visitor used.', max_length=200, verbose_name='Main web address'),
+            model_name="sitesettings",
+            name="site_url",
+            field=models.CharField(
+                blank=True,
+                help_text="e.g. https://wise-teck.dev — used for canonical links, the sitemap and sharing. Empty = the address the visitor used.",
+                max_length=200,
+                verbose_name="Main web address",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='meta_description',
-            field=models.CharField(blank=True, help_text='The text under the title in Google results. Best 120–160 characters.', max_length=300, verbose_name='SEO description'),
+            model_name="page",
+            name="meta_description",
+            field=models.CharField(
+                blank=True,
+                help_text="The text under the title in Google results. Best 120–160 characters.",
+                max_length=300,
+                verbose_name="SEO description",
+            ),
         ),
         migrations.AlterField(
-            model_name='page',
-            name='title',
-            field=models.CharField(help_text='Best 50–60 characters. Put the most important words first.', max_length=160, verbose_name='Page title (Google + browser tab)'),
+            model_name="page",
+            name="title",
+            field=models.CharField(
+                help_text="Best 50–60 characters. Put the most important words first.",
+                max_length=160,
+                verbose_name="Page title (Google + browser tab)",
+            ),
         ),
     ]

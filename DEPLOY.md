@@ -38,7 +38,7 @@ git pull origin main
 apt install -y unzip
 cd /root && rm -rf wiseteck-new && unzip -q wise-teck-site.zip -d wiseteck-new
 rsync -a --exclude media/ --exclude staticfiles/ --exclude .env --exclude db.sqlite3 wiseteck-new/ /srv/wiseteck/app/
-cp -rn wiseteck-new/media/seed /srv/wiseteck/app/media/
+cp -r wiseteck-new/media/seed /srv/wiseteck/app/media/     # seed photos only (sharper versions); uploads are not touched
 ```
 
 ### Step 3: install, update the database, restart
@@ -67,6 +67,8 @@ What this release changes on the server:
   blog summaries **only where they were never edited**. It hides the "[Placeholder]" sections. Nothing typed in the
   admin is overwritten.
 - `make_image_variants` makes the WebP copies of every photo once (otherwise each is made on its first view).
+- The seed photos in `media/seed/` are replaced by their full-size originals (1408px instead of 512px); photos uploaded
+  in the admin are never touched.
 
 ### Step 4: Nginx improvements (once)
 

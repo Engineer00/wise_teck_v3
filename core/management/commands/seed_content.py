@@ -347,7 +347,7 @@ def home():
             "list_title": "Three Programs, One Earning Centre",
             "body": "Students from all three programs come to Wise-Teck to learn professional skills. After completing their skills training, they move to the Wise-Teck Earning Centre, where they work on practical projects and explore earning opportunities.",
             "list_items": "Wise Support Hub — Intermediate Level (ICS)\nWise College — ADP / BS Degree Programs\nProfessional Paid Courses — Weekend Classes\nWise-Teck Earning Centre — practical projects & self-earning",
-            "button_label": "Explore the Earning Centre",
+            "button_label": "Visit Earning Centre",
             "button_url": P["centre"],
             "items": [
                 it("fa-users", "Wise Support Hub", link_url=P["hub"]),
@@ -578,7 +578,7 @@ def about():
             visual="photo",
             side="left",
             spacing="tight",
-            button=("Explore the Earning Centre", P["centre"]),
+            button=("Visit Earning Centre", P["centre"]),
             image_url=img("01", 14),
             image_alt="Students and professionals collaborating",
         ),
@@ -989,7 +989,7 @@ def blocks():
             "Ready to Start Earning?",
             "Pick the earning block that matches your skills and interests.",
             ("Apply Now", P["contact"]),
-            ("About the Earning Centre", P["centre"]),
+            ("Visit Earning Centre", P["centre"]),
         ),
     ]
     return (
@@ -1173,8 +1173,8 @@ def incubation():
                 "Our Outcome",
                 "Become Financially Independent",
                 "To help students turn their education and professional skills into real earning opportunities and become financially independent.",
-                ("Share Your Business Idea", P["contact"]),
-                ("Student Loan Scheme", P["loan"]),
+                ("Share Your Idea", P["contact"]),
+                ("Student Loans", P["loan"]),
             ),
         ],
     )
@@ -1203,7 +1203,7 @@ def loan():
                 visual="photo",
                 div="a",
                 anchor="details",
-                button=("Business Incubation Centre", P["incubation"]),
+                button=("Incubation Centre", P["incubation"]),
                 image_url=photo_src,
                 image_alt="Young entrepreneurs working on a business",
             ),
@@ -1369,7 +1369,7 @@ def contact():
             "Let’s Start Your Journey",
             "Journey",
             "Questions about programs, courses, services or partnerships? Get in touch with Wise-Teck.",
-            ("Call +92 300 8410868", "tel:+923008410868", "fa-phone"),
+            ("Call Us Now", "tel:+923008410868", "fa-phone"),
             photo=(img("02", 0) or img("01", 0), "Wise-Teck Earning Centre, 48-Main Gulberg, Lahore"),
             badge=("fa-location-dot", "48-Main Gulberg, Lahore"),
         ),
@@ -1592,7 +1592,10 @@ class Command(BaseCommand):
             rel = existing[0].relative_to(settings.MEDIA_ROOT).as_posix()
         else:
             try:
-                req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (site content import)"})
+                full = url + "=s0" if "googleusercontent.com" in url and "=" not in url.rsplit("/", 1)[-1] else url
+                req = urllib.request.Request(
+                    full, headers={"User-Agent": "Mozilla/5.0 (site content import)"}
+                )  # =s0: original size
                 with urllib.request.urlopen(req, timeout=30) as r:
                     data, ctype = r.read(), r.headers.get("Content-Type", "")
                 ext = {"image/png": ".png", "image/webp": ".webp", "image/gif": ".gif"}.get(ctype.split(";")[0], ".jpg")

@@ -1,9 +1,12 @@
 """The two seed success stories get clean square portraits (their photos were two-photo collages, which looked
 broken in the round avatar). Only stories still using the original seed photo are changed."""
+
 from django.db import migrations
 
-SWAPS = [("seed/v3/7c886daaa1d8280e.jpg", "seed/stories/aima-asif.jpg"),
-         ("seed/v3/8a77ff59e17fb1a5.jpg", "seed/stories/noshaba.jpg")]
+SWAPS = [
+    ("seed/v3/7c886daaa1d8280e.jpg", "seed/stories/aima-asif.jpg"),
+    ("seed/v3/8a77ff59e17fb1a5.jpg", "seed/stories/noshaba.jpg"),
+]
 
 
 def forwards(apps, schema_editor):

@@ -4,30 +4,62 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('core', '0007_seo_texts_hide_placeholders'),
+        ("core", "0007_seo_texts_hide_placeholders"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='sitesettings',
-            name='color_accent',
-            field=models.CharField(blank=True, default='#d4af37', help_text='The call-to-action buttons (gold by default).', max_length=7, verbose_name='Accent colour'),
+            model_name="sitesettings",
+            name="color_accent",
+            field=models.CharField(
+                blank=True,
+                default="#d4af37",
+                help_text="The call-to-action buttons (gold by default).",
+                max_length=7,
+                verbose_name="Accent colour",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='color_dark',
-            field=models.CharField(blank=True, default='#0d2158', help_text='Top bar, footer and headings.', max_length=7, verbose_name='Dark colour'),
+            model_name="sitesettings",
+            name="color_dark",
+            field=models.CharField(
+                blank=True,
+                default="#0d2158",
+                help_text="Top bar, footer and headings.",
+                max_length=7,
+                verbose_name="Dark colour",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='color_primary',
-            field=models.CharField(blank=True, default='#6d28d9', help_text='Buttons, links, highlights and the light page backgrounds.', max_length=7, verbose_name='Primary colour'),
+            model_name="sitesettings",
+            name="color_primary",
+            field=models.CharField(
+                blank=True,
+                default="#6d28d9",
+                help_text="Buttons, links, highlights and the light page backgrounds.",
+                max_length=7,
+                verbose_name="Primary colour",
+            ),
         ),
         migrations.AddField(
-            model_name='sitesettings',
-            name='color_scheme',
-            field=models.CharField(blank=True, choices=[('', 'Wise-Teck Violet (default)'), ('ocean', 'Ocean Blue'), ('emerald', 'Emerald'), ('teal', 'Teal & Coral'), ('crimson', 'Crimson'), ('indigo', 'Royal Indigo'), ('custom', 'Custom colours')], default='', help_text='Every colour on the website follows the scheme: buttons, backgrounds, waves, footer and the 3D coin.', max_length=20, verbose_name='Colour scheme'),
+            model_name="sitesettings",
+            name="color_scheme",
+            field=models.CharField(
+                blank=True,
+                choices=[
+                    ("", "Wise-Teck Violet (default)"),
+                    ("ocean", "Ocean Blue"),
+                    ("emerald", "Emerald"),
+                    ("teal", "Teal & Coral"),
+                    ("crimson", "Crimson"),
+                    ("indigo", "Royal Indigo"),
+                    ("custom", "Custom colours"),
+                ],
+                default="",
+                help_text="Every colour on the website follows the scheme: buttons, backgrounds, waves, footer and the 3D coin.",
+                max_length=20,
+                verbose_name="Colour scheme",
+            ),
         ),
     ]

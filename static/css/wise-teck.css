@@ -236,7 +236,7 @@
   --measure-col-text:33em;        /* paragraphs in a half-width column */
   --measure-article-head:19em;    /* headings inside an article */
   --nav-radius:var(--r-56);
-  --page-hero-min-sm:830px;       /* phones: every inner hero is this tall, content centred (fits 360px phones) */
+  --page-hero-min-sm:700px;            /* phones: inner heroes are at least this tall; content-heavy ones grow */
   --measure:68ch;
   --p-gap:12px;
   --r-sm:1rem;
@@ -1588,6 +1588,9 @@
     .ctas,.band .acts,.v3 .band .acts,.hero .acts{display:grid;width:max-content;max-width:100%;grid-auto-flow:column;
       grid-auto-columns:minmax(var(--btn-w),1fr);gap:var(--sp-12)}
     .page-hero .ctas{margin-inline:auto}
+    /* the outlined button (with its play / arrow icon) is the same 52px as every other button */
+    .ctas .btn-ghost{background:rgb(var(--p-white-rgb) / 0.7);box-shadow:inset 0 0 0 1.5px var(--p-ink-900);padding-block:var(--sp-12)}
+    .ctas .btn-ghost .play{width:28px;height:28px;font-size:var(--fs-9)}
     .v3 .page-hero--center .hero-body{padding-bottom:calc(var(--sp-24) + var(--page-wave-reach-md))}
     .v3 .page-feature,.v3 .page-feature:has(.hero__visual){margin-top:calc(var(--page-wave-drop-md) + var(--sp-24))}
     .v3 .prog-row{grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--grid-gap)}
@@ -1656,6 +1659,7 @@
     /* contact form: one column; every field full width */
     .form{grid-template-columns:minmax(0,1fr)}
     .form > *{grid-column:1 / -1;min-width:0}
+    .form > .btn{min-width:min(var(--btn-w),100%)}   /* the send button keeps the standard size */
     /* hero orbit visuals (home + inner pages): narrower, so the side labels stay on screen */
     .v3 .hero .hero__visual,.v3 .page-feature .hero__visual{width:min(var(--hero-visual-sm),100% - var(--sp-64));height:auto;aspect-ratio:1;margin-inline:auto}
     /* keep 40px between the buttons and the diagram's top label: the label sits 52px above the diagram's box */
@@ -1672,7 +1676,7 @@
     .v3 .wv-hero-art{height:var(--hero-wave-sm)}
     .v3 .hero:not(.page-hero) .hero-body{padding-bottom:calc(var(--sp-120) + var(--sp-48) + var(--sp-14))}   /* lowest label 24px above the wave */
     /* inner heroes: same space above the content (from the header) as below it (to the wave) */
-    .v3 .page-hero--center .hero-body{padding-bottom:calc(var(--sp-24) + var(--page-wave-reach-sm))}
+    .v3 .page-hero--center .hero-body{padding-top:var(--sp-40);padding-bottom:calc(var(--sp-40) + var(--page-wave-reach-sm))}   /* at least 40px above and below the content, always equal */
     .v3 .page-feature,.v3 .page-feature:has(.hero__visual){margin-top:calc(var(--page-wave-drop-sm) + var(--sp-24))}
     /* orbit: compact nodes and labels */
     .v3 .eorbit--in{width:min(100% - 24px,22rem);margin:var(--sp-48) auto var(--sp-40)}
@@ -1683,8 +1687,6 @@
     /* buttons: natural width, one size (the Read More size); they wrap onto a new line when they do not fit */
     .ctas,.band .acts,.v3 .band .acts,.hero .acts{grid-auto-flow:row}
     .ctas{margin-inline:auto}
-    .ctas .btn-ghost{background:rgb(var(--p-white-rgb) / 0.7);box-shadow:inset 0 0 0 1.5px var(--p-ink-900);padding-block:var(--sp-12)}
-    .ctas .btn-ghost .play{width:28px;height:28px;font-size:var(--fs-9)}
   }
 }
 /* ---- SYSTEM: the global spacing rules (last layer, so it always wins). ----
