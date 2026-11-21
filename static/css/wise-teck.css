@@ -222,7 +222,6 @@
   --wave-h:clamp(56px,7.6vw,110px);
   --wave-overlap:calc(var(--wave-h) * -.36);
   --grid-gap:clamp(16px,13.03px + 0.762vw,24px);
-  --grid-gap-sm:clamp(12px,10.51px + 0.381vw,16px);
   --split-gap:clamp(32px,20.11px + 3.048vw,64px);
   --stack-gap:var(--sp-16);
   --topbar-h:54px;
@@ -890,7 +889,6 @@
   @media (min-width:1024px){
     .v3 .wt-sec.center{padding-top:0;padding-bottom:0;margin-top:0}
   }
-  .v3 .stories .st-head{margin-bottom:var(--sp-16)}
   .v3 .stories .dots{margin-top:var(--sp-16)}
   /* wave strands: soft lavender-violet (no white), smooth round joins */
   .wt-lav{stroke:var(--p-lav-500);stroke-width:1.4;stroke-opacity:.75;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-linejoin:round}
@@ -1481,7 +1479,7 @@
   /* ---- sections: every main section shares one rhythm ---- */
   .sec,main > section{padding-block:var(--sec-pad)}
   /* heading -> content */
-  .sec-head,.blk .sec-head{margin-bottom:var(--head-gap)}
+  .sec-head,.blk .sec-head,.st-head{margin-bottom:var(--head-gap)}
   /* collaborators block (inside the corporate section): centred sub-heading, one section gap above */
   .corp-grid h2{margin-bottom:var(--sp-12)}
   .collab-block{text-align:center;margin-top:var(--sec-pad)}
@@ -1515,7 +1513,7 @@
   /* ---- grids: shared gaps ---- */
   .split,.about-grid,.eco-grid,.corp-grid,.contact-grid,.v3 .eco-grid{gap:var(--split-gap)}
   .cards,.blocks,.collab-row,.partners,.pstrip,.svc-grid,.steps,.st-slide{gap:var(--grid-gap)}
-  .sk-grid{gap:var(--grid-gap-sm)}
+  .sk-grid{gap:var(--grid-gap)}
   /* ---- layout primitives for new markup ---- */
   .grid{display:grid;gap:var(--grid-gap);grid-template-columns:repeat(var(--cols,3),minmax(0,1fr))}
   .stack{display:flex;flex-direction:column;gap:var(--stack-gap)}
