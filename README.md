@@ -224,8 +224,10 @@ height, space, radius and z-index is a token in the `:root` blocks at the top. C
 | Breakpoints | 1200px (menu → menu button), 1024px (tablet), 640px (phone) |
 | Touch | buttons and links have at least a 44px touch area |
 
-Rules enforced by `core/tests/test_css.py`: no hard-coded colours / radii / font sizes / z-index outside the tokens, tokens
-only in `:root`, only the breakpoints above, no inline styles in templates. New section type: see the
+Rules enforced by `core/tests/test_css.py`: no hard-coded colours / radii / font sizes / z-index outside the tokens,
+**every margin, padding and gap from a spacing token** (a new section needs no spacing CSS of its own), tokens only in
+`:root`, only the breakpoints above, no inline styles in templates. The few deliberate overlaps have named tokens
+(`--feature-overlap`, `--hero-wave-room`, `--eorbit-shift` ...). New section type: see the
 `new-section-layout` skill in `.claude/skills/`.
 
 ## Commands

@@ -56,6 +56,21 @@ class UniversalCssTest(SimpleTestCase):
                 problems.append(f"z-index {prop}: {value[:60]}")
         self.assertEqual(problems, [], "use a token from the :root block instead")
 
+    def test_spacing_comes_from_tokens(self):
+        """Every margin, padding and gap uses the spacing tokens (--sp-*, --sec-pad, --grid-gap, ...), so spacing
+        stays the same everywhere and a new section never needs its own numbers. 0 and auto are fine."""
+        spacing = re.compile(
+            r"^(margin|padding)(-(top|right|bottom|left|block|inline)(-(start|end))?)?$|^(row-|column-)?gap$"
+        )
+        problems = []
+        for prop, value in _declarations(_outside_root(_css())):
+            if not spacing.match(prop):
+                continue
+            raw = re.findall(r"(?<![\w.-])(-?\d*\.?\d+)(px|rem|em)\b", re.sub(r"var\([^)]*\)", "", value))
+            if any(float(number) != 0 for number, _unit in raw):
+                problems.append(f"{prop}: {value.strip()[:60]}")
+        self.assertEqual(problems, [], "use a spacing token from the :root block instead of a number")
+
     def test_only_the_standard_breakpoints(self):
         queries = {re.sub(r"\s+", "", q) for q in re.findall(r"@media\s*([^{]+)\{", _css())}
         allowed = {
