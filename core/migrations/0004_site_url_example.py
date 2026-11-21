@@ -4,19 +4,15 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
+
     dependencies = [
-        ("core", "0003_seo"),
+        ('core', '0003_seo'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="sitesettings",
-            name="site_url",
-            field=models.CharField(
-                blank=True,
-                help_text="e.g. https://wiseteck.dev — used for canonical links, the sitemap and sharing. Empty = the address the visitor used.",
-                max_length=200,
-                verbose_name="Main web address",
-            ),
+            model_name='sitesettings',
+            name='site_url',
+            field=models.CharField(blank=True, help_text='e.g. https://wiseteck.dev — used for canonical links, the sitemap and sharing. Empty = the address the visitor used.', max_length=200, verbose_name='Main web address'),
         ),
     ]
