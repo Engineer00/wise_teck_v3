@@ -5,7 +5,8 @@ Server: Ubuntu 24.04, `159.198.43.141`, logged in as `root` (PuTTY). Nginx is al
 its folders or its database). Everything below only adds new files.
 
 The site is already live at https://wiseteck.dev. To bring a new version online, follow
-**Update the live site** right below. Sections 1–9 are the first-time setup, kept for reference.
+**Update the live site** right below, and do **Server security** once. Sections 1–9 are the first-time setup, kept
+for reference.
 
 ## Update the live site
 
@@ -49,14 +50,23 @@ set -a; . /srv/wiseteck/.env; set +a
 ../venv/bin/python manage.py migrate
 ../venv/bin/python manage.py check --deploy
 ../venv/bin/python manage.py collectstatic --noinput
+../venv/bin/python manage.py make_image_variants
 chown -R www-data:www-data /srv/wiseteck/app/media
 systemctl restart wiseteck
 systemctl status wiseteck --no-pager
 ```
 
-`check --deploy` must end with "no issues (1 silenced)". The database changes in this release only add settings
-(colour scheme), remove the logo subtitle setting, improve page descriptions that were never edited, and hide the
-"[Placeholder]" sections. Nothing typed in the admin is overwritten.
+`check --deploy` must end with "no issues (1 silenced)".
+
+What this release changes on the server:
+
+- `pip install` upgrades Django from 6.0.10 to **6.1.3** (the version the tests run on; `requirements.txt` pins exact
+  versions, so the server always matches what was tested).
+- `migrate` adds settings (colour scheme, announcement bar, 404 texts, Google Analytics ID, keywords), the visitor
+  statistics and rate-limit tables, removes the logo subtitle setting, and improves page titles, descriptions and two
+  blog summaries **only where they were never edited**. It hides the "[Placeholder]" sections. Nothing typed in the
+  admin is overwritten.
+- `make_image_variants` makes the WebP copies of every photo once (otherwise each is made on its first view).
 
 ### Step 4: Nginx improvements (once)
 
@@ -67,10 +77,23 @@ Open the Wise-Teck site file only: `nano /etc/nginx/sites-available/wiseteck` (n
    ```
    server_tokens off;
    gzip on;
-   gzip_types text/css application/javascript application/json image/svg+xml application/xml text/plain;
+   gzip_types text/css application/javascript application/json image/svg+xml application/xml text/plain font/woff2;
    gzip_min_length 1024;
    if ($host = www.wiseteck.dev) { return 301 https://wiseteck.dev$request_uri; }
    ```
+
+   In the same block, replace the two `location /static/` and `location /media/` lines with:
+
+   ```
+   location /static/ { alias /srv/wiseteck/app/staticfiles/; expires 1y; add_header Cache-Control "public, immutable"; add_header X-Content-Type-Options nosniff; }
+   location /media/  { alias /srv/wiseteck/app/media/; expires 30d; add_header Cache-Control "public"; add_header X-Content-Type-Options nosniff; add_header Content-Security-Policy "default-src 'none'; img-src 'self'; style-src 'unsafe-inline'; sandbox"; }
+   ```
+
+   (Static files carry a version in their address, so browsers may keep them for a year. The `/media/` policy
+   stops an uploaded file from ever running code when opened on its own.)
+
+   Keep the existing `proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;` line in `location /`: the rate
+   limits and visitor statistics read the visitor's address from it.
 
 2. Save, then check and reload:
 
@@ -89,6 +112,67 @@ Open the Wise-Teck site file only: `nano /etc/nginx/sites-available/wiseteck` (n
 
 If something goes wrong: `journalctl -u wiseteck -n 50 --no-pager` shows the error. To go back to the previous version,
 use `git checkout <previous commit>` and restart (or restore the backups from step 1).
+
+## Server security (do this first)
+
+A read-only check on 21 Nov 2026 found **9,227 failed root password guesses over SSH in 24 hours**, root login with a
+password allowed, no firewall and no fail2ban. Nothing showed a break-in (only the owner's and the developer's
+addresses had logged in), but a simple root password will not hold against that. These steps do not touch the
+websites; run them in PuTTY as `root`, one block at a time.
+
+**1. Block password guessers (fail2ban).** Bans an address for an hour after 5 wrong SSH passwords.
+
+```
+apt install -y fail2ban
+printf '[sshd]\nenabled = true\nmaxretry = 5\nbantime = 1h\n' > /etc/fail2ban/jail.d/sshd.local
+systemctl enable --now fail2ban
+fail2ban-client status sshd
+```
+
+**2. Firewall.** Only SSH and the websites (both sites use 80 and 443).
+
+```
+ufw allow OpenSSH
+ufw allow 'Nginx Full'
+ufw --force enable
+ufw status
+```
+
+**3. SSH login.** Best: sign in with SSH keys only. Root already has two keys in `/root/.ssh/authorized_keys`; once
+everyone who needs the server can sign in with a key, turn passwords off:
+
+```
+printf 'PasswordAuthentication no\nPermitRootLogin prohibit-password\n' > /etc/ssh/sshd_config.d/10-keys-only.conf
+sshd -t && systemctl reload ssh
+```
+
+Keep the current PuTTY window open and test a new key login before closing it. Until keys are set up, at least
+change the root password to a long random one: `passwd`.
+
+**4. Security updates.** Automatic updates are on, and some need a restart (`/var/run/reboot-required` exists).
+Reboot at a quiet hour (both sites are down for about a minute): `reboot`.
+
+**5. Backups.** There were none. Daily database + photos, kept 14 days:
+
+```
+cat > /root/backup-wiseteck.sh <<'EOF'
+#!/bin/sh
+# Daily backup of the Wise-Teck database and uploaded photos; keeps 14 days.
+set -e
+D=/root/backups; mkdir -p "$D"
+sudo -u postgres pg_dump wiseteck | gzip > "$D/wiseteck-$(date +%F).sql.gz"
+tar czf "$D/wiseteck-media-$(date +%F).tgz" --exclude=media/_v -C /srv/wiseteck/app media
+find "$D" -name 'wiseteck-*' -mtime +14 -delete
+EOF
+chmod 700 /root/backup-wiseteck.sh && /root/backup-wiseteck.sh && ls -lh /root/backups
+echo '30 2 * * * root /root/backup-wiseteck.sh' > /etc/cron.d/wiseteck-backup
+```
+
+Copy `/root/backups` to another place now and then (WinSCP to a PC or Google Drive): a backup on the same server
+does not survive the server.
+
+**Also found:** the HTTPS certificate of **dehleze.store** expired on 12 Nov 2026 (wiseteck.dev's is valid until
+Feb 2027 and renews itself). That site belongs to someone else; tell its owner rather than changing its settings.
 
 ## 1. Packages
 
@@ -267,7 +351,12 @@ client's edits.
 
 ## Backups
 
+Daily automatic backups: see **Server security → 5. Backups**. A one-off backup before a risky change:
+
 ```
 sudo -u postgres pg_dump wiseteck > /root/wiseteck-$(date +%F).sql
 tar czf /root/wiseteck-media-$(date +%F).tgz -C /srv/wiseteck/app media
 ```
+
+Restore: `sudo -u postgres psql wiseteck < /root/wiseteck-<date>.sql` and unpack the media archive into
+`/srv/wiseteck/app/`.

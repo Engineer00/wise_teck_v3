@@ -78,6 +78,18 @@ class RateLimitTests(SeededTestCase):
         self.assertEqual(r.status_code, 429)  # even the right password waits
         self.assertContains(r, "Too many attempts", status_code=429)
 
+    def test_faked_forwarded_addresses_do_not_get_round_the_limit(self):
+        for n in range(5):  # the attacker invents a new first address each time; Nginx appends the real one
+            self.client.post(
+                "/admin/login/",
+                {"username": "tester", "password": "wrong"},
+                HTTP_X_FORWARDED_FOR=f"10.0.0.{n}, 203.0.113.7",
+            )
+        r = self.client.post(
+            "/admin/login/", {"username": "tester", "password": "wrong"}, HTTP_X_FORWARDED_FOR="10.9.9.9, 203.0.113.7"
+        )
+        self.assertEqual(r.status_code, 429)
+
     def test_successful_login_clears_the_count(self):
         self.client.post("/admin/login/", {"username": "tester", "password": "wrong"})
         r = self.client.post("/admin/login/", {"username": "tester", "password": "pw-tester-123"})

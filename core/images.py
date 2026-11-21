@@ -155,7 +155,7 @@ SLOTS = {
     "partner": (1440, 600, "Home · Corporate collaborations photo (wide)."),
     "card": (800, 500, "Card photo (16:10): programs, earning blocks, team, blog cards."),
     "tile": (800, 450, "Home · photo tile (16:9)."),
-    "logo2": (400, 200, "Collaborator logo: transparent PNG or SVG."),
+    "logo2": (400, 200, "Collaborator logo: a PNG with a transparent background."),
     "blog": (1920, 1080, "Blog photo: a 16:10 card on lists and a wide banner on the post (keep the subject centred)."),
     "story": (1000, 1000, "Square photo of the person: round on lists, centre of a wide banner on the story page."),
     "team": (800, 500, "Team card photo (16:10, head and shoulders centred)."),

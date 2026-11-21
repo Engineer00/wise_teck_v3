@@ -14,10 +14,10 @@ from .models import Attempt
 
 
 def client_ip(request):
-    """The visitor's address. Behind Nginx it arrives in X-Real-IP / X-Forwarded-For (see DEPLOY.md)."""
-    meta = request.META
-    forwarded = meta.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
-    return meta.get("HTTP_X_REAL_IP") or forwarded or meta.get("REMOTE_ADDR", "")
+    """The visitor's address. Nginx appends the real address to X-Forwarded-For; entries before it come from the
+    visitor and can be faked, so only the last one is trusted (see DEPLOY.md, proxy_add_x_forwarded_for)."""
+    forwarded = request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[-1].strip()
+    return forwarded or request.META.get("REMOTE_ADDR", "")
 
 
 def _key(request):
