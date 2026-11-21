@@ -1573,8 +1573,8 @@
     .sk-grid{grid-template-columns:minmax(0,1fr)}
     /* stories slider: one story per slide on phones (each slide also holds the next story for wider screens) */
     .st-slide > .story + .story{display:none}
-    /* weekend-course features: one per line, so an odd count never leaves a lone item */
-    .wk-feats{flex-direction:column;gap:var(--sp-8)}
+    /* weekend-course features: two per row with even gaps, 24px under the button */
+    .wk-feats,.v3 .weekend .wk-feats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-16);margin:var(--sp-24) 0 0}
     .wk-feats div,.v3 .weekend .wk-feats div{width:auto;padding:0;border-right:0}
     .wk-feats i{flex:none;width:var(--sp-32);text-align:center}
     /* skill cards: one per line on phones */
@@ -1689,23 +1689,28 @@
   .ft-logo .wordmark__wise{fill:var(--p-white)}
   .ft-logo .wordmark__teck{fill:var(--p-wordmark-violet-light)}
 
-  /* menu button (phones + tablets): brand-violet rounded square, three lines -> X when the menu is open */
+  /* menu button (phones + tablets): glossy brand-violet tile with a thin gold rim. Three lines of descending
+     length line up on hover (one after another) and turn into an X with a half spin when the menu is open. */
   .burger{place-items:center;width:var(--tap);height:var(--tap);padding:0;border:0;border-radius:var(--r-14);flex:none;cursor:pointer;
-    background:var(--grad-violet);box-shadow:0 10px 22px -10px rgb(var(--p-violet-600-rgb) / .7),inset 0 1px 0 rgb(var(--p-white-rgb) / .25);
-    transition:transform .2s var(--ease),box-shadow .2s}
-  .burger:hover{transform:translateY(-1px)}
-  .burger:active{transform:scale(.96)}
+    background:radial-gradient(120% 120% at 30% 12%,rgb(var(--p-white-rgb) / .24),rgb(var(--p-white-rgb) / 0) 55%),var(--grad-violet);
+    box-shadow:0 12px 24px -12px rgb(var(--p-violet-600-rgb) / .85),inset 0 0 0 1px rgb(var(--p-gold-200-2-rgb) / .5),inset 0 1px 0 rgb(var(--p-white-rgb) / .3);
+    transition:transform .25s var(--ease),box-shadow .25s var(--ease)}
+  .burger:hover{transform:translateY(-1px);box-shadow:0 16px 28px -12px rgb(var(--p-violet-600-rgb) / .95),inset 0 0 0 1px rgb(var(--p-gold-200-2-rgb) / .8),inset 0 1px 0 rgb(var(--p-white-rgb) / .3)}
+  .burger:active{transform:scale(.95)}
   .burger:focus-visible{outline:2px solid var(--p-gold-300);outline-offset:3px}
-  .burger-lines{position:relative;display:block;width:var(--sp-20);height:14px}
-  .burger-lines i{position:absolute;right:0;height:2px;border-radius:var(--r-pill);background:var(--p-white);
-    transition:transform .3s var(--ease),opacity .2s,width .3s var(--ease),top .3s var(--ease)}
+  .burger-lines{position:relative;display:block;width:var(--sp-20);height:var(--sp-14);transition:transform .45s var(--ease)}
+  .burger-lines i{position:absolute;right:0;height:var(--sp-2);border-radius:var(--r-pill);background:var(--p-white);
+    transition:transform .35s var(--ease),opacity .2s,width .35s var(--ease),top .35s var(--ease)}
   .burger-lines i:nth-child(1){top:0;width:100%}
-  .burger-lines i:nth-child(2){top:6px;width:70%}
-  .burger-lines i:nth-child(3){top:12px;width:100%}
-  .burger:hover .burger-lines i:nth-child(2){width:100%}
-  .burger[aria-expanded="true"] .burger-lines i:nth-child(1){top:6px;transform:rotate(45deg)}
+  .burger-lines i:nth-child(2){top:6px;width:70%;transition-delay:.05s}
+  .burger-lines i:nth-child(3){top:12px;width:45%;transition-delay:.1s}
+  .burger:hover .burger-lines i{width:100%}
+  .burger[aria-expanded="true"] .burger-lines{transform:rotate(180deg)}
+  .burger[aria-expanded="true"] .burger-lines i{transition-delay:0s}
+  .burger[aria-expanded="true"] .burger-lines i:nth-child(1){top:6px;width:100%;transform:rotate(45deg)}
   .burger[aria-expanded="true"] .burger-lines i:nth-child(2){opacity:0;width:0}
-  .burger[aria-expanded="true"] .burger-lines i:nth-child(3){top:6px;transform:rotate(-45deg)}
+  .burger[aria-expanded="true"] .burger-lines i:nth-child(3){top:6px;width:100%;transform:rotate(-45deg)}
+  @media (prefers-reduced-motion:reduce){.burger,.burger-lines,.burger-lines i{transition:none}}
   @media (max-width:1199px){.burger{display:grid}}
 
   /* page numbers under the blog list and the story grid (one tap size: --tap) */
