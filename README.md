@@ -7,7 +7,8 @@ setting lives in the database and is edited in a friendly admin panel. No code i
 - **Repository:** <https://github.com/Engineer00/wise_teck_v3> (`main` is the version to deploy; every push is tested by CI)
 - **Server:** Namecheap VPS (Ubuntu 24.04, Python 3.12, PostgreSQL), next to `dehleze.store`. See [DEPLOY.md](DEPLOY.md).
 - **Versions:** Django 6.1.3 and the other exact versions in `requirements.txt` (the versions the tests run on).
-- **History:** [CHANGELOG.md](CHANGELOG.md) records what changed, why, the decisions and the open items.
+- **History:** [CHANGELOG.md](CHANGELOG.md) records what changed, why, the decisions and the open items; its
+  *Current status* says which version is live (`main` was deployed on 22 November 2026).
 
 ## What the admin can change
 
@@ -75,7 +76,7 @@ The sizes live in one place, `core/images.py` (`SLOTS`), which the admin badges 
 **Automatic (nothing to do):** page titles of at most 60 characters (the " | Wise-Teck" suffix is left off when it
 would not fit), descriptions cut at 160 characters, canonical links, page 2+ of lists with their own canonical and
 prev / next links, `/sitemap.xml` (updates itself), `/robots.txt`, structured data (educational organisation, website,
-breadcrumbs, articles), sharing previews with a 1200 × 630 default image, 301 redirects when an address changes,
+breadcrumbs, articles, courses), sharing previews with a 1200 × 630 default image, 301 redirects when an address changes,
 `noindex` on drafts, previews and the 404 page, responsive WebP photos, lazy loading, fast pages. The dashboard's
 **SEO health** runs every check on every live page, post and story each time it opens.
 
@@ -145,7 +146,7 @@ make plain `py` pick a Python without Django.
 ## Tests and code quality
 
 ```powershell
-py -3.13 manage.py test core                  # 80 tests
+py -3.13 manage.py test core                  # 94 tests
 py -3.13 -m ruff check .                      # lint (rules in pyproject.toml)
 py -3.13 -m ruff format .                     # formatting
 ```
@@ -162,23 +163,26 @@ checklist and all tests on Python 3.12 + PostgreSQL 16 (as on the server) for ev
 | `test_audit.py` | security headers, pagination, page weight, accessibility fixes |
 | `test_theme.py` | colour schemes: recolouring, readability checks, admin picker, staff-only preview |
 | `test_features.py` | visitor statistics, SEO health, rate limits, announcement, 404 texts, Analytics, WebP photos, size hints |
+| `test_custom_fields.py` | courses (cards, hidden past start dates, enquiry link, structured data, admin) and section extra details (table, admin box, version history, drafts) |
 
 ## Project structure
 
 ```text
 config/                  settings (env-based; production security), URLs, WSGI
 core/
-  models.py              content tables: Page → Section → Item, SiteSettings, menu, footer, programs, stories,
-                         blog, team, services, messages, redirects, versions, visitor statistics, rate-limit attempts
+  models.py              content tables: Page → Section → Item / Detail (extra details), SiteSettings, menu, footer,
+                         programs, stories, blog, team, services, courses, messages, redirects, versions, visitor
+                         statistics, rate-limit attempts
   views.py               pages (with pagination), blog / story pages, contact form, previews, robots.txt, sitemap.xml
-  layouts.py             which fields each section type uses and its photo sizes (drives the admin form)
+  layouts.py             which fields each section type uses, its photo sizes and whether it shows extra details
+                         (drives the admin form)
   images.py              upload shrinking, responsive WebP copies (srcset), recommended photo sizes
   theme.py               colour schemes: three brand colours → the whole palette
   seo.py / seo_audit.py  search-engine tags and structured data / the SEO health checks
   stats.py               cookie-free visitor statistics for the dashboard
   throttle.py            rate limits for sign-in and the contact form
   permissions.py         staff-only access
-  versioning.py          drafts, scheduled publishing, version history
+  versioning.py          drafts, scheduled publishing, version history (pages with their sections, cards, details)
   signals.py             automatic redirect when a page / post / story address changes
   middleware.py          redirects, Permissions-Policy, Analytics CSP
   context_processors.py  site settings, menu, footer and the colour scheme for every page
@@ -190,7 +194,7 @@ core/
   tests/                 the test suite
 templates/
   base.html, page.html, detail.html, 404.html, 500.html
-  sections/<type>.html   one template per section type (21)
+  sections/<type>.html   one template per section type (22), plus _details.html (the extra-details table)
   partials/              header, logo + wordmark, buttons, 3D coin, story card, pagination, SEO tags
   adminpanel/            admin panel screens (dashboard, forms, colour-scheme picker)
 static/
@@ -218,12 +222,14 @@ height, space, radius and z-index is a token in the `:root` blocks at the top. C
 | Content width / side gaps | 1200px, centred; 16px phone, 24px tablet; the header lines up with the content |
 | Fluid sizes | font sizes and spacing grow in a straight line from phone (390px) to desktop (1440px) |
 | Section padding | the same for every section at a given width: 48px phone → 80px desktop; sections are as tall as their content (equal spacing, not forced equal heights), so the gap between any two sections is the same: 96px phone, 119px tablet, 160px desktop |
-| Heroes | home fills the first screen; every inner hero has one height per screen: 720px desktop and tablet, 830px phone |
+| Heroes | home fills the first screen; inner heroes are 720px on desktop and tablet, at least 700px on phones (content-heavy ones grow) |
+| Call-to-action band | the purple band ending each inner page has one minimum height per screen: 360px desktop, 408px at 1024–1199px, 448px tablet, 560px phone (no maximum: longer text makes it taller) |
 | Typography | Inter only; one style per role: h1 30/32 → 48/52, h2 26 → 36, sub-heading 22 → 28, h3 20, intro 18, text 16 / 1.7, labels 14, tag lines 13 caps; form fields 16 (no zoom on phones) |
 | Phones | one card per row; sliders show one card; small icon tiles two per row; photo first, text below in photo + text sections |
 | Buttons (phones + tablets) | 52px tall; every button in a group as wide as the widest one, never under 244px; hero button pairs centred |
 | Text spacing | `class="rhythm"` spaces a text block's children (tag line → heading 12, h1 → next 20, h2 → 16, text → buttons 24) |
 | Cards | one padding scale (32 / 24 / 40px; phones 24 / 20 / 24), radius 24px |
+| Extra details | a glass table of label + value rows: under the cards (up to 800px wide, centred), or full width in the text column of a split section |
 | Breakpoints | 1200px (menu → menu button), 1024px (tablet), 640px (phone) |
 | Touch | buttons and links have at least a 44px touch area |
 
