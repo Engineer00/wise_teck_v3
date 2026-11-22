@@ -3,15 +3,27 @@
 The record of work on the Wise-Teck website: what changed, why, and where things stand. Newest first.
 How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEPLOY.md).
 
-## Current status (21 November 2026)
+## Current status (22 November 2026)
 
 | | |
 | --- | --- |
-| **GitHub** | `main` and `fix/audit-and-responsive` hold the latest version; CI (lint, migrations, production checklist, 82 tests on Python 3.12 + PostgreSQL) passes |
-| **Live site** | https://wiseteck.dev still runs the 20 November version (`c119ede`). Nothing newer has been deployed yet |
-| **To go live** | DEPLOY.md, *Update the live site* (git pull or `wise-teck-site.zip`), then *Server security* once |
+| **GitHub** | `main` holds the latest version; CI (lint, migrations, production checklist, 94 tests on Python 3.12 + PostgreSQL) passes |
+| **Live site** | https://wiseteck.dev runs `7b9f1ca` (deployed 22 Nov 2026): Django 6.1.3, migrations up to 0018, courses and extra details, equal call-to-action bands |
+| **Next update** | DEPLOY.md, *Update the live site* (git pull). Still to do once: *Server security* (fail2ban, firewall, SSH keys, daily backups) |
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
+
+## 2026-11-22: deployed to wiseteck.dev
+
+- The live site moved from the 20 November version (`c119ede`) to `7b9f1ca`: everything from 21 and 22 November.
+  Django 6.0.10 → 6.1.3, migrations 0004–0018 applied (content changes only where never edited in the admin).
+- Backup taken first on the server: `/root/deploy-backup-2026-11-22-0633/` (database dump, uploaded photos,
+  previous commit). It also keeps three files someone had edited directly on the server on 20 Nov and an extra
+  migration made there; all of those edits were already in GitHub, so the server copy was reset to GitHub's.
+- Checked after the deploy: every page, the sitemap, robots.txt and the admin (including Courses) open; home has its
+  six waves; call-to-action band 360px desktop / 560px phone; security headers present; dehleze.store untouched.
+- Seen once during the restart: three site workers took longer than 30 seconds while the WebP photo copies were made,
+  and were replaced automatically (pages may have failed for a few seconds). Not repeated since.
 
 ## 2026-11-22: courses and extra details (the site's version of WordPress ACF custom fields)
 
@@ -166,10 +178,15 @@ idle, first-screen content shown at once, home page HTML from 278KB to 86KB.
 | Fixed: type scale, spacing, layout, wave shapes | So nothing an editor changes can break the phone layout |
 
 ## Open items
-- **Deploy** this version (DEPLOY.md) and do the **server security** steps once.
+- **Server security:** do the steps in DEPLOY.md once (fail2ban, firewall, key-only SSH, daily backups). The server
+  has no automatic backups yet; the only copy is the one taken before the 22 Nov deploy.
+- **Small server fixes (optional):** send www.wiseteck.dev to wiseteck.dev with a redirect (it shows the site
+  directly; its canonical link already points to wiseteck.dev); stop the Gunicorn 27 warning "Control server error:
+  Permission denied: /var/www/.gunicorn" in the site log (harmless).
+- **Courses:** add Wise-Teck's courses in Content → Courses; the course list appears on the Professional Paid Courses
+  page with the first one.
 - **Owner accounts:** verify Google Search Console and submit the sitemap; create the Google Business Profile;
   optionally add a Google Analytics ID.
-- **dehleze.store:** its HTTPS certificate expired on 12 Nov 2026; tell its owner (that site is not ours to change).
 - **Server tidy-up:** remove `/root/attack.sh`, `/root/attack-report.txt` (an analysis report) and the empty
   `/var/www/wiseteck` folder.
 - **Later:** a CSS consolidation pass (fold the old v3 override rules into single definitions, replace one-off tokens
