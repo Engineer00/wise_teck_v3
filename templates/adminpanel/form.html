@@ -28,10 +28,10 @@
     {% endif %}
     {% endfor %}
 
-    {% if formset %}
-    <fieldset class="ap-fieldset">
-      <legend class="ap-legend">{{ meta.formset_label }}</legend>
-      {% if layout_guide %}<p class="ap-help ap-items-help" id="apItemsHelp"></p>{% endif %}
+    {% for fs in formsets %}{% with formset=fs.formset %}
+    <fieldset class="ap-fieldset" data-inline="{{ fs.key }}">
+      <legend class="ap-legend">{{ fs.label }}</legend>
+      {% if layout_guide %}<p class="ap-help ap-items-help" id="{% if fs.key == 'details' %}apDetailsHelp{% else %}apItemsHelp{% endif %}"></p>{% endif %}
       {{ formset.management_form }}
       {% if formset.non_form_errors %}<div class="ap-flash ap-flash-error">{{ formset.non_form_errors }}</div>{% endif %}
       <div class="ap-inlines">
@@ -51,9 +51,9 @@
         </div>
         {% endfor %}
       </div>
-      <p class="ap-help">Fill in the empty card to add one. Save to get another empty card.</p>
+      <p class="ap-help">{{ fs.add_help }}</p>
     </fieldset>
-    {% endif %}
+    {% endwith %}{% endfor %}
 
     <div class="ap-form-actions">
       <button type="submit" class="ap-btn ap-btn-primary">{% if is_create %}Create{% else %}Save changes{% endif %}</button>

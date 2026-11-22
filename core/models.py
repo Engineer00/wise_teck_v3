@@ -3,7 +3,8 @@
     Page -> Section (one block of the page, drawn by its layout template) -> Item (cards, steps, tags, stats ...)
 
 Shared content: SiteSettings (logo, contact details, footer text), NavItem (menu), FooterColumn/FooterLink,
-Program (the three-program strip used on many pages), SuccessStory, BlogPost, TeamMember, Service.
+Program (the three-program strip used on many pages), SuccessStory, BlogPost, TeamMember, Service, Course.
+Section extras: Detail (label + value rows an editor adds to a section, shown as a small table).
 Inbox: ContactMessage (the contact form).
 
 Text conventions used by the templates (see core/templatetags/wt.py):
@@ -17,6 +18,9 @@ import re
 from django.core.exceptions import ValidationError
 from django.core.validators import FileExtensionValidator, RegexValidator
 from django.db import models
+from django.utils import timezone
+from django.utils.formats import date_format
+from django.utils.functional import cached_property
 
 from . import theme
 
@@ -442,6 +446,7 @@ class Section(models.Model):
         ("blog_list", "Blog posts (from Blogs)"),
         ("team", "Team members (from Team)"),
         ("services_feed", "Services (from Services)"),
+        ("courses", "Courses (from Courses)"),
     ]
     HERO_LAYOUTS = ("home_hero", "page_hero")
     VISUALS = [
@@ -660,6 +665,7 @@ class Section(models.Model):
             "blog_list": BlogPost,
             "team": TeamMember,
             "services_feed": Service,
+            "courses": Course,
         }.get(self.layout)
         if not model:
             return None
@@ -673,6 +679,42 @@ class Section(models.Model):
         if qs is None:
             return []
         return list(qs[: self.feed_limit] if self.feed_limit else qs)
+
+    COURSE_FACT_ICONS = (
+        "fa-clock",
+        "fa-tag",
+        "fa-calendar-week",
+        "fa-calendar-check",
+    )  # duration, fee, schedule, start
+
+    @property
+    def course_labels(self):
+        """Courses section: the labels on each card, from "List" (one per line), in the order of COURSE_FACT_ICONS."""
+        lines = self.list_lines
+        defaults = ["Duration", "Fee", "Schedule", "Next start"]
+        return [lines[n] if n < len(lines) else label for n, label in enumerate(defaults)]
+
+    @cached_property
+    def course_cards(self):
+        """Courses section: every shown course with its filled-in facts as (icon, label, value) rows."""
+        if self.layout != "courses":
+            return []
+        cards = []
+        for c in self.feed:
+            start = date_format(c.next_start, "j M Y") if c.next_start else ""
+            values = (c.duration, c.fee, c.schedule, start)
+            facts = zip(self.COURSE_FACT_ICONS, self.course_labels, values, strict=True)
+            cards.append((c, [(icon, label, value) for icon, label, value in facts if value]))
+        return cards
+
+    @property
+    def is_empty(self):
+        """A list section with nothing to show is left out of the page, together with its wave."""
+        return self.layout == "courses" and not self.course_cards
+
+    @property
+    def extra_details(self):
+        return list(self.details.all())
 
     @property
     def story_slides(self):
@@ -746,6 +788,23 @@ class Item(models.Model):
     @property
     def img(self):
         return image_src(self.image, self.image_url)
+
+
+class Detail(models.Model):
+    """Extra details an editor adds to a section without a developer (like a custom field): label + value rows,
+    e.g. "Fee | Rs 15,000". Shown as a small table in the layouts built for it (core/layouts.py, details=...)."""
+
+    section = models.ForeignKey(Section, related_name="details", on_delete=models.CASCADE)
+    label = models.CharField(max_length=80)
+    value = models.CharField(max_length=300)
+    order = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ["order", "id"]
+        verbose_name = "extra detail"
+
+    def __str__(self):
+        return f"{self.label}: {self.value}"
 
 
 # ---------------------------------------------------------------------------------------------- inbox
@@ -933,6 +992,44 @@ class Service(models.Model):
     @property
     def img(self):
         return image_src(self.image)
+
+
+class Course(models.Model):
+    """Professional paid courses: one card each in a "Courses" section (the Professional Paid Courses page)."""
+
+    name = models.CharField("Course name", max_length=200)
+    short_description = models.CharField("What students learn", max_length=300, blank=True)
+    icon = models.CharField(max_length=60, blank=True, help_text=ICON_HELP)
+    duration = models.CharField(max_length=80, blank=True, help_text="e.g. 3 months (12 weekends)")
+    fee = models.CharField(
+        max_length=80, blank=True, help_text="Written as visitors should read it, e.g. Rs 15,000 or Rs 5,000 a month"
+    )
+    schedule = models.CharField(
+        "Weekend schedule", max_length=120, blank=True, help_text="e.g. Saturday & Sunday, 10 am – 1 pm"
+    )
+    start_date = models.DateField(
+        "Next start date", null=True, blank=True, help_text="Hidden on the site once this date has passed."
+    )
+    link_url = models.CharField(
+        "Link", max_length=300, blank=True, help_text="Leave empty to use the section's card link (the enquiry form)."
+    )
+    display_order = models.PositiveIntegerField("Order", default=0)
+    is_active = models.BooleanField("Show", default=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        ordering = ["display_order", "name"]
+
+    def __str__(self):
+        return self.name
+
+    @property
+    def next_start(self):
+        """The start date while it is still ahead (today counts), else None."""
+        if self.start_date and self.start_date >= timezone.localdate():
+            return self.start_date
+        return None
 
 
 # ---------------------------------------------------------------------------------------------- redirects

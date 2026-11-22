@@ -22,6 +22,7 @@ from django.utils.dateparse import parse_datetime
 
 from core.models import (
     BlogPost,
+    Course,
     FooterColumn,
     FooterLink,
     Item,
@@ -271,6 +272,21 @@ def placeholder(title, text):
         "spacing": "tight",
         "is_active": False,
     }  # hidden until Wise-Teck supplies the real content
+
+
+# Courses section: one card per course from Content → Courses. Wise-Teck has not supplied its course list yet,
+# so no courses are seeded and the section stays hidden until the first course is added in the admin.
+COURSE_LIST = {
+    "layout": "courses",
+    "anchor": "courses",
+    "eyebrow": "Weekend Courses",
+    "title": "Course List, Fees & Timings",
+    "highlight": "Fees & Timings",
+    "subtitle": "Choose a course and send us an enquiry for the next weekend batch.",
+    "list_items": "Duration\nFee\nSchedule\nNext start",
+    "item_label": "Enquire Now",
+    "button_url": "/contact/?interest=Professional+Paid+Courses",
+}
 
 
 def cta(tag, title, text, primary, secondary=None):
@@ -818,10 +834,7 @@ def courses():
         "Paid Course",
         feats,
         ("b", "a", "b"),
-        extra=placeholder(
-            "Course List, Fees & Timings",
-            "Add each course with its duration, fee, weekend schedule and next start date — to be supplied by Wise-Teck.",
-        ),
+        extra=COURSE_LIST,
     )
     s.append(
         cta(
@@ -1627,7 +1640,18 @@ class Command(BaseCommand):
             return
         with transaction.atomic():
             if reset:
-                for m in (Page, NavItem, FooterColumn, Program, SuccessStory, BlogPost, TeamMember, Service, Redirect):
+                for m in (
+                    Page,
+                    NavItem,
+                    FooterColumn,
+                    Program,
+                    SuccessStory,
+                    BlogPost,
+                    TeamMember,
+                    Service,
+                    Course,
+                    Redirect,
+                ):
                     m.objects.all().delete()
             self.settings()
             self.menu()

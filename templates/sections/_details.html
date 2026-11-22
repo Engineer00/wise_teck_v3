@@ -1,0 +1,1 @@
+{% load wt %}{% with rows=s.extra_details %}{% if rows %}<dl class="details glass reveal">{% for d in rows %}<div><dt>{{ d.label }}</dt><dd>{{ d.value|rich }}</dd></div>{% endfor %}</dl>{% endif %}{% endwith %}

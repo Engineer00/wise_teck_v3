@@ -14,7 +14,7 @@ from django.views.decorators.cache import cache_page
 from . import seo as seo_data
 from . import throttle, versioning
 from .forms import ContactForm
-from .models import BlogPost, Item, Page, Revision, Section, SiteSettings, SuccessStory
+from .models import BlogPost, Detail, Item, Page, Revision, Section, SiteSettings, SuccessStory
 from .permissions import staff_required
 
 log = logging.getLogger(__name__)
@@ -60,7 +60,8 @@ def _paginate(request, sections):
 
 def _page_qs():
     sections_qs = Section.objects.filter(is_active=True).prefetch_related(
-        Prefetch("items", queryset=Item.objects.order_by("order", "id"))
+        Prefetch("items", queryset=Item.objects.order_by("order", "id")),
+        Prefetch("details", queryset=Detail.objects.order_by("order", "id")),
     )
     return Page.objects.prefetch_related(Prefetch("sections", queryset=sections_qs))
 

@@ -117,6 +117,29 @@ def breadcrumbs(base, crumbs, canonical):
     return {"@type": "BreadcrumbList", "itemListElement": items}
 
 
+def course_list(site, base, url, courses):
+    """The courses on a page as a schema.org list of Course (each points to its card). Google requires a
+    description, so only courses that have one are listed."""
+    provider = {"@type": "EducationalOrganization", "name": site.seo_name or site.site_name, "url": base + "/"}
+    return {
+        "@type": "ItemList",
+        "itemListElement": [
+            {
+                "@type": "ListItem",
+                "position": n,
+                "item": {
+                    "@type": "Course",
+                    "url": f"{url}#course-{c.pk}",
+                    "name": c.name,
+                    "description": c.short_description,
+                    "provider": provider,
+                },
+            }
+            for n, c in enumerate(courses, 1)
+        ],
+    }
+
+
 def _pack(seo, graph):
     seo["jsonld"] = ld_json({"@context": "https://schema.org", "@graph": graph}) if graph else ""
     return seo
@@ -165,6 +188,9 @@ def page_seo(request, page, sections, preview=False, paged=None):
     crumbs = hero.crumb_list if hero is not None and hero.layout == "page_hero" else []
     if len(crumbs) > 1:
         graph.append(breadcrumbs(base, crumbs, canonical))
+    courses = [c for s in sections if s.layout == "courses" for c, _ in s.course_cards if c.short_description]
+    if courses:
+        graph.append(course_list(site, base, canonical.split("?")[0], courses))
     graph.append(
         {
             "@type": "WebPage",

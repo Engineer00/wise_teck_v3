@@ -11,6 +11,8 @@ from .. import theme
 from ..models import (
     BlogPost,
     ContactMessage,
+    Course,
+    Detail,
     FooterColumn,
     FooterLink,
     Item,
@@ -141,6 +143,23 @@ ServiceForm = styled(
     Service,
     ("name", "short_description", "image", "icon_file", "icon", "link_url", "display_order", "is_active"),
     base=ServiceBase,
+)
+
+CourseForm = styled(
+    Course,
+    (
+        "name",
+        "short_description",
+        "icon",
+        "duration",
+        "fee",
+        "schedule",
+        "start_date",
+        "link_url",
+        "display_order",
+        "is_active",
+    ),
+    widgets={"start_date": forms.DateInput(attrs={"type": "date"}, format="%Y-%m-%d")},
 )
 
 ContactMessageForm = styled(ContactMessage, ("name", "email", "phone", "interest", "message", "page", "is_read"))
@@ -298,6 +317,11 @@ ItemFormSet = inlineformset_factory(
         "bullets": forms.Textarea(attrs={"rows": 3}),
         "logo_html": forms.Textarea(attrs={"rows": 2}),
     },
+)
+
+# extra details: label + value rows the editor adds to a section (shown as a small table where the layout has one)
+DetailFormSet = inlineformset_factory(
+    Section, Detail, form=StyledForm, extra=2, can_delete=True, fields=("label", "value", "order")
 )
 
 ProgramForm = styled(Program, ("title", "text", "icon", "link_url", "order", "is_active"))

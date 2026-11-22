@@ -20,19 +20,22 @@ class SeededTestCase(TestCase):
 
 
 def section_post(section, **changes):
-    """Everything the admin section form would submit for this section (and its cards), with some fields changed."""
-    from core.adminpanel.forms import ItemFormSet, SectionForm
+    """Everything the admin section form would submit for this section (its cards and extra details), with some
+    fields changed."""
+    from core.adminpanel.forms import DetailFormSet, ItemFormSet, SectionForm
 
-    form, formset = SectionForm(instance=section), ItemFormSet(instance=section)
+    form = SectionForm(instance=section)
+    formsets = [ItemFormSet(instance=section), DetailFormSet(instance=section)]
     data = {}
-    for field in list(form) + [f for sub in formset.forms for f in sub]:
+    for field in list(form) + [f for fs in formsets for sub in fs.forms for f in sub]:
         value = field.value()
         if isinstance(value, bool):
             if value:
                 data[field.html_name] = "on"
         elif isinstance(value, (str, int)) and value != "":
             data[field.html_name] = value
-    for key, value in formset.management_form.initial.items():
-        data[f"{formset.prefix}-{key}"] = value
+    for fs in formsets:
+        for key, value in fs.management_form.initial.items():
+            data[f"{fs.prefix}-{key}"] = value
     data.update(changes)
     return data

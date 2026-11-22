@@ -5,6 +5,7 @@ Ported from the original site's custom panel (same screens and styling) and exte
 v2 website structure: pages, sections with their cards, menu, footer and site settings.
 """
 
+from datetime import datetime
 from urllib.parse import quote
 
 from django.contrib import messages
@@ -24,6 +25,7 @@ from ..layouts import ALWAYS, GUIDE
 from ..models import (
     BlogPost,
     ContactMessage,
+    Course,
     FooterColumn,
     NavItem,
     Page,
@@ -84,8 +86,21 @@ RESOURCES = {
         "group": "Website",
         "model": Section,
         "form": F.SectionForm,
-        "formset": F.ItemFormSet,
-        "formset_label": "Cards / items in this section",
+        "formsets": [
+            {
+                "key": "items",
+                "class": F.ItemFormSet,
+                "label": "Cards / items in this section",
+                "add_help": "Fill in the empty card to add one. Save to get another empty card.",
+            },
+            {
+                "key": "details",
+                "class": F.DetailFormSet,
+                "label": "Extra details (label + value)",
+                "add_help": "Fill in an empty row to add a detail: a label (e.g. Fee) and its value (e.g. Rs 15,000; "
+                "**double stars** = bold). Lower order numbers come first. Save to get more empty rows.",
+            },
+        ],
         "label": "Sections",
         "singular": "Section",
         "icon": "layers",
@@ -168,8 +183,14 @@ RESOURCES = {
         "group": "Website",
         "model": FooterColumn,
         "form": F.FooterColumnForm,
-        "formset": F.FooterLinkFormSet,
-        "formset_label": "Links in this column",
+        "formsets": [
+            {
+                "key": "links",
+                "class": F.FooterLinkFormSet,
+                "label": "Links in this column",
+                "add_help": "Fill in an empty row to add a link. Save to get more empty rows.",
+            }
+        ],
         "label": "Footer",
         "singular": "Footer Column",
         "icon": "columns",
@@ -297,6 +318,23 @@ RESOURCES = {
         "search_fields": ["name", "short_description"],
         "filter_fields": [("is_active", "Show", YES_NO)],
     },
+    "courses": {
+        "group": "Content",
+        "model": Course,
+        "form": F.CourseForm,
+        "label": "Courses",
+        "singular": "Course",
+        "icon": "calendar",
+        "list_fields": [
+            ("name", "Course"),
+            ("fee", "Fee"),
+            ("start_date", "Next start"),
+            ("display_order", "Order"),
+            ("is_active", "Show"),
+        ],
+        "search_fields": ["name", "short_description", "schedule"],
+        "filter_fields": [("is_active", "Show", YES_NO)],
+    },
     # --- Inbox -----------------------------------------------------------------
     "messages": {
         "group": "Inbox",
@@ -386,7 +424,10 @@ def format_cell(obj, field_name):
     if isinstance(value, bool):
         return {"type": "bool", "value": value}
     if hasattr(value, "strftime"):
-        return {"type": "text", "value": value.strftime("%b %d, %Y %H:%M")}
+        return {
+            "type": "text",
+            "value": value.strftime("%b %d, %Y %H:%M" if isinstance(value, datetime) else "%b %d, %Y"),
+        }
     return {"type": "text", "value": value if value not in (None, "") else "—"}
 
 
@@ -586,7 +627,7 @@ def resource_list(request, resource):
     )
 
 
-def _render_form(request, resource, meta, form, formset, obj):
+def _render_form(request, resource, meta, form, formsets, obj):
     is_create = obj is None
     children = None
     if obj is not None and meta.get("children") == "sections":
@@ -609,7 +650,7 @@ def _render_form(request, resource, meta, form, formset, obj):
             "meta": meta,
             "form": form,
             "groups": form_groups(meta, form),
-            "formset": formset,
+            "formsets": formsets,
             "object": obj,
             "is_create": is_create,
             "children": children,
@@ -645,10 +686,12 @@ def _save(request, resource, meta, obj=None):
         instance=obj,
         initial={k: request.GET[k] for k in meta.get("prefill", []) if k in request.GET} if obj is None else None,
     )
-    formset = None
-    if meta.get("formset"):
-        formset = meta["formset"](request.POST or None, request.FILES or None, instance=obj or meta["model"]())
-    if request.method == "POST" and form.is_valid() and (formset is None or formset.is_valid()):
+    formsets = [
+        dict(spec, formset=spec["class"](request.POST or None, request.FILES or None, instance=obj or meta["model"]()))
+        for spec in meta.get("formsets", [])
+    ]
+    valid = [form.is_valid()] + [fs["formset"].is_valid() for fs in formsets]  # check them all, to show every error
+    if request.method == "POST" and all(valid):
         target = obj if obj is not None else (form.cleaned_data.get("page") if resource == "sections" else None)
         label = f"{meta['singular'].lower()} “{obj}”" if obj is not None else f"new {meta['singular'].lower()}"
         tracker = (
@@ -658,15 +701,15 @@ def _save(request, resource, meta, obj=None):
         )
         with transaction.atomic():
             saved = form.save()
-            if formset is not None:
-                formset.instance = saved
-                formset.save()
+            for fs in formsets:
+                fs["formset"].instance = saved
+                fs["formset"].save()
             if tracker:
                 tracker.done()
         verb = "created" if obj is None else "updated"
         messages.success(request, f"{meta['singular']} {verb} successfully.")
         return redirect("adminpanel_change", resource=resource, pk=saved.pk)
-    return _render_form(request, resource, meta, form, formset, obj)
+    return _render_form(request, resource, meta, form, formsets, obj)
 
 
 @staff_required

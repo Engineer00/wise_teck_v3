@@ -15,11 +15,12 @@ setting lives in the database and is edited in a friendly admin panel. No code i
 | --- | --- |
 | **Dashboard** | Visitors (last 30 days, top pages, where visitors come from, phone / tablet / desktop), **SEO health** score with fix-it links, Google tools, messages, drafts, recent changes. |
 | **Website → Pages** | Each page: address, title, search description, sharing preview, published or hidden. **Drafts**, **scheduled publishing** and **version history** with one-click restore. |
-| **Website → Sections** | The blocks of a page, in order. 21 section types; the form shows only the fields the type uses, with the best photo size next to every photo field. |
+| **Website → Sections** | The blocks of a page, in order. 22 section types; the form shows only the fields the type uses, with the best photo size next to every photo field. **Extra details**: label + value rows (e.g. *Fee · Rs 15,000*) added to a section without a developer, shown as a small table in text, card, step, team, services and course sections. |
 | **Website → Menu / Footer / Programs** | Top menu and drop-downs, footer link columns, the three-program strip. |
 | **Website → Site Settings** | Logo, **colour scheme**, **announcement bar**, contact details, header button, footer, social links, contact-form messages and alerts, **404 page**, search engines, **Google Analytics ID**, keywords to watch. |
 | **Website → Redirects** | Old addresses → new ones. Added automatically when a page address changes. |
 | **Content → Success Stories / Blogs / Team / Services** | Lists shown by the matching sections. Blog posts and stories have their own pages; long lists get page numbers. |
+| **Content → Courses** | Professional paid courses: name, what students learn, duration, fee, weekend schedule, next start date (hidden once passed). Shown as cards on the Professional Paid Courses page, each with an enquiry link; the section appears once the first course is added. |
 | **Inbox → Messages** | Contact-form messages. |
 
 **Colour schemes.** Site Settings → *Colour scheme*: six ready-made schemes or *Custom colours* (primary, accent,

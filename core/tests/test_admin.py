@@ -40,6 +40,7 @@ class AdminPanelTest(SeededTestCase):
             "team",
             "blogs",
             "services",
+            "courses",
             "messages",
         ]:
             with self.subTest(resource=res):

@@ -1,8 +1,9 @@
 """What each section layout shows, and which fields it uses.
 
-The admin panel uses this to show only the fields a layout needs (with labels in that layout's terms)
-and to explain what the cards/items under a section are. The templates in templates/sections/ are the
-source of truth; keep this in step when a template changes.
+The admin panel uses this to show only the fields a layout needs (with labels in that layout's terms),
+to explain what the cards/items under a section are, and to show the "Extra details" box only for layouts
+whose template includes sections/_details.html (details=...). The templates in templates/sections/ are the
+source of truth; keep this in step when a template changes (test_details_box_matches_the_templates checks it).
 """
 
 from .images import size_hint
@@ -29,15 +30,18 @@ BTN2 = {
     "button2_icon": "Second button icon",
 }
 PHOTO = {"image": "Photo", "image_url": "…or photo link", "image_alt": "Photo description"}
+UNDER_CARDS = "Shown as a small table under the cards (e.g. Fee | Rs 15,000)."
 
 
-def _(help, fields, items=None, item_help="", photos=None, item_photo=None):
-    """photos / item_photo: image slot names (core/images.py SLOTS); the admin shows their best upload size."""
+def _(help, fields, items=None, item_help="", photos=None, item_photo=None, details=""):
+    """photos / item_photo: image slot names (core/images.py SLOTS); the admin shows their best upload size.
+    details: where the layout shows the section's extra details (empty = it does not show them)."""
     return {
         "help": help,
         "fields": fields,
         "items": items or {},
         "item_help": item_help,
+        "details": details,
         "sizes": {f: size_hint(slot) for f, slot in (photos or {}).items()},
         "item_sizes": {"image": size_hint(item_photo)} if item_photo else {},
     }
@@ -181,6 +185,7 @@ GUIDE = {
             "list_items": "Checklist (one per line)",
         },
         photos={"image": "split"},
+        details="Shown as a small table under the text, above the buttons (e.g. Duration | 2 years).",
     ),
     "cards": _(
         "Heading and a grid of icon cards.",
@@ -193,17 +198,20 @@ GUIDE = {
         },
         {"icon": "Icon", "title": "Title", "text": "Text", "link_label": "Link text", "link_url": "Link"},
         "One card each.",
+        details=UNDER_CARDS,
     ),
     "steps": _(
         "Heading and numbered steps joined by a line (e.g. the earning pathway).",
         {**HEAD, "item_label": "Step label (e.g. Step)", "note": "Note box under the steps"},
         {"icon": "Icon", "title": "Title", "text": "Text (optional)"},
         "One card per step.",
+        details="Shown as a small table under the steps.",
     ),
     "program_strip": _(
         "Heading and the three program cards. The cards come from Website → Programs "
         "(edit them once, every page updates).",
         {**HEAD, "item_label": "Link text on each card", "note": "Note box under the cards"},
+        details=UNDER_CARDS,
     ),
     "earning_blocks": _(
         "Heading and numbered photo cards (earning blocks).",
@@ -218,6 +226,7 @@ GUIDE = {
         },
         "One card each.",
         item_photo="card",
+        details=UNDER_CARDS,
     ),
     "story_grid": _(
         "Heading and a grid of success stories (from Content → Success Stories).",
@@ -241,9 +250,30 @@ GUIDE = {
         "Heading and blog post cards (from Content → Blogs).",
         {**HEAD, "feed_limit": "Posts per page (0 = 9)", "item_label": "Link text"},
     ),
-    "team": _("Heading and team member cards (from Content → Team).", {**HEAD, "feed_limit": "How many (0 = all)"}),
+    "team": _(
+        "Heading and team member cards (from Content → Team).",
+        {**HEAD, "feed_limit": "How many (0 = all)"},
+        details=UNDER_CARDS,
+    ),
     "services_feed": _(
         "Heading and service cards (from Content → Services).",
         {**HEAD, "columns": "Cards per row", "feed_limit": "How many (0 = all)", "item_label": "Link text"},
+        details=UNDER_CARDS,
+    ),
+    "courses": _(
+        "Heading and course cards (from Content → Courses): each shows its duration, fee, weekend schedule and next "
+        "start date (only the ones filled in; a start date that has passed is hidden). The section stays hidden "
+        "until at least one course is set to Show.",
+        {
+            **HEAD,
+            "columns": "Cards per row",
+            "feed_limit": "How many (0 = all)",
+            "list_items": "Labels on each card (4 lines: duration, fee, schedule, next start)",
+            "item_label": "Link text on each card",
+            "button_url": "Card link (for courses without their own link)",
+            "note": "Note box under the cards",
+        },
+        details="Shown as a small table under the course cards, for details that apply to every course "
+        "(e.g. Certificate | Included).",
     ),
 }

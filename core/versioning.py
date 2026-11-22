@@ -1,7 +1,7 @@
 """Drafts, scheduled publishing and version history.
 
 * Version history: before anything is changed in the admin panel, a copy of it is saved as a Revision.
-  A page's copy includes all its sections and their cards, so a whole page can be restored at once.
+  A page's copy includes all its sections with their cards and extra details, so a whole page can be restored at once.
 * Drafts: "Create draft" copies a live page (with its sections and cards) into a private draft page.
   It is edited with the normal forms, previewed at /preview/page/<id>/, then published or discarded.
 * Scheduled publishing: a draft with "Go live at" replaces its live page at that time. Due drafts are
@@ -17,7 +17,7 @@ from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models, transaction
 from django.utils import timezone
 
-from .models import FooterColumn, Item, Page, Revision, Section
+from .models import Detail, FooterColumn, Item, Page, Revision, Section
 
 KEEP_PER_OBJECT = 60  # oldest revisions beyond this are removed
 PAGE_FIELDS_SKIP = {"id", "slug", "draft_of", "publish_at", "created_at", "updated_at"}
@@ -50,7 +50,11 @@ def page_snapshot(page):
     return {
         "page": _fields(page, PAGE_FIELDS_SKIP),
         "sections": [
-            dict(_fields(s, {"page"}), items=[_fields(i, {"section"}) for i in s.items.all()])
+            dict(
+                _fields(s, {"page"}),
+                items=[_fields(i, {"section"}) for i in s.items.all()],
+                details=[_fields(d, {"section"}) for d in s.details.all()],
+            )
             for s in page.sections.all().order_by("order", "id")
         ],
     }
@@ -67,20 +71,22 @@ def snapshot(obj):
 
 
 def _fill_page(page, data):
-    """Replace a page's sections and cards with those in data."""
+    """Replace a page's sections, cards and extra details with those in data (versions saved before extra details
+    existed have none)."""
     page.sections.all().delete()
     for sd in data["sections"]:
         sd = dict(sd)
-        items = sd.pop("items", [])
+        rows = {Item: sd.pop("items", []), Detail: sd.pop("details", [])}
         sec = Section(page=page)
         _apply(sec, sd, {"page"})
         sec.page = page
         sec.save()
-        for idata in items:
-            it = Item(section=sec)
-            _apply(it, idata, {"section"})
-            it.section = sec
-            it.save()
+        for model, saved in rows.items():
+            for row_data in saved:
+                row = model(section=sec)
+                _apply(row, row_data, {"section"})
+                row.section = sec
+                row.save()
 
 
 # ------------------------------------------------------------------------------------------ history
@@ -112,10 +118,10 @@ def history(obj):
 
 
 def history_root(obj):
-    """What a change to obj is recorded against: sections and cards belong to their page."""
+    """What a change to obj is recorded against: sections, cards and extra details belong to their page."""
     if isinstance(obj, Section):
         return obj.page
-    if isinstance(obj, Item):
+    if isinstance(obj, (Item, Detail)):
         return obj.section.page
     return obj
 

@@ -1,5 +1,6 @@
 /* Section form: show only the fields the chosen layout uses, relabel them in that layout's terms,
-   and explain what the cards under the section are. Data: core/layouts.py (GUIDE). */
+   explain what the cards under the section are, and show the extra details box only for layouts
+   that display it. Data: core/layouts.py (GUIDE). */
 (function () {
   var el = document.getElementById('apLayoutGuide');
   var select = document.getElementById('id_layout');
@@ -8,6 +9,8 @@
   var help = document.getElementById('apLayoutHelp');
   var itemsHelp = document.getElementById('apItemsHelp');
   var form = select.form;
+  var detailsBox = form.querySelector('[data-inline="details"]');
+  var detailsHelp = document.getElementById('apDetailsHelp');
   var original = {};
 
   function fieldsIn(root) { return [].slice.call(root.querySelectorAll('[data-field]')); }
@@ -51,7 +54,11 @@
       fs.hidden = shown === 0;
     });
     if (help) { help.hidden = !g; help.textContent = g ? g.help : ''; }
-    var inl = form.querySelector('.ap-inlines');
+    if (detailsBox) {
+      detailsBox.hidden = g ? !g.details : false;
+      if (detailsHelp) detailsHelp.textContent = g ? (g.details || '') : '';
+    }
+    var inl = form.querySelector('[data-inline="items"] .ap-inlines');
     if (inl) {
       var items = g ? g.items : {}, has = Object.keys(items).length > 0;
       inl.closest('fieldset').hidden = g ? !has : false;

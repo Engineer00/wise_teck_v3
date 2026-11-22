@@ -1811,4 +1811,23 @@
   .social a{display:grid;place-items:center;width:var(--sp-40);height:var(--sp-40);border-radius:var(--r-round);font-size:var(--fs-h4);
     background:rgb(var(--p-white-rgb) / .08);box-shadow:inset 0 0 0 1px rgb(var(--p-white-rgb) / .16);transition:background .2s,color .2s}
   .social a:hover,.social a:focus-visible{background:rgb(var(--p-white-rgb) / .16)}
+
+  /* extra details (label + value rows an editor adds to a section, sections/_details.html): a small glass table
+     under the cards, or in the text column of a split block (there it keeps the space a button group gets) */
+  .details{display:grid;max-width:800px;margin:var(--sp-48) auto 0;padding:var(--sp-8) var(--pad-card);text-align:left}
+  .details > div{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2fr);gap:var(--sp-16);padding-block:var(--sp-14)}
+  .details > div + div{border-top:1px solid var(--line)}
+  .details dt{color:var(--muted);font-size:var(--fs-label);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
+  .details dd{margin:0;color:var(--heading);font-size:var(--fs-body);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
+  .split .details{max-width:none;margin-inline:0}
+  .rhythm > .details{margin-top:var(--gap-actions)}
+
+  /* course cards: duration, fee, schedule and next start as label / value rows, kept at the bottom of the card
+     (so the rows line up across a row of cards) above the enquiry link */
+  .card.course .course-facts{display:grid;margin:auto 0 0;padding-top:var(--sp-16)}
+  .course-facts > div{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;column-gap:var(--sp-12);row-gap:var(--sp-2);padding-block:var(--sp-12);border-top:1px solid var(--line)}
+  .course-facts > div:last-child{border-bottom:1px solid var(--line)}
+  .course-facts dt{display:inline-flex;align-items:center;gap:var(--sp-8);color:var(--muted);font-size:var(--fs-label);font-weight:var(--fw-semibold);line-height:var(--lh-snug)}
+  .course-facts dt i{width:var(--sp-16);color:var(--purple);text-align:center}
+  .course-facts dd{margin:0 0 0 auto;color:var(--heading);font-size:var(--fs-label);font-weight:var(--fw-bold);line-height:var(--lh-snug);text-align:right}
 }

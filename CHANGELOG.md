@@ -13,6 +13,26 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
 
+## 2026-11-22: courses and extra details (the site's version of WordPress ACF custom fields)
+
+- **Content → Courses** (new admin screen): one record per professional paid course with exactly the fields a
+  course needs: name, what students learn, icon, duration, fee, weekend schedule, next start date, link, order, show.
+  The Professional Paid Courses page lays them out automatically as cards: each card shows only the facts that are
+  filled in, a start date disappears by itself once it has passed, and *Enquire Now* opens the contact form with
+  "Professional Paid Courses" already chosen (a course can have its own link instead). The courses are also listed
+  for Google as structured data (schema.org Course, for courses with a description).
+- The hidden "[Placeholder] Course List, Fees & Timings" notice on that page became the new **Courses** section
+  (migration 0018, only if the placeholder is unchanged). No courses are seeded: Wise-Teck has not sent its course
+  list yet, so the section stays hidden and the live page looks the same until the first course is added.
+- **Extra details on sections**: under *Extra details (label + value)* on a section's form, an editor adds rows such
+  as *Fee · Rs 15,000* or *Certificate · Included* without a developer. They appear as a small table: in the text
+  column of a text + photo / quote / checklist block, and under the cards in icon cards, steps, program strip, photo
+  cards, team, services and courses sections. The box is shown only for those section types. Extra details are kept
+  in version history and copied into drafts like the cards.
+- Checked at 1440, 1024, 768 and 390px with sample courses and details (removed afterwards): gaps between sections
+  unchanged (160 / 135 / 119 / 96px), course cards in a row equal height with their links aligned, no sideways
+  scrolling; added and saved a detail through the admin in a browser. 11 new tests (94 in total).
+
 ## 2026-11-22: equal call-to-action bands, waves between every home section
 
 - **Call-to-action band** (the purple band at the end of each inner page): it had no minimum or maximum height, so
