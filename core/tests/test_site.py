@@ -13,6 +13,13 @@ class PagesTest(SeededTestCase):
             with self.subTest(page=page.slug):
                 self.assertEqual(Client().get(page.get_absolute_url()).status_code, 200)
 
+    def test_home_has_a_wave_between_every_pair_of_sections(self):
+        """Every gap between home sections has a wave divider (alternating crest up / down), none before the footer;
+        without one, two neighbouring sections read as a single block."""
+        body = [s for s in Page.objects.get(slug="home").sections.filter(is_active=True) if not s.is_hero]
+        self.assertEqual([s.divider_after for s in body], ["a", "b"] * 3 + [""])
+        self.assertContains(Client().get("/"), 'class="wave-div"', count=len(body) - 1)
+
     def test_unknown_and_unpublished_pages_are_404(self):
         self.assertEqual(Client().get("/no-such-page/").status_code, 404)
         Page.objects.filter(slug="placement").update(is_active=False)

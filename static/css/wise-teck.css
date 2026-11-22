@@ -237,6 +237,12 @@
   --measure-article-head:19em;    /* headings inside an article */
   --nav-radius:var(--r-56);
   --page-hero-min-sm:700px;            /* phones: inner heroes are at least this tall; content-heavy ones grow */
+  /* call-to-action band at the end of inner pages: at least as tall as the tallest one at that screen size, so every
+     page ends with the same band height (longer text still grows it; it is never cut) */
+  --band-min:360px;                    /* desktop, 1200px and up */
+  --band-min-lg:408px;                 /* small laptops, 1024-1199px */
+  --band-min-md:448px;                 /* tablets, 640-1023px */
+  --band-min-sm:560px;                 /* phones */
   --measure:68ch;
   --p-gap:12px;
   --r-sm:1rem;
@@ -1094,9 +1100,17 @@
   .v3 .band .tag::before{content:"";width:28px;height:2px;border-radius:var(--r-2);background:linear-gradient(90deg,var(--p-gold-200),var(--p-gold-300))}
   .v3 .band .acts{flex-direction:row;gap:var(--sp-12);position:relative;z-index:var(--z-1)}
   .v3 .band .btn-gold{box-shadow:0 12px 26px -10px rgb(var(--p-gold-425-rgb) / 0.75)}
+  /* one band height per screen size; the content stays together in the middle */
+  .v3 .band{min-height:var(--band-min);align-content:center}
+  @media (max-width:1199px){
+    .v3 .band{min-height:var(--band-min-lg)}
+  }
   @media (max-width:1023px){
-    .v3 .band{border-radius:var(--r-28);padding:var(--sp-40) var(--sp-32)}
+    .v3 .band{border-radius:var(--r-28);padding:var(--sp-40) var(--sp-32);min-height:var(--band-min-md)}
     .v3 .band .acts{flex-direction:column}
+  }
+  @media (max-width:639px){
+    .v3 .band{min-height:var(--band-min-sm)}
   }
   /* footer: body colour starts under the wave crest (no seam / no lighter rectangle), same navy as the wave */
   /* footer brand block: clear spacing between logo, tag line and social icons */

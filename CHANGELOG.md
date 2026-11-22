@@ -13,6 +13,21 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
 
+## 2026-11-22: equal call-to-action bands, waves between every home section
+
+- **Call-to-action band** (the purple band at the end of each inner page): it had no minimum or maximum height, so
+  it varied from page to page with the length of its text (up to 98px apart at 1024px). It now has a **minimum**
+  height per screen size, set just above the tallest band: **360px** desktop, **408px** at 1024-1199px, **448px**
+  tablet, **560px** phone (`--band-min*` tokens). The content stays centred and the text keeps 40px to the buttons.
+  No maximum: a longer text written in the admin makes that band taller instead of being cut off. Checked at 159
+  widths from 360 to 1920px: every band is the same height at each width.
+- **Home page waves**: the weekend-courses, success-stories and corporate sections had no wave between them, so the
+  weekend card read as part of the stories. Waves added after weekend courses and success stories (data migration
+  0016 changes them only if they still have no divider; the admin's "Wave divider after" field controls them).
+  Gaps between sections are unchanged: 160px desktop, 135px at 1024px, 119px tablet, 96px phone.
+- Section heights stay natural everywhere else (equal padding, equal gaps); only the inner heroes and this band
+  have a fixed minimum.
+
 ## 2026-11-21: responsive polish, owner features, security, performance
 
 ### Design system and spacing

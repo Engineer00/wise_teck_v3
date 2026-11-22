@@ -426,6 +426,7 @@ def home():
         },
         {
             "layout": "home_weekend",
+            "divider_after": "a",
             "image_url": H[11],
             "image_alt": "Professional learner on a laptop",
             "eyebrow": "Professional Paid Courses",
@@ -448,6 +449,7 @@ def home():
         {
             "layout": "home_stories",
             "anchor": "stories",
+            "divider_after": "b",
             "motif": "stories",
             "title": "Success Stories From Our Learners",
         },
