@@ -7,11 +7,28 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 
 | | |
 | --- | --- |
-| **GitHub** | `main` holds the latest version; CI (lint, migrations, production checklist, 94 tests on Python 3.12 + PostgreSQL) passes |
+| **GitHub** | `main` holds the latest version; CI (lint, migrations, production checklist, 108 tests on Python 3.12 + PostgreSQL) passes |
 | **Live site** | https://wiseteck.dev runs `7b9f1ca` (deployed 22 Nov 2026): Django 6.1.3, migrations up to 0018, courses and extra details, equal call-to-action bands |
 | **Next update** | DEPLOY.md, *Update the live site* (git pull). Still to do once: *Server security* (fail2ban, firewall, SSH keys, daily backups) |
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
+
+## 2026-11-23: daily Lighthouse on the dashboard, SEO 100, smooth hovers, top bar aligned
+
+- **Daily Google Lighthouse check** (`.github/workflows/lighthouse.yml`): every page in the sitemap, phone and
+  desktop, on GitHub's servers at 05:30 Pakistan time. Results on the run page (table, full reports) and, with the
+  `LIGHTHOUSE_TOKEN` secret, in a new *Speed & quality* panel on the admin dashboard: average scores with the change
+  since the day before, Core Web Vitals of the home page, the most common suggestions, every page's scores.
+- **SEO and accessibility fixes Lighthouse found on the live site:** "Read More" links now say which page they open
+  (hidden text for Google and screen readers, no visible change); the contact form title is an h2 (no skipped
+  heading level); new `/llms.txt` for AI search. Home and blog SEO 92 → 100, contact accessibility 98 → 100.
+- **Smooth hovers everywhere:** links fade their colour; cards (programs, services and others) lift again on hover.
+  The scroll fade-in had been holding them flat for good.
+- **Top bar lines up with the header** at every width: its first item over the logo, its last item over the
+  right edge of the Apply button (it was 44px inside above 1280px).
+- Measured on the live site (Lighthouse 13.6, 23 Nov): accessibility, best practices and SEO 100 after the fixes;
+  speed: home on desktop 89 (main content in 1.1 s), about on desktop 98, blog on a phone 95. Phone speed for every
+  page will come from the first daily run (local runs on this PC often lose the speed trace).
 
 ## 2026-11-23: menu button resets after closing, brand-violet tap colour
 

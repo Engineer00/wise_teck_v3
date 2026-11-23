@@ -14,7 +14,7 @@ setting lives in the database and is edited in a friendly admin panel. No code i
 
 | Admin section | What it controls |
 | --- | --- |
-| **Dashboard** | Visitors (last 30 days, top pages, where visitors come from, phone / tablet / desktop), **SEO health** score with fix-it links, Google tools, messages, drafts, recent changes. |
+| **Dashboard** | Visitors (last 30 days, top pages, where visitors come from, phone / tablet / desktop), **SEO health** score with fix-it links, **Google Lighthouse** scores for every page (daily, phone and desktop), Google tools, messages, drafts, recent changes. |
 | **Website → Pages** | Each page: address, title, search description, sharing preview, published or hidden. **Drafts**, **scheduled publishing** and **version history** with one-click restore. |
 | **Website → Sections** | The blocks of a page, in order. 22 section types; the form shows only the fields the type uses, with the best photo size next to every photo field. **Extra details**: label + value rows (e.g. *Fee · Rs 15,000*) added to a section without a developer, shown as a small table in text, card, step, team, services and course sections. |
 | **Website → Menu / Footer / Programs** | Top menu and drop-downs, footer link columns, the three-program strip. |
@@ -75,17 +75,27 @@ The sizes live in one place, `core/images.py` (`SLOTS`), which the admin badges 
 
 **Automatic (nothing to do):** page titles of at most 60 characters (the " | Wise-Teck" suffix is left off when it
 would not fit), descriptions cut at 160 characters, canonical links, page 2+ of lists with their own canonical and
-prev / next links, `/sitemap.xml` (updates itself), `/robots.txt`, structured data (educational organisation, website,
+prev / next links, `/sitemap.xml` (updates itself), `/robots.txt`, `/llms.txt` (the same pages, written for AI search
+such as ChatGPT, Gemini and Perplexity), structured data (educational organisation, website,
 breadcrumbs, articles, courses), sharing previews with a 1200 × 630 default image, 301 redirects when an address changes,
 `noindex` on drafts, previews and the 404 page, responsive WebP photos, lazy loading, fast pages. The dashboard's
-**SEO health** runs every check on every live page, post and story each time it opens.
+**SEO health** runs every check on every live page, post and story each time it opens, and the **Lighthouse** panel
+shows Google's daily speed, SEO and accessibility check of every page (see *Lighthouse* below).
 
 **Your part, once:** Site Settings → *Main web address* = `https://wiseteck.dev`; verify Google Search Console (paste
 the code into Site Settings) and submit the sitemap (dashboard → Google tools → Copy); create the Google Business
-Profile (Lahore); optionally add a Google Analytics ID.
+Profile (Lahore); add the site to Bing Webmaster Tools (one click: import from Search Console; Bing's index also
+feeds ChatGPT search and Copilot); optionally add a Google Analytics ID; switch on the Lighthouse panel (DEPLOY.md).
 
 **Your part, ongoing:** publish useful content (two or more blog posts a month around the keywords in Site Settings),
-fix what SEO health lists, describe every photo, and ask partners (PSDF, NIC, universities) to link to the site.
+fix what SEO health and Lighthouse list, describe every photo, ask students for Google reviews, and ask partners
+(PSDF, NIC, universities, employers, local directories, education portals) to link to the site. Keep the name,
+address and phone identical everywhere.
+
+**Automated vs. not:** technical SEO and monitoring are automatic (SEO health, daily Lighthouse, Search Console
+alerts once verified). Backlinks can be *monitored* (Search Console → Links, or the free Ahrefs Webmaster Tools) but
+not created by software: bought or automated links break Google's spam policies and can get the site removed from
+results. Content can be drafted with AI help, but a person should review it and add real facts.
 
 **KPIs (targets):**
 
@@ -118,6 +128,22 @@ How: fonts and icons served from the site (no outside servers before text shows)
 in the right size, lazy loading below the first screen, the 3D library loaded when the browser is idle, first-screen
 content shown at once (no fade-in), long lists split into pages.
 
+## Lighthouse (daily, automatic)
+
+Every day at 00:30 UTC (05:30 in Pakistan) `.github/workflows/lighthouse.yml` runs Google Lighthouse 13 on GitHub's
+servers against every page in the live sitemap, on a phone and a desktop (`tools/lighthouse/run.mjs`; a lost trace is
+retried up to 3 times). Results:
+
+- the run page on GitHub: a table of every page's scores, and the full HTML reports to download (kept 30 days);
+- the admin dashboard, when the repository secret `LIGHTHOUSE_TOKEN` equals the server's `LIGHTHOUSE_TOKEN`: the
+  workflow posts a summary to `/api/lighthouse/` (403 for a wrong token, 404 when the server has none; every value is
+  checked and trimmed in `core/lighthouse.py`). The panel shows the average Performance, Accessibility, Best
+  practices and SEO scores with the change since the previous day, Core Web Vitals of the home page, the most common
+  suggestions and every page's scores. The newest 120 checks are kept.
+
+Start one by hand: GitHub → Actions → Lighthouse → *Run workflow* (the dashboard links there). Nothing runs on the
+web server. Switching it on: DEPLOY.md → *Daily Lighthouse check*.
+
 ## Security
 
 - Headers on every page: Content-Security-Policy (scripts, styles and fonts only from the site itself), HSTS,
@@ -146,7 +172,7 @@ make plain `py` pick a Python without Django.
 ## Tests and code quality
 
 ```powershell
-py -3.13 manage.py test core                  # 94 tests
+py -3.13 manage.py test core                  # 108 tests
 py -3.13 -m ruff check .                      # lint (rules in pyproject.toml)
 py -3.13 -m ruff format .                     # formatting
 ```
@@ -163,6 +189,7 @@ checklist and all tests on Python 3.12 + PostgreSQL 16 (as on the server) for ev
 | `test_audit.py` | security headers, pagination, page weight, accessibility fixes |
 | `test_theme.py` | colour schemes: recolouring, readability checks, admin picker, staff-only preview |
 | `test_features.py` | visitor statistics, SEO health, rate limits, announcement, 404 texts, Analytics, WebP photos, size hints |
+| `test_lighthouse.py` | the Lighthouse endpoint (token, cleaning, keeping 120 runs), the dashboard panel, the SEO fixes it found (link names, heading order, `/llms.txt`) |
 | `test_custom_fields.py` | courses (cards, hidden past start dates, enquiry link, structured data, admin) and section extra details (table, admin box, version history, drafts) |
 
 ## Project structure
@@ -173,7 +200,9 @@ core/
   models.py              content tables: Page → Section → Item / Detail (extra details), SiteSettings, menu, footer,
                          programs, stories, blog, team, services, courses, messages, redirects, versions, visitor
                          statistics, rate-limit attempts
-  views.py               pages (with pagination), blog / story pages, contact form, previews, robots.txt, sitemap.xml
+  views.py               pages (with pagination), blog / story pages, contact form, previews, robots.txt, sitemap.xml,
+                         llms.txt, the Lighthouse results endpoint
+  lighthouse.py          daily Lighthouse results: checks what the workflow sends, builds the dashboard panel
   layouts.py             which fields each section type uses, its photo sizes and whether it shows extra details
                          (drives the admin form)
   images.py              upload shrinking, responsive WebP copies (srcset), recommended photo sizes
@@ -204,7 +233,8 @@ static/
   img/                   logo mark, wordmark, favicon, default sharing card
   vendor/                Inter font and Font Awesome Free, served from the site
 media/seed/              photos used by seed_content
-.github/                 CI workflow and Dependabot
+.github/                 CI workflow, daily Lighthouse workflow, Dependabot
+tools/lighthouse/        the Lighthouse runner used by that workflow
 pyproject.toml           Ruff lint and format rules
 CLAUDE.md                commands and conventions for Claude Code sessions
 .claude/                 project hook (no AI attribution in commits) and skills (deploy, new-section-layout)

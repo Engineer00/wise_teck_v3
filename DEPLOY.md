@@ -35,11 +35,15 @@ git pull origin main
 **B. From the zip file**: copy the zip to `/root/` with WinSCP, then:
 
 ```
-apt install -y unzip
+apt install -y unzip rsync
 cd /root && rm -rf wiseteck-new && unzip -q wise-teck-site.zip -d wiseteck-new
 rsync -a --exclude media/ --exclude staticfiles/ --exclude .env --exclude db.sqlite3 wiseteck-new/ /srv/wiseteck/app/
 cp -r wiseteck-new/media/seed /srv/wiseteck/app/media/     # seed photos only (sharper versions); uploads are not touched
 ```
+
+The server folder is also a GitHub copy, so after a zip update `git status` lists changed files; that is expected.
+To go back to A later: `git fetch origin && git reset --hard origin/main` in `/srv/wiseteck/app` (`.env`, uploads
+and the database are not in GitHub and are kept).
 
 ### Step 3: install, update the database, restart
 
@@ -58,17 +62,27 @@ systemctl status wiseteck --no-pager
 
 `check --deploy` must end with "no issues (1 silenced)".
 
-What this release changes on the server:
+What this release (23 November 2026) changes on the server:
 
-- `pip install` upgrades Django from 6.0.10 to **6.1.3** (the version the tests run on; `requirements.txt` pins exact
-  versions, so the server always matches what was tested).
-- `migrate` adds settings (colour scheme, announcement bar, 404 texts, Google Analytics ID, keywords), the visitor
-  statistics and rate-limit tables, removes the logo subtitle setting, and improves page titles, descriptions and two
-  blog summaries **only where they were never edited**. It hides the "[Placeholder]" sections. Nothing typed in the
-  admin is overwritten.
-- `make_image_variants` makes the WebP copies of every photo once (otherwise each is made on its first view).
-- The seed photos in `media/seed/` are replaced by their full-size originals (1408px instead of 512px); photos uploaded
-  in the admin are never touched.
+- `migrate` adds one table (`0019_lighthouse_run`) for the daily Lighthouse results. No content is changed.
+- No new Python packages. `collectstatic` picks up the new CSS and JavaScript (menu button, smooth hovers, top bar
+  alignment, Lighthouse panel). New address: `/llms.txt`.
+- Optional, once: switch on the Lighthouse panel (*Daily Lighthouse check* below).
+
+### Daily Lighthouse check (once)
+
+The check itself runs on GitHub every day; this lets its results appear on the admin dashboard.
+
+```
+openssl rand -hex 32                                   # copy the value it prints
+nano /srv/wiseteck/.env                                # add a line: LIGHTHOUSE_TOKEN=<that value>
+systemctl restart wiseteck
+```
+
+Then on GitHub: repository **Settings → Secrets and variables → Actions → New repository secret**, name
+`LIGHTHOUSE_TOKEN`, the same value. Start the first check at once: **Actions → Lighthouse → Run workflow**; the
+dashboard's *Speed & quality* panel fills in when it finishes (about 15 minutes). The workflow checks
+`https://wiseteck.dev`; to check another address, set a repository *variable* `SITE_URL`.
 
 ### Step 4: Nginx improvements (once)
 
