@@ -92,6 +92,7 @@ class UniversalCssTest(SimpleTestCase):
             "(min-width:640px)",
             "(max-width:1199px)",  # menu breakpoint: the full menu needs ~1100px of header width
             "(prefers-reduced-motion:reduce)",
+            "(hover:hover)and(pointer:fine)",  # input type, not a width: hover looks for a mouse only
         }
         self.assertEqual(queries - allowed, set())
 

@@ -28,7 +28,12 @@
       burger.setAttribute('aria-expanded', open ? 'true' : 'false');
       burger.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
     };
-    burger.addEventListener('click', function () { setOpen(!menu.classList.contains('open')); });
+    burger.addEventListener('click', function () {
+      var open = !menu.classList.contains('open');
+      setOpen(open);
+      burger.classList.toggle('just-closed', !open);   // show the resting (uneven) lines at once, not the hover look
+    });
+    burger.addEventListener('pointerleave', function () { burger.classList.remove('just-closed'); });
     document.addEventListener('click', function (e) {          // a tap on the dimmed page closes the menu
       if (menu.classList.contains('open') && !menu.contains(e.target) && !burger.contains(e.target)) setOpen(false);
     });

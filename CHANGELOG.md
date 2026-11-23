@@ -13,6 +13,16 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
 
+## 2026-11-23: menu button resets after closing, brand-violet tap colour
+
+- The phone/tablet menu button now always goes back to its three uneven lines (full, 70%, 45%) after the menu is
+  closed. Before, the "lines line up" hover look stayed on after a tap (touch screens keep `:hover` on the last tapped
+  element), so from the second time on it showed three equal lines. The hover look is now for a mouse only
+  (`@media (hover:hover) and (pointer:fine)`), and after a click the resting icon shows until the mouse leaves.
+- Tapping a link or button on a phone flashed the browser's default sky blue. The tap colour is now a light brand
+  violet everywhere; the menu button shows a soft lavender ring while pressed.
+- Checked in Chrome at 390px by touch (three open/close rounds) and at 1024px with a mouse.
+
 ## 2026-11-22: deployed to wiseteck.dev
 
 - The live site moved from the 20 November version (`c119ede`) to `7b9f1ca`: everything from 21 and 22 November.
