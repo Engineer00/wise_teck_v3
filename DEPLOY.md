@@ -1,5 +1,8 @@
 # Deploying Wise-Teck on the VPS
 
+Day-to-day work (logging in, finding files, changing the code, putting it live, undoing an update):
+[SERVER-ACCESS.md](SERVER-ACCESS.md).
+
 Server: Ubuntu 24.04, `159.198.43.141`, logged in as `root` (PuTTY). Nginx is already running and serves
 `dehleze.store`. **Do not edit or remove anything belonging to dehleze** (`/etc/nginx/sites-available/dehleze`,
 its folders or its database). Everything below only adds new files.

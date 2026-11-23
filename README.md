@@ -239,6 +239,7 @@ pyproject.toml           Ruff lint and format rules
 CLAUDE.md                commands and conventions for Claude Code sessions
 .claude/                 project hook (no AI attribution in commits) and skills (deploy, new-section-layout)
 DEPLOY.md                server setup, updating the live site, server security, backups
+SERVER-ACCESS.md         logging in to the server, finding your way, changing the code and putting it live
 ```
 
 ## Design system (universal CSS)
