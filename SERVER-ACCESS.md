@@ -463,6 +463,17 @@ Then make the same change on the PC and send it through section 4 the same day, 
 
 Newest first. Add an entry each time someone changes the server.
 
+### 23 November 2026, 09:21 UTC: reboot for pending updates
+
+```bash
+systemctl reboot        # sent as: nohup sh -c 'sleep 3; systemctl reboot' &
+```
+
+Before: kernel 6.8.0-147, `/var/run/reboot-required` listed `linux-image-6.8.0-149-generic`, `libc6`, `linux-base`;
+every service enabled to start at boot. After: kernel 6.8.0-149, nothing pending; machine up in 7.2 s, dehleze and
+nginx at 09:21:26-27, wiseteck at 09:21:29 (about 15 s of downtime); all 8 services active, 0 failed; ufw and
+fail2ban active; code unchanged (`507de0c`).
+
 ### 23 November 2026, 09:07 UTC: website update from `7b9f1ca` to `af57acb` (`main`)
 
 Backup first (taken 08:10 UTC, in `/root/deploy-backup-2026-11-23-0810/`):
@@ -549,7 +560,5 @@ chown -R www-data:www-data /srv/wiseteck/app/media
 
 ### Still to do
 
-- Reboot for pending updates (`reboot`, at a quiet hour; both sites are down about a minute and come back by
-  themselves).
 - Switch on the Lighthouse panel: `LIGHTHOUSE_TOKEN` in `/srv/wiseteck/.env` and the same value as a GitHub secret
   (DEPLOY.md → *Daily Lighthouse check*).

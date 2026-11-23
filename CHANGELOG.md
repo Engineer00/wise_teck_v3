@@ -9,7 +9,7 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 | --- | --- |
 | **GitHub** | `main` holds the latest version; CI (lint, migrations, production checklist, 108 tests on Python 3.12 + PostgreSQL) passes |
 | **Live site** | https://wiseteck.dev runs `main` as of 23 Nov 2026 (`af57acb`, deployed 09:07 UTC): migrations up to 0019, daily Lighthouse panel (waiting for its `LIGHTHOUSE_TOKEN`), SEO fixes and `llms.txt`, menu, hover and top-bar fixes |
-| **Next update** | SERVER-ACCESS.md, section 4.6 (git pull or zip). Server security done on 23 Nov (fail2ban, firewall, daily backups); still due: a reboot at a quiet hour; keys-only SSH optional |
+| **Next update** | SERVER-ACCESS.md, section 4.6 (git pull or zip). Server security done on 23 Nov (fail2ban, firewall, daily backups) and the server rebooted onto the new kernel; keys-only SSH optional |
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
 
@@ -31,7 +31,9 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 - Applied (DEPLOY.md, *Server security*): fail2ban (5 wrong tries in 10 minutes = 1 hour ban, growing to a week for
   repeat offenders; watching `ssh.service`, the Ubuntu 24.04 name), firewall (only 22, 80, 443), daily backups of the
   database and uploaded photos at 02:30 UTC kept 14 days (`/root/backups/`). Both websites checked after each step.
-- Still to do: a reboot at a quiet hour (pending updates); keys-only SSH login is optional.
+- Rebooted at 09:21 UTC to activate the pending updates (kernel 6.8.0-147 → 6.8.0-149, libc6): the machine was back
+  in 7 seconds, both websites in about 15 (nginx 09:21:27, wiseteck 09:21:29); all 8 services active, 0 failed;
+  firewall and fail2ban active. Keys-only SSH login remains optional.
 - SERVER-ACCESS.md: a step-by-step quick start, what each tool is and why we use it, the important files in the zip.
 - The header coin rests face-on (lined up with the top bar) and turns once every 8.5 s.
 - Desktop drop-down hover in brand violet, matching the phone menu (it was a cool, bluish lavender). The phone

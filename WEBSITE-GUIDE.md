@@ -131,7 +131,7 @@ run (see below).
 | Best practices | Lighthouse | 100 |
 | Speed | Lighthouse | Home on desktop 89 (main content in 1.1 s, no layout jumping); about on desktop 98; blog on a phone 95 |
 | Design consistency | One stylesheet with shared tokens; tests block stray colours, spacing and screen sizes; alignment measured at 8 widths | Pass |
-| Security | Content Security Policy, HTTPS, login and contact-form rate limits, Django's production checklist | Pass; server secured on 23 Nov (firewall, fail2ban, daily backups); a reboot at a quiet hour is still due |
+| Security | Content Security Policy, HTTPS, login and contact-form rate limits, Django's production checklist | Pass; server secured on 23 Nov (firewall, fail2ban, daily backups); rebooted onto the latest security updates |
 
 Lighthouse's remaining speed suggestions are about 98 KB of unused CSS, CSS and JavaScript that could be minified
 (31 KB and 11 KB), and a 0.6 s server response on the home page. These are the next speed improvements.
@@ -297,10 +297,10 @@ accounted for. On 23 November the server was locked down so these attempts are n
 | Rate limits on the website | The admin login stops after 5 wrong passwords; the contact form after 5 messages in 10 minutes | Protects the website's own login and inbox |
 
 **Have the attacks stopped?** No, and they never will: bots scan every server on the internet. The difference now is
-that each one is blocked after 5 tries, and the password cannot be guessed. Two optional extras would cut them
+that each one is blocked after 5 tries, and the password cannot be guessed. One optional extra would cut them
 further: key-only login (the server stops accepting passwords at all, but everyone would need a key file instead of
-the password), and a reboot at a quiet hour to finish installing pending updates. Every service, including
-dehleze.store's, restarts by itself, so the reboot is safe; it takes both sites down for about a minute.
+the password). The server was rebooted on 23 November to activate the latest security updates; both sites were back
+within about 15 seconds.
 
 **If you get locked out** after typing the password wrong 5 times, wait an hour, or ask someone who can log in to run
 `fail2ban-client set sshd unbanip <your address>`.

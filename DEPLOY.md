@@ -135,8 +135,8 @@ use `git checkout <previous commit>` and restart (or restore the backups from st
 ## Server security
 
 **Status (23 Nov 2026):** steps 1 (fail2ban), 2 (firewall) and 5 (daily backups) are done. Step 3 (keys-only login)
-is optional while the root password is long and random, and would change how everyone logs in. Step 4 (reboot) is
-still due: every service, including dehleze's, starts again by itself, so it only needs a quiet hour. The firewall
+is optional while the root password is long and random, and would change how everyone logs in. Step 4 (reboot) was
+done on 23 Nov at 09:21 UTC: kernel 6.8.0-149 and libc6 active, every service back within about 15 seconds. The firewall
 also holds an older rule for port 8001 (nothing listens there); remove it with `ufw delete allow 8001` if nobody
 needs it. Evidence of the attacks (30 days of logs, 298,509 failed passwords): `/root/security-evidence-2026-11-23/`
 on the server.
