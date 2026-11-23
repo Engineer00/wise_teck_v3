@@ -24,6 +24,12 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 - Still to do: a reboot at a quiet hour (pending updates); keys-only SSH login is optional.
 - SERVER-ACCESS.md: a step-by-step quick start, what each tool is and why we use it, the important files in the zip.
 - The header coin rests face-on (lined up with the top bar) and turns once every 8.5 s.
+- Desktop drop-down hover in brand violet, matching the phone menu (it was a cool, bluish lavender). The phone
+  menu's violet hover and open states date from 21 Nov and are live; the violet tap colour comes with this update.
+- README rewritten to the standard structure: summary and links, badges, contents, features, tech stack, getting
+  started, configuration (every environment variable), folder structure, testing, performance, SEO, security
+  (with how to report a vulnerability), deployment, design system, contributing, licence. WEBSITE-GUIDE.md: the
+  owner's guide as Markdown.
 
 ## 2026-11-23: daily Lighthouse on the dashboard, SEO 100, smooth hovers, top bar aligned
 
