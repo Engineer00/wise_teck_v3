@@ -406,6 +406,8 @@
   html{scroll-behavior:smooth;-webkit-tap-highlight-color:rgb(var(--p-violet-500-rgb) / .14)}
   body{margin:0;font-family:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--text);background:var(--lav-100);-webkit-font-smoothing:antialiased;overflow-x:hidden;line-height:1.6}
   img{max-width:100%;display:block}
+  /* every link and menu button changes colour smoothly on hover (elements with their own transition keep it) */
+  a,.menu .dd > button{transition:color .2s var(--ease),background-color .2s var(--ease)}
   a{color:inherit;text-decoration:none}
   h1,h2,h3,h4{color:var(--ink);margin:0;letter-spacing:-.02em;line-height:1.15}
   p{margin:0}
@@ -744,15 +746,17 @@
   .v3 .hero h1{font-size:var(--fs-fluid-34-50)}
   .v3 .hero p.lead{margin:var(--sp-20) 0 var(--sp-32)}
   /* ---------- motion ---------- */
-  .reveal{opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
-  .reveal.in{opacity:1;transform:none}
-  .reveal.d1{transition-delay:.08s}
-  .reveal.d2{transition-delay:.16s}
-  .reveal.d3{transition-delay:.24s}
-  .reveal.d4{transition-delay:.32s}
+  /* fade-in on scroll. Once it has played, wt.js adds .shown and these rules let go, so the element's own
+     transitions and hover effects (card lift, shadow) work, quickly and with no stagger delay */
+  .reveal:not(.shown){opacity:0;transform:translateY(22px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+  .reveal.in:not(.shown){opacity:1;transform:none}
+  .reveal.d1:not(.shown){transition-delay:.08s}
+  .reveal.d2:not(.shown){transition-delay:.16s}
+  .reveal.d3:not(.shown){transition-delay:.24s}
+  .reveal.d4:not(.shown){transition-delay:.32s}
   html:not(.js) .reveal{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){
-    .reveal{opacity:1;transform:none;transition:none}
+    .reveal:not(.shown){opacity:1;transform:none;transition:none}
   }
   /* ---------- inner-page blocks ---------- */
   .blk{position:relative;padding:var(--sp-96) 0;isolation:isolate}
@@ -1499,6 +1503,9 @@
   .topbar,.topbar > .container{min-height:var(--topbar-h)}
   /* ---- containers ---- */
   .container{box-sizing:border-box;width:100%;max-width:var(--container);margin-inline:auto;padding-inline:var(--gutter)}
+  /* the top bar spans the same width as the header below it: its first item lines up with the logo,
+     its last item with the right edge of the Apply button (or the menu button) */
+  .topbar > .container{max-width:none;padding-inline:var(--nav-pad-x)}
   .v3 .page-hero--center .hero-body{max-width:var(--container-narrow)}
   /* centred inner heroes: narrow text column */
   .v3 .page-feature{box-sizing:border-box;max-width:var(--container);padding-inline:var(--gutter)}
