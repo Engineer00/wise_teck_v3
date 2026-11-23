@@ -456,3 +456,69 @@ Then make the same change on the PC and send it through section 4 the same day, 
 - Edit the dehleze files, or reload Nginx without `nginx -t` passing first.
 - Commit passwords, `.env` or `db.sqlite3` (the repository is public).
 - Press *Reinstall OS* in the Namecheap dashboard.
+
+---
+
+## 8. Log: what has been run on the server
+
+Newest first. Add an entry each time someone changes the server.
+
+### 23 November 2026: security (no website code changed)
+
+The live code stayed at `7b9f1ca` (the 22 November version). Run as root over SSH:
+
+```bash
+# evidence of the attacks (read-only): every failed SSH login still in the logs, 25 Oct - 23 Nov
+mkdir -p /root/security-evidence-2026-11-23 && cd /root/security-evidence-2026-11-23
+( for f in $(ls -1tr /var/log/auth.log*); do case $f in *.gz) zcat $f;; *) cat $f;; esac; done ) \
+  | grep -E "sshd.*(Failed password|Invalid user)" > failed-ssh-logins.log
+gzip -kf failed-ssh-logins.log            # + per-day.txt, top-addresses.txt, top-usernames.txt
+
+# daily backups (database + uploaded photos, 02:30 UTC, kept 14 days)
+#   script /root/backup-wiseteck.sh as in DEPLOY.md -> Server security -> 5, then:
+/root/backup-wiseteck.sh
+echo '30 2 * * * root /root/backup-wiseteck.sh' > /etc/cron.d/wiseteck-backup
+
+# fail2ban (Ubuntu 24.04: the SSH service is ssh.service)
+apt-get update -qq && apt-get install -y fail2ban
+printf '[sshd]\nenabled = true\nmaxretry = 5\nfindtime = 10m\nbantime = 1h\nbantime.increment = true\nbantime.maxtime = 1w\nbackend = systemd\njournalmatch = _SYSTEMD_UNIT=ssh.service + _COMM=sshd\n' > /etc/fail2ban/jail.d/sshd.local
+systemctl enable --now fail2ban && systemctl restart fail2ban
+fail2ban-client status sshd
+
+# firewall: SSH and the websites only
+ufw allow 22/tcp && ufw allow 80/tcp && ufw allow 443/tcp
+ufw --force enable && ufw status verbose
+```
+
+Checked after each step: a new SSH login works; https://wiseteck.dev, https://www.wiseteck.dev, the admin and
+https://dehleze.store answer.
+
+### 22 November 2026: website update from `c119ede` to `7b9f1ca`
+
+Run as root over SSH (exact command lines were not kept; these are the steps, in order):
+
+```bash
+# 1. backup into /root/deploy-backup-2026-11-22-0633/
+sudo -u postgres pg_dump wiseteck > /root/deploy-backup-2026-11-22-0633/wiseteck.sql
+tar czf /root/deploy-backup-2026-11-22-0633/media.tgz -C /srv/wiseteck/app media
+cd /srv/wiseteck/app && git rev-parse HEAD > /root/deploy-backup-2026-11-22-0633/previous-commit.txt
+# 2. three files edited directly on the server on 20 Nov (and an extra migration made there) were copied into
+#    that backup folder, then put back to GitHub's version; GitHub already had the same edits
+# 3. update the code and restart
+git pull --ff-only origin main
+set -a; . /srv/wiseteck/.env; set +a
+../venv/bin/pip install -r requirements.txt
+../venv/bin/python manage.py check --deploy
+../venv/bin/python manage.py migrate
+../venv/bin/python manage.py collectstatic --noinput
+systemctl restart wiseteck
+../venv/bin/python manage.py make_image_variants
+chown -R www-data:www-data /srv/wiseteck/app/media
+```
+
+### Not yet run
+
+- The 23 November website changes (branch `fix/burger-icon-reset`, also in `D:\Inner Pages\wise-teck-site.zip`):
+  use section 4.6 (Option A after merging into `main`, or Option B with the zip).
+- Reboot for pending updates (`reboot`, at a quiet hour; both sites are down about a minute and come back by
+  themselves).
