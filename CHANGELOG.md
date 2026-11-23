@@ -3,15 +3,25 @@
 The record of work on the Wise-Teck website: what changed, why, and where things stand. Newest first.
 How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEPLOY.md).
 
-## Current status (22 November 2026)
+## Current status (23 November 2026)
 
 | | |
 | --- | --- |
 | **GitHub** | `main` holds the latest version; CI (lint, migrations, production checklist, 108 tests on Python 3.12 + PostgreSQL) passes |
-| **Live site** | https://wiseteck.dev runs `7b9f1ca` (deployed 22 Nov 2026): Django 6.1.3, migrations up to 0018, courses and extra details, equal call-to-action bands |
-| **Next update** | DEPLOY.md, *Update the live site* (git pull). Still to do once: *Server security* (fail2ban, firewall, SSH keys, daily backups) |
+| **Live site** | https://wiseteck.dev runs `main` as of 23 Nov 2026 (`af57acb`, deployed 09:07 UTC): migrations up to 0019, daily Lighthouse panel (waiting for its `LIGHTHOUSE_TOKEN`), SEO fixes and `llms.txt`, menu, hover and top-bar fixes |
+| **Next update** | SERVER-ACCESS.md, section 4.6 (git pull or zip). Server security done on 23 Nov (fail2ban, firewall, daily backups); still due: a reboot at a quiet hour; keys-only SSH optional |
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
+
+## 2026-11-23: deployed to wiseteck.dev
+
+- The live site moved from `7b9f1ca` (22 Nov) to `af57acb`: everything listed below for 23 Nov. Backup first in
+  `/root/deploy-backup-2026-11-23-0810/` (database, uploaded photos, settings file, previous version). The update
+  ran as a script on the server (`/root/deploy-2026-11-23.sh`, log next to it) so a dropped connection could not
+  interrupt it: pull, install, `check --deploy` (no issues), migrate (0019), collectstatic, restart. 8 seconds.
+- Checked on the live site afterwards: every page, `llms.txt`, robots, sitemap and the admin answer; the new CSS and
+  JavaScript are served with a new version stamp; the menu button resets on a phone; the top bar lines up at 1024,
+  1440, 1585 and 1920px; cards lift on hover; the Lighthouse panel shows its setup steps; dehleze.store untouched.
 
 ## 2026-11-23: server secured (fail2ban, firewall, daily backups)
 

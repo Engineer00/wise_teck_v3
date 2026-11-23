@@ -379,7 +379,7 @@ The code lives in three places. GitHub holds the master copy; the server and thi
 
 | Where | Address | Notes |
 | --- | --- | --- |
-| GitHub (public) | <https://github.com/Engineer00/wise_teck_v3> | Branch `main` is what goes live. The 23 November changes wait on branch `fix/burger-icon-reset` until merged |
+| GitHub (public) | <https://github.com/Engineer00/wise_teck_v3> | Branch `main` is what goes live |
 | The server | `/srv/wiseteck/app` | The live copy. Settings and passwords are next to it in `/srv/wiseteck/.env` |
 | This PC | `D:\Inner Pages\wise-teck-v3-django` | The working copy where changes are made and tested |
 
@@ -421,8 +421,7 @@ code directly on the server: the next update overwrites it, as happened to edits
 
 ## How to update the live site
 
-On 23 November the live site still ran the 22 November version, which was put on the server with `git pull` from
-GitHub, not with a zip. Either method below works. Both keep everything edited in the admin, the uploaded photos and
+The live site was last updated on 23 November 2026 (to `main`, with `git pull` from GitHub). Either method below works. Both keep everything edited in the admin, the uploaded photos and
 the passwords.
 
 ### Method A: the zip file
@@ -488,7 +487,7 @@ database. They exist only on the server.
 
 ### Method B: from GitHub (fewer steps)
 
-First merge the changes into `main` on GitHub (branch `fix/burger-icon-reset`, one click). Then on the server, run
+Make sure the changes are merged into `main` on GitHub. Then on the server, run
 block 1 above, then:
 
 ```bash

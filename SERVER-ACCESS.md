@@ -463,6 +463,37 @@ Then make the same change on the PC and send it through section 4 the same day, 
 
 Newest first. Add an entry each time someone changes the server.
 
+### 23 November 2026, 09:07 UTC: website update from `7b9f1ca` to `af57acb` (`main`)
+
+Backup first (taken 08:10 UTC, in `/root/deploy-backup-2026-11-23-0810/`):
+
+```bash
+B=/root/deploy-backup-2026-11-23-0810; mkdir -p $B
+cd /srv/wiseteck/app && git rev-parse HEAD > $B/previous-commit.txt
+cd /tmp && sudo -u postgres pg_dump wiseteck > $B/wiseteck.sql
+tar czf $B/media.tgz -C /srv/wiseteck/app media
+cp /srv/wiseteck/.env $B/env.backup && chmod 600 $B/env.backup
+```
+
+Then the update, saved as `/root/deploy-2026-11-23.sh` and run in the background so a dropped connection could not
+stop it halfway (`nohup /root/deploy-2026-11-23.sh > /root/deploy-2026-11-23.log 2>&1 &`):
+
+```bash
+set -e
+cd /srv/wiseteck/app
+[ -z "$(git status --porcelain)" ] || { echo "STOP: files changed on the server"; exit 1; }
+git pull --ff-only origin main
+set -a; . /srv/wiseteck/.env; set +a
+../venv/bin/pip install -q -r requirements.txt
+../venv/bin/python manage.py check --deploy          # "no issues (1 silenced)"
+../venv/bin/python manage.py migrate --noinput       # applied core.0019_lighthouse_run
+../venv/bin/python manage.py collectstatic --noinput # 3 files updated
+chown -R www-data:www-data /srv/wiseteck/app/media
+systemctl restart wiseteck                           # "active"
+```
+
+To undo: `git checkout 7b9f1ca && systemctl restart wiseteck` (the new table from 0019 is harmless to the old code).
+
 ### 23 November 2026: security (no website code changed)
 
 The live code stayed at `7b9f1ca` (the 22 November version). Run as root over SSH:
@@ -516,9 +547,9 @@ systemctl restart wiseteck
 chown -R www-data:www-data /srv/wiseteck/app/media
 ```
 
-### Not yet run
+### Still to do
 
-- The 23 November website changes (branch `fix/burger-icon-reset`, also in `D:\Inner Pages\wise-teck-site.zip`):
-  use section 4.6 (Option A after merging into `main`, or Option B with the zip).
 - Reboot for pending updates (`reboot`, at a quiet hour; both sites are down about a minute and come back by
   themselves).
+- Switch on the Lighthouse panel: `LIGHTHOUSE_TOKEN` in `/srv/wiseteck/.env` and the same value as a GitHub secret
+  (DEPLOY.md → *Daily Lighthouse check*).
