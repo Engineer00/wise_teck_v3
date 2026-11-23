@@ -1143,10 +1143,12 @@
   .brand__spin{position:relative;width:var(--logo-mark);height:var(--logo-mark);transform-style:preserve-3d}
   .brand__face{position:absolute;inset:0;width:100%;height:100%;backface-visibility:hidden;-webkit-backface-visibility:hidden}
   .brand__face--back{transform:rotateY(180deg)}
+  /* the header coin rests face-on (lined up with the top bar above it) for ~6 s, then makes one smooth turn */
   @keyframes logoSpin{
-    to{transform:rotateY(360deg)}
+    0%,72%{transform:rotateY(0deg)}
+    100%{transform:rotateY(360deg)}
   }
-  .brand__spin{animation:logoSpin 8.5s linear infinite;flex:none;perspective:600px}
+  .brand__spin{animation:logoSpin 8.5s cubic-bezier(.65,0,.35,1) infinite;flex:none;perspective:600px}
   /* hero 3D coin stage + ring + tags */
   .hero__visual{position:relative;aspect-ratio:1;width:100%;max-width:520px;margin-left:0;justify-self:start;--cy:50%;--rr:35%}
   /* square stage: ring centre (--cy) and radius (--rr, % of width) */
@@ -1238,8 +1240,10 @@
   @keyframes wt-orbit-dash{
     to{stroke-dashoffset:-280}
   }
+  /* the header coin rests face-on (lined up with the top bar above it) for ~6 s, then makes one smooth turn */
   @keyframes logoSpin{
-    to{transform:rotateY(360deg)}
+    0%,72%{transform:rotateY(0deg)}
+    100%{transform:rotateY(360deg)}
   }
   .eorbit__system{pointer-events:none;animation:wt-orbit 20s linear infinite}
   .eorbit__path{animation:wt-orbit-dash 20s linear infinite}
