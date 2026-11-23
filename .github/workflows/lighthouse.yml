@@ -1,0 +1,40 @@
+# Daily Google Lighthouse check of the live site: every page in the sitemap, phone and desktop.
+# Results: the table on the run page, full HTML reports as a download, and (with the LIGHTHOUSE_TOKEN secret)
+# the admin dashboard of the site. Start one by hand: Actions -> Lighthouse -> Run workflow.
+name: Lighthouse
+
+on:
+  schedule:
+    - cron: "30 0 * * *"   # every day 00:30 UTC = 05:30 in Pakistan, before the working day
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lighthouse
+  cancel-in-progress: false
+
+jobs:
+  lighthouse:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 40
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Install Lighthouse
+        run: npm install --no-save --no-package-lock lighthouse@13.6.0 chrome-launcher@1.2.3
+      - name: Check every page
+        env:
+          SITE_URL: ${{ vars.SITE_URL || 'https://wiseteck.dev' }}
+          LIGHTHOUSE_TOKEN: ${{ secrets.LIGHTHOUSE_TOKEN }}
+        run: node tools/lighthouse/run.mjs
+      - name: Keep the full reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-reports
+          path: reports/
+          retention-days: 30

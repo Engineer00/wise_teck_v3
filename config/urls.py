@@ -15,6 +15,8 @@ urlpatterns = [
     # old browsers and crawlers ask for /favicon.ico
     path("favicon.ico", RedirectView.as_view(url=static_url("img/favicon.png"), permanent=True)),
     path("sitemap.xml", views.sitemap_xml, name="sitemap_xml"),
+    path("llms.txt", views.llms_txt, name="llms_txt"),
+    path("api/lighthouse/", views.lighthouse_report, name="lighthouse_report"),
     path("preview/page/<int:pk>/", views.preview_page, name="preview_page"),
     path("preview/version/<int:pk>/", views.preview_revision, name="preview_revision"),
     path("blog/<slug:slug>/", views.blog_detail, name="blog_detail"),

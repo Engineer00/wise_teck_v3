@@ -36,6 +36,17 @@ def hl(title, words):
     return mark_safe(title)
 
 
+# link words that say nothing about where the link goes (Lighthouse "Links do not have descriptive text")
+VAGUE_LINKS = {"read more", "learn more", "more", "see more", "view more", "click here", "here", "details", "continue"}
+
+
+@register.filter
+def vague(label):
+    """True for a button or link label such as "Read More": the template then adds hidden context for search
+    engines and screen readers."""
+    return (label or "").strip().lower() in VAGUE_LINKS
+
+
 @register.filter
 def br(text):
     return mark_safe(escape(text or "").replace("|", "<br/>"))

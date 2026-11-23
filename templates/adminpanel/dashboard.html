@@ -91,6 +91,45 @@
   </section>
 </div>
 
+{% with lh=lighthouse %}
+<section class="ap-panel ap-lighthouse">
+  <div class="ap-panel-head">
+    <h2>Speed &amp; quality · Google Lighthouse</h2>
+    {% if lh.run %}<span class="ap-help">Checked {{ lh.run.ran_at|timesince }} ago{% if lh.run.version %} · Lighthouse {{ lh.run.version }}{% endif %}</span>{% endif %}
+  </div>
+  {% if lh.run %}
+  <p class="ap-help">Every page of the live site is checked each day on a phone and on a desktop. Scores: 90–100 good, 50–89 needs work, under 50 poor.{% if lh.stale %} <strong>The last check is more than 3 days old: open the workflow below to see why.</strong>{% endif %}</p>
+  {% for m in lh.modes %}
+  <h3 class="ap-subhead">{{ m.name }} · average of all pages</h3>
+  <div class="ap-kpis ap-lh-kpis">
+    {% for c in m.cards %}<div class="ap-kpi" title="{{ c.help }}"><span>{{ c.label }}</span><strong class="ap-lh-{{ c.rating }}">{% if c.value is None %}–{% else %}{{ c.value }}{% endif %}</strong>{% if c.change %}<em class="ap-change {% if c.change > 0 %}ap-change-up{% else %}ap-change-down{% endif %}">{% if c.change > 0 %}+{% endif %}{{ c.change }} since the previous check</em>{% endif %}</div>{% endfor %}
+  </div>
+  {% endfor %}
+  <div class="ap-grid-2">
+    <div>
+      <h3 class="ap-subhead">Home page on a phone · Core Web Vitals</h3>
+      <ul class="ap-lh-vitals">{% for v in lh.vitals %}<li><span><b>{{ v.label }}</b>{{ v.plain }}</span><strong class="ap-lh-{{ v.rating }}">{{ v.text }}</strong></li>{% endfor %}</ul>
+    </div>
+    <div>
+      <h3 class="ap-subhead">What Lighthouse suggests</h3>
+      {% if lh.issues %}<ul class="ap-lh-issues">{% for i in lh.issues %}<li><span>{{ i.title }}</span><small>{{ i.pages }} page{{ i.pages|pluralize }} · {{ i.modes }}</small></li>{% endfor %}</ul>
+      {% else %}<p class="ap-empty">No suggestions: every check passes.</p>{% endif %}
+    </div>
+  </div>
+  <h3 class="ap-subhead">Every page · phone / desktop</h3>
+  <div class="ap-table-scroll">
+    <table class="ap-table ap-lh-table">
+      <thead><tr><th>Page</th><th>Performance</th><th>Accessibility</th><th>Best practices</th><th>SEO</th></tr></thead>
+      <tbody>{% for p in lh.pages %}<tr><td><a class="ap-link" href="{{ p.url }}" target="_blank" rel="noopener">{{ p.url }}</a></td>{% for pair in p.cells %}<td>{% for s in pair %}<b class="ap-lh-{{ s.rating }}">{% if s.value is None %}–{% else %}{{ s.value }}{% endif %}</b>{% if forloop.first %} / {% endif %}{% endfor %}</td>{% endfor %}</tr>{% endfor %}</tbody>
+    </table>
+  </div>
+  <p class="ap-help ap-lh-links">{% if lh.run.report_url %}<a class="ap-link" href="{{ lh.run.report_url }}" target="_blank" rel="noopener">Full reports for every page</a> · {% endif %}<a class="ap-link" href="{{ lh.workflow_url }}" target="_blank" rel="noopener">Run a check now</a> (on GitHub: <em>Run workflow</em>)</p>
+  {% else %}
+  <p class="ap-empty">No Lighthouse results yet.{% if lh.configured %} The first daily check will appear here after it runs; you can also start it now: <a class="ap-link" href="{{ lh.workflow_url }}" target="_blank" rel="noopener">Run workflow on GitHub</a>.{% else %} To switch on the daily check: put the same long random value in the server's <code>.env</code> as <code>LIGHTHOUSE_TOKEN</code> and in GitHub (repository Settings → Secrets → Actions) as <code>LIGHTHOUSE_TOKEN</code>, then restart the site. See DEPLOY.md, “Daily Lighthouse check”.{% endif %}</p>
+  {% endif %}
+</section>
+{% endwith %}
+
 <div class="ap-grid-2 ap-grid-gap">
   <section class="ap-panel">
     <div class="ap-panel-head">

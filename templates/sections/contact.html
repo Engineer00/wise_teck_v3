@@ -6,7 +6,7 @@
       {% with L=s.form_labels %}<form class="glass form reveal d1" id="contact-form" method="post" action="{{ request.path }}#contact-form" novalidate>
         {% csrf_token %}<input type="hidden" name="section" value="{{ s.pk }}"/>
         <div class="hp" aria-hidden="true"><label>Website<input name="website" tabindex="-1" autocomplete="off"/></label></div>
-        <h3>{{ s.form_title }}</h3>
+        <h2>{{ s.form_title }}</h2>
         {% if messages %}{% for m in messages %}<p class="form-msg form-msg--{{ m.tags }}" role="status">{{ m }}</p>{% endfor %}{% endif %}
         {% if form.non_field_errors %}<p class="form-msg form-msg--error" role="alert">{{ form.non_field_errors|join:" " }}</p>{% elif form.errors %}<p class="form-msg form-msg--error" role="alert">{{ site.contact_error }}</p>{% endif %}
         <label{% if form.name.errors %} class="has-error"{% endif %}>{{ L.0.0 }}<input name="name" required maxlength="120" autocomplete="name" placeholder="{{ L.0.1 }}" value="{{ form.name.value|default:'' }}"/></label>

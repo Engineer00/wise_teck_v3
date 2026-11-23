@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.conf import settings
@@ -6,13 +7,15 @@ from django.core.mail import send_mail
 from django.core.paginator import EmptyPage, PageNotAnInteger, Paginator
 from django.db import transaction
 from django.db.models import Prefetch
-from django.http import Http404, HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
 from django.views.decorators.cache import cache_page
+from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_POST
 
+from . import lighthouse, throttle, versioning
 from . import seo as seo_data
-from . import throttle, versioning
 from .forms import ContactForm
 from .models import BlogPost, Detail, Item, Page, Revision, Section, SiteSettings, SuccessStory
 from .permissions import staff_required
@@ -234,10 +237,36 @@ def preview_revision(request, pk):
     return response
 
 
+# ------------------------------------------------------------------------------------------ Lighthouse
+@csrf_exempt  # called by the GitHub workflow with a shared secret, not from a browser form
+@require_POST
+def lighthouse_report(request):
+    """Receives the daily Lighthouse results (core/lighthouse.py). Unknown without LIGHTHOUSE_TOKEN set."""
+    if not settings.LIGHTHOUSE_TOKEN:
+        raise Http404
+    if not lighthouse.token_ok(request.headers.get("Authorization", "")):
+        return JsonResponse({"error": "wrong token"}, status=403)
+    if len(request.body) > 1_000_000:
+        return JsonResponse({"error": "too large"}, status=413)
+    try:
+        run = lighthouse.save(json.loads(request.body))
+    except (ValueError, UnicodeDecodeError) as e:  # json.JSONDecodeError is a ValueError
+        return JsonResponse({"error": str(e)[:200]}, status=400)
+    return JsonResponse({"saved": run.pk, "results": len(run.results)}, status=201)
+
+
 # ------------------------------------------------------------------------------------------ search engines
 def robots_txt(request):
     site = SiteSettings.load()
-    lines = ["User-agent: *", "Disallow: /admin/", "Disallow: /adminpanel/", "Disallow: /preview/", "Allow: /", ""]
+    lines = [
+        "User-agent: *",
+        "Disallow: /admin/",
+        "Disallow: /adminpanel/",
+        "Disallow: /preview/",
+        "Disallow: /api/",
+        "Allow: /",
+        "",
+    ]
     extra = site.robots_extra.strip()
     if extra:
         lines += [extra, ""]
@@ -278,6 +307,32 @@ def sitemap_xml(request):
         )
     body.append("</urlset>")
     return HttpResponse("\n".join(body) + "\n", content_type="application/xml; charset=utf-8")
+
+
+@cache_page(60 * 15)
+def llms_txt(request):
+    """/llms.txt: a plain-text guide to the site for AI assistants and AI search (llmstxt.org), built from the same
+    pages as the sitemap, so it is always up to date."""
+    site = SiteSettings.load()
+    base = seo_data.base_url(request, site)
+
+    def line(title, url, text):
+        text = " ".join((text or "").split())
+        return f"- [{title}]({base}{url})" + (f": {text}" if text else "")
+
+    pages = Page.objects.live().filter(is_active=True, noindex=False, canonical_url="")
+    out = [f"# {site.seo_name}", ""]
+    if site.meta_description:
+        out += [f"> {' '.join(site.meta_description.split())}", ""]
+    out += ["## Pages", ""] + [line(p.title, p.get_absolute_url(), p.meta_description) for p in pages]
+    posts = list(BlogPost.objects.live())
+    if posts:
+        out += ["", "## Blog", ""] + [line(b.title, b.get_absolute_url(), b.short_description) for b in posts]
+    stories = list(SuccessStory.objects.live().exclude(description=""))
+    if stories:
+        out += ["", "## Success stories", ""]
+        out += [line(st.client_name, st.get_absolute_url(), st.short_description) for st in stories]
+    return HttpResponse("\n".join(out) + "\n", content_type="text/plain; charset=utf-8")
 
 
 def not_found(request, exception=None):

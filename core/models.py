@@ -1121,3 +1121,19 @@ class Attempt(models.Model):
 
     def __str__(self):
         return f"{self.kind} {self.at:%Y-%m-%d %H:%M}"
+
+
+class LighthouseRun(models.Model):
+    """One automatic Google Lighthouse check of the live site: scores, timings and issues per page, phone and
+    desktop. Sent by the GitHub workflow .github/workflows/lighthouse.yml (cleaned by core/lighthouse.py)."""
+
+    ran_at = models.DateTimeField(db_index=True)
+    version = models.CharField("Lighthouse version", max_length=20, blank=True)
+    report_url = models.URLField("Full reports", max_length=300, blank=True)
+    results = models.JSONField(default=list)
+
+    class Meta:
+        ordering = ["-ran_at"]
+
+    def __str__(self):
+        return f"Lighthouse {self.ran_at:%Y-%m-%d %H:%M}"

@@ -166,6 +166,13 @@ else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "Wise-Teck Website <no-reply@wise-teck.org>")
 
+# Daily Google Lighthouse check (core/lighthouse.py): the GitHub workflow posts its results with this shared
+# secret (repository secret LIGHTHOUSE_TOKEN = the same value). Empty = results are not accepted.
+LIGHTHOUSE_TOKEN = os.environ.get("LIGHTHOUSE_TOKEN", "")
+LIGHTHOUSE_WORKFLOW_URL = os.environ.get(
+    "LIGHTHOUSE_WORKFLOW_URL", "https://github.com/Engineer00/wise_teck_v3/actions/workflows/lighthouse.yml"
+)
+
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,

@@ -71,8 +71,8 @@ class CoursesTest(SeededTestCase):
         Course.objects.create(name="AI Tools")
         Course.objects.create(name="Own Page", link_url="/wise-college/")
         html = course_section(Client().get(COURSES).content.decode())
-        self.assertIn('href="/contact/?interest=Professional+Paid+Courses">Enquire Now', html)
-        self.assertIn('href="/wise-college/">Enquire Now', html)
+        self.assertIn('href="/contact/?interest=Professional+Paid+Courses"><span>Enquire Now', html)
+        self.assertIn('href="/wise-college/"><span>Enquire Now', html)
         form = Client().get("/contact/?interest=Professional+Paid+Courses")
         self.assertContains(form, "<option selected>Professional Paid Courses</option>")
 

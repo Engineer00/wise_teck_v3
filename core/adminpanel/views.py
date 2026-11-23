@@ -20,7 +20,7 @@ from django.utils import timezone
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views import View
 
-from .. import seo_audit, stats, throttle, versioning
+from .. import lighthouse, seo_audit, stats, throttle, versioning
 from ..layouts import ALWAYS, GUIDE
 from ..models import (
     BlogPost,
@@ -547,6 +547,7 @@ def dashboard(request):
             "stats": cards,
             "visitors": stats.summary(),
             "seo": seo_audit.audit(),
+            "lighthouse": lighthouse.summary(),
             "google": _google_tools(site, base_url(request, site)),
             "ga_id": site.ga_id,
             "recent_contacts": ContactMessage.objects.all()[:6],
