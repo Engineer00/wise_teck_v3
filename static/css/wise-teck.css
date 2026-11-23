@@ -456,7 +456,8 @@
   .dd-panel{position:absolute;top:100%;left:0;min-width:250px;background:var(--p-white);border-radius:var(--r-14);box-shadow:var(--shadow-lift);padding:var(--sp-8);opacity:0;visibility:hidden;transform:translateY(6px);transition:.2s}
   .dd:hover .dd-panel,.dd:focus-within .dd-panel{opacity:1;visibility:visible;transform:none}
   .dd-panel a{display:block;padding:var(--sp-8) var(--sp-12);border-radius:var(--r-10);font-size:var(--fs-label);font-weight:500;color:var(--text)}
-  .dd-panel a:hover{background:var(--lav-100);color:var(--purple)}
+  /* drop-down links: the same brand-violet tint as the phone menu (was a cool, bluish lavender) */
+  .dd-panel a:hover,.dd-panel a:focus-visible{background:rgb(var(--p-violet-600-rgb) / .1);color:var(--purple)}
   .burger{display:none;background:none;border:0;font-size:var(--fs-quote-lg);color:var(--ink);cursor:pointer}
   .btn{display:inline-flex;align-items:center;gap:var(--sp-12);border-radius:var(--r-pill);font-weight:700;font-size:var(--fs-small);padding:var(--sp-12) var(--sp-24);transition:.25s;cursor:pointer;border:0;white-space:nowrap}
   .btn i{transition:transform .25s}
