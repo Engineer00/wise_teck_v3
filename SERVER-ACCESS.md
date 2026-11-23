@@ -6,14 +6,137 @@ you need is here, in the order you use it. Server setup, security hardening and 
 > This repository is public. Never write a password, the contents of `.env` or any secret into this file, a commit
 > or an issue.
 
+## Quick start: the five things you will do most
+
+Type these in **PowerShell** on your PC (lines starting with `#` are notes, not commands).
+
+### 1. Log in to the server
+
+```powershell
+ssh root@159.198.43.141
+# type the root password (nothing shows while typing), press Enter
+```
+
+### 2. Go to the website's folder and look around
+
+```bash
+cd /srv/wiseteck/app        # the website's code
+ls                          # list what is there
+git log --oneline -3        # which version is live (top line)
+```
+
+### 3. Read a file
+
+```bash
+less templates/sections/home_hero.html     # arrows to scroll, q to quit
+grep -rn "Apply Now" templates core        # find where some text or code is
+```
+
+Or open WinSCP (section 1), go to `/srv/wiseteck/app` and double-click a file.
+
+### 4. Update the website with the zip
+
+On your PC, in PowerShell, from the project folder `D:\Inner Pages\wise-teck-v3-django`:
+
+```powershell
+git archive --format=zip -o "D:\Inner Pages\wise-teck-site.zip" main     # make the zip from the main version
+scp "D:\Inner Pages\wise-teck-site.zip" root@159.198.43.141:/root/      # send it to the server
+ssh root@159.198.43.141                                                  # log in
+```
+
+Then on the server, one block at a time:
+
+```bash
+# a. back up first
+sudo -u postgres pg_dump wiseteck > /root/wiseteck-$(date +%F).sql
+tar czf /root/wiseteck-media-$(date +%F).tgz -C /srv/wiseteck/app media
+
+# b. unpack the zip and copy the new code in (keeps .env, uploaded photos and the database)
+apt install -y unzip rsync          # needed once; quick if already installed
+cd /root && rm -rf wiseteck-new && unzip -q wise-teck-site.zip -d wiseteck-new
+rsync -a --exclude media/ --exclude staticfiles/ --exclude .env --exclude db.sqlite3 wiseteck-new/ /srv/wiseteck/app/
+cp -r wiseteck-new/media/seed /srv/wiseteck/app/media/
+
+# c. install, update the database, restart
+cd /srv/wiseteck/app
+set -a; . /srv/wiseteck/.env; set +a
+../venv/bin/pip install -r requirements.txt
+../venv/bin/python manage.py migrate
+../venv/bin/python manage.py check --deploy
+../venv/bin/python manage.py collectstatic --noinput
+chown -R www-data:www-data /srv/wiseteck/app/media
+systemctl restart wiseteck
+systemctl status wiseteck --no-pager       # must say "active (running)"
+```
+
+### 5. Check the site and leave
+
+```bash
+curl -I https://wiseteck.dev               # "200" means the site answers
+exit                                       # log out of the server
+```
+
+The rest of this file explains each of these in more detail, and covers changing the code, undoing an update and
+emergencies.
+
+## What each tool is and why we use it
+
+| Tool | What it is | Why we use it |
+| --- | --- | --- |
+| `ssh` (PowerShell) / PuTTY | A secure remote login to the server | To type commands on the server from your PC; everything sent is encrypted |
+| WinSCP | A file browser for the server | To see, read and copy the server's files like in Windows Explorer |
+| `scp` | Secure file copy | To send the update zip to the server (or bring files back) |
+| Git | Version tracking for code | Every change is recorded and can be undone; the server can update with `git pull` |
+| GitHub | Online home of the code | The master copy; it runs all the tests on every change and the daily Lighthouse check |
+| `git archive` / zip / `unzip` / `rsync` | Packing and copying code | The zip method: pack `main`, unpack on the server, copy only the code over the old code (rsync), leaving passwords, photos and the database alone |
+| Nginx | The web server in front | HTTPS padlock, sends photos and CSS fast, passes pages to the website program, keeps the two websites on this server apart |
+| Gunicorn + Django | The website program | Django is the site's code; Gunicorn runs several copies so many visitors are served at once |
+| `systemctl` | Starts and stops background services | To restart the site (`wiseteck`) or Nginx, and to see if they are running |
+| `journalctl` | Reads the system's logs | To see errors and who tried to log in |
+| PostgreSQL / `pg_dump` | The database / its backup tool | Holds all content edited in the admin; `pg_dump` saves a copy of it |
+| `cron` | Runs jobs on a timetable | Makes the daily backup at 02:30 UTC without anyone doing anything |
+| fail2ban | Watches failed logins and blocks the sender | Bots try about 10,000 passwords a day; after 5 wrong tries an address is blocked for an hour, longer if it returns |
+| `ufw` | The firewall | Only SSH (22) and the websites (80, 443) can be reached from the internet; everything else is closed |
+| `.env` | The settings file with passwords | Keeps secrets out of the code, so the code can be public on GitHub |
+
+## What is in the zip (the important files)
+
+| File or folder | What it is |
+| --- | --- |
+| `SERVER-ACCESS.md` | This guide |
+| `DEPLOY.md` | Server setup, security, backups, switching on Lighthouse |
+| `README.md` | What the site does, the admin, SEO, Lighthouse, running it locally, tests |
+| `CHANGELOG.md` | Every change, the decisions, and which version is live |
+| `CLAUDE.md` | Project rules and commands (for developers and AI coding sessions) |
+| `manage.py` | The command used to run Django tasks: `migrate`, `collectstatic`, `check --deploy`… |
+| `requirements.txt` | The exact Python packages the site needs (installed with `pip install -r`) |
+| `config/settings.py` | Site settings; reads passwords from `.env` on the server |
+| `config/urls.py` | Which web address goes to which page or feature |
+| `core/models.py` | The database tables: pages, sections, blog, stories, courses, settings… |
+| `core/views.py` | What each address shows (pages, contact form, sitemap, `llms.txt`, Lighthouse results) |
+| `core/migrations/` | Database updates, applied by `manage.py migrate` |
+| `core/adminpanel/` | The admin panel at `/admin/` |
+| `core/lighthouse.py`, `core/seo.py`, `core/seo_audit.py` | Lighthouse panel; search-engine tags; the SEO health check |
+| `core/tests/` | The automatic tests (108) |
+| `templates/` | The HTML of every page; `templates/sections/` has one file per section type |
+| `static/css/wise-teck.css` | The website's one stylesheet |
+| `static/css/adminpanel.css` | The admin panel's stylesheet |
+| `static/js/` | Scripts: menu, waves, 3D coin |
+| `media/seed/` | The starting photos (photos uploaded in the admin live only on the server) |
+| `.github/workflows/` | GitHub jobs: tests on every change (`ci.yml`), daily Lighthouse (`lighthouse.yml`) |
+| `tools/lighthouse/run.mjs` | The Lighthouse runner used by that daily job |
+
+Not in the zip, and never overwritten by an update: `/srv/wiseteck/.env` (passwords), `/srv/wiseteck/app/media/`
+(uploaded photos) and the database. They exist only on the server.
+
 ## Quick facts
 
 | What | Value |
 | --- | --- |
 | Server address | `159.198.43.141` (Namecheap VPS, Ubuntu 24.04) |
 | Login | `root`, password auth (ask the site owner for the password) |
-| Website | https://wiseteck.dev (also https://www.wiseteck.dev) |
-| Website admin | https://wiseteck.dev/admin/ (its own login, separate from the server) |
+| Website | <https://wiseteck.dev> (also <https://www.wiseteck.dev>) |
+| Website admin | <https://wiseteck.dev/admin/> (its own login, separate from the server) |
 | Code on the server | `/srv/wiseteck/app` |
 | Settings and passwords | `/srv/wiseteck/.env` (never overwrite, never commit) |
 | Uploaded photos | `/srv/wiseteck/app/media/` (only on the server) |
@@ -21,7 +144,7 @@ you need is here, in the order you use it. Server setup, security hardening and 
 | Site service | `wiseteck` (Gunicorn running Django) |
 | Database | PostgreSQL, database and user `wiseteck` |
 | Nginx file for this site | `/etc/nginx/sites-available/wiseteck` |
-| Master copy of the code | https://github.com/Engineer00/wise_teck_v3 (branch `main` = what goes live) |
+| Master copy of the code | <https://github.com/Engineer00/wise_teck_v3> (branch `main` = what goes live) |
 | Working copy on the dev PC | `D:\Inner Pages\wise-teck-v3-django` |
 
 **Logins we have:** the server's root password and the website admin. **Logins we don't have:** the Namecheap
@@ -123,6 +246,19 @@ free -h                                       # free memory
 uptime                                        # how long the server has run, and its load
 ```
 
+Security on the server (set up on 23 November 2026):
+
+```bash
+fail2ban-client status sshd                   # how many addresses are blocked right now
+fail2ban-client set sshd unbanip <address>    # unblock someone who typed the password wrong 5 times
+ufw status                                    # the firewall: only 22, 80 and 443 open
+ls -lh /root/backups                          # the daily backups (database + photos, last 14 days)
+/root/backup-wiseteck.sh                      # make a backup now
+```
+
+If **you** get "Connection refused" or "timed out" after several wrong passwords, fail2ban has blocked your address
+for an hour. Wait, or ask someone else who can log in to unblock you (find your address at <https://api.ipify.org>).
+
 Run Django's own commands on the server (always load the settings first):
 
 ```bash
@@ -170,7 +306,7 @@ git checkout -b fix/short-description     # e.g. fix/footer-phone-number
 py -3.13 manage.py runserver 127.0.0.1:8010
 ```
 
-Open http://127.0.0.1:8010/ (site) and http://127.0.0.1:8010/admin/ (admin). Edit the files in any editor (VS Code);
+Open <http://127.0.0.1:8010/> (site) and <http://127.0.0.1:8010/admin/> (admin). Edit the files in any editor (VS Code);
 the local site reloads by itself. Stop it with Ctrl+C.
 
 - Wording, photos, menus and colours are content: change them in the live admin, not in code.
@@ -216,7 +352,7 @@ sudo -u postgres pg_dump wiseteck > /root/wiseteck-$(date +%F).sql
 tar czf /root/wiseteck-media-$(date +%F).tgz -C /srv/wiseteck/app media
 ```
 
-**Option A: from GitHub (recommended)**
+#### Option A: from GitHub (recommended)
 
 ```bash
 cd /srv/wiseteck/app
@@ -224,7 +360,7 @@ git status                      # must be clean; if not, stop and look at "git d
 git pull --ff-only origin main
 ```
 
-**Option B: from a zip**
+#### Option B: from a zip
 
 On the PC, build the zip from `main` (in the project folder), then copy it up:
 
@@ -245,7 +381,7 @@ cp -r wiseteck-new/media/seed /srv/wiseteck/app/media/
 (After a zip update `git status` on the server lists changed files; that is expected. To return to option A:
 `git fetch origin && git reset --hard origin/main`.)
 
-**Then, for both options:**
+#### Then, for both options
 
 ```bash
 cd /srv/wiseteck/app
@@ -262,8 +398,8 @@ systemctl status wiseteck --no-pager
 ### 4.7 Check it worked
 
 - `systemctl status wiseteck --no-pager` says **active (running)**.
-- https://wiseteck.dev and https://wiseteck.dev/admin/ open; look at the page you changed on a phone too.
-- https://dehleze.store still opens.
+- <https://wiseteck.dev> and <https://wiseteck.dev/admin/> open; look at the page you changed on a phone too.
+- <https://dehleze.store> still opens.
 - If something is wrong: `journalctl -u wiseteck -n 50 --no-pager` shows the error.
 
 ---
