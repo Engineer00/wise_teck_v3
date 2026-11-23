@@ -13,6 +13,18 @@ How to run, test and deploy the site: [README.md](README.md) and [DEPLOY.md](DEP
 | **Server folder** | `/srv/wiseteck/app` (code), `/srv/wiseteck/.env` (settings), `/srv/wiseteck/app/media` (uploads). dehleze.store lives separately in `/home/dehleze/` and is never touched |
 | **Passwords** | The server `root` and live admin passwords were changed to strong random ones on 21 Nov 2026 and shared privately. They are never written in this repository (it is public) |
 
+## 2026-11-23: server secured (fail2ban, firewall, daily backups)
+
+- Read-only check: 298,509 failed root password guesses over SSH in 30 days (25 Oct to 23 Nov), from 2,038
+  addresses, mostly username `root`. No break-in: every successful login in 10 days is accounted for. Evidence kept
+  on the server in `/root/security-evidence-2026-11-23/`.
+- Applied (DEPLOY.md, *Server security*): fail2ban (5 wrong tries in 10 minutes = 1 hour ban, growing to a week for
+  repeat offenders; watching `ssh.service`, the Ubuntu 24.04 name), firewall (only 22, 80, 443), daily backups of the
+  database and uploaded photos at 02:30 UTC kept 14 days (`/root/backups/`). Both websites checked after each step.
+- Still to do: a reboot at a quiet hour (pending updates); keys-only SSH login is optional.
+- SERVER-ACCESS.md: a step-by-step quick start, what each tool is and why we use it, the important files in the zip.
+- The header coin rests face-on (lined up with the top bar) and turns once every 8.5 s.
+
 ## 2026-11-23: daily Lighthouse on the dashboard, SEO 100, smooth hovers, top bar aligned
 
 - **Daily Google Lighthouse check** (`.github/workflows/lighthouse.yml`): every page in the sitemap, phone and

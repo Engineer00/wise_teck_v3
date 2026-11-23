@@ -132,18 +132,27 @@ Open the Wise-Teck site file only: `nano /etc/nginx/sites-available/wiseteck` (n
 If something goes wrong: `journalctl -u wiseteck -n 50 --no-pager` shows the error. To go back to the previous version,
 use `git checkout <previous commit>` and restart (or restore the backups from step 1).
 
-## Server security (do this first)
+## Server security
+
+**Status (23 Nov 2026):** steps 1 (fail2ban), 2 (firewall) and 5 (daily backups) are done. Step 3 (keys-only login)
+is optional while the root password is long and random, and would change how everyone logs in. Step 4 (reboot) is
+still due: every service, including dehleze's, starts again by itself, so it only needs a quiet hour. The firewall
+also holds an older rule for port 8001 (nothing listens there); remove it with `ufw delete allow 8001` if nobody
+needs it. Evidence of the attacks (30 days of logs, 298,509 failed passwords): `/root/security-evidence-2026-11-23/`
+on the server.
 
 A read-only check on 21 Nov 2026 found **9,227 failed root password guesses over SSH in 24 hours**, root login with a
 password allowed, no firewall and no fail2ban. Nothing showed a break-in (only the owner's and the developer's
 addresses had logged in), but a simple root password will not hold against that. These steps do not touch the
 websites; run them in PuTTY as `root`, one block at a time.
 
-**1. Block password guessers (fail2ban).** Bans an address for an hour after 5 wrong SSH passwords.
+**1. Block password guessers (fail2ban).** Bans an address for an hour after 5 wrong SSH passwords in 10 minutes,
+longer each time it returns (up to a week). On Ubuntu 24.04 the SSH service is `ssh.service`, so the jail must watch
+that name (`journalmatch` below); with the default it sees nothing.
 
 ```
 apt install -y fail2ban
-printf '[sshd]\nenabled = true\nmaxretry = 5\nbantime = 1h\n' > /etc/fail2ban/jail.d/sshd.local
+printf '[sshd]\nenabled = true\nmaxretry = 5\nfindtime = 10m\nbantime = 1h\nbantime.increment = true\nbantime.maxtime = 1w\nbackend = systemd\njournalmatch = _SYSTEMD_UNIT=ssh.service + _COMM=sshd\n' > /etc/fail2ban/jail.d/sshd.local
 systemctl enable --now fail2ban
 fail2ban-client status sshd
 ```
